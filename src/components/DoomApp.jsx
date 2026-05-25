@@ -8,6 +8,8 @@ const SCREEN_CENTER_X = VIEW_WIDTH / 2;
 const FOV = Math.PI / 3;
 const MAX_VIEW_DISTANCE = 22;
 const FIXED_TIMESTEP = 1000 / 60;
+const MAX_FRAME_DELTA = 42;
+const MAX_SIMULATION_STEP = 1000 / 90;
 const PLAYER_RADIUS = 0.18;
 const ENEMY_RADIUS = 0.2;
 const PROJECTILE_RADIUS = 0.14;
@@ -79,6 +81,8 @@ const HUD_GLYPHS = {
 
 const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
 const lerp = (from, to, amount) => from + (to - from) * amount;
+const scaleBlend = (blend, delta) => 1 - (1 - blend) ** (delta / FIXED_TIMESTEP);
+const scaleDamping = (damping, delta) => damping ** (delta / FIXED_TIMESTEP);
 const pointInRect = (x, y, left, top, right, bottom) => x >= left && x < right && y >= top && y < bottom;
 const normalizeAngle = (angle) => ((angle % TWO_PI) + TWO_PI) % TWO_PI;
 
@@ -883,11 +887,11 @@ const DoomApp = () => {
     const canvas = canvasRef.current;
     if (!canvas) return undefined;
 
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext('2d', { alpha: false, desynchronized: true });
     const buffer = document.createElement('canvas');
     buffer.width = VIEW_WIDTH;
     buffer.height = VIEW_HEIGHT;
-    const bctx = buffer.getContext('2d');
+    const bctx = buffer.getContext('2d', { alpha: false });
     const isLowPower =
       (typeof window !== 'undefined' && window.innerWidth <= 768) ||
       (typeof window !== 'undefined' &&
@@ -1162,6 +1166,28 @@ const DoomApp = () => {
       }
     };
 
+    const moveEnemyTowardPlayer = (enemy, dx, dy, distance, delta, now, speedMultiplier = 1) => {
+      if (distance <= 0.001) return;
+
+      const step = enemy.speed * speedMultiplier * delta;
+      const moveX = (dx / distance) * step;
+      const moveY = (dy / distance) * step;
+      const next = tryMove(enemy, enemy.x + moveX, enemy.y + moveY, ENEMY_RADIUS);
+
+      if (next.x !== enemy.x || next.y !== enemy.y) {
+        enemy.x = next.x;
+        enemy.y = next.y;
+        return;
+      }
+
+      const strafeDirection = Math.sin(now * 0.004 + enemy.bobSeed * 8) >= 0 ? 1 : -1;
+      const strafeX = (-dy / distance) * step * strafeDirection;
+      const strafeY = (dx / distance) * step * strafeDirection;
+      const sidestep = tryMove(enemy, enemy.x + strafeX, enemy.y + strafeY, ENEMY_RADIUS);
+      enemy.x = sidestep.x;
+      enemy.y = sidestep.y;
+    };
+
     const updateStep = (delta, now) => {
       if (!game.running) return;
 
@@ -1196,13 +1222,14 @@ const DoomApp = () => {
         PLAYER_WALK_SPEED *
         (running ? PLAYER_RUN_MULTIPLIER : 1) *
         (backpedaling ? PLAYER_BACKPEDAL_MULTIPLIER : 1);
-      const moveBlend = wishLength > 0 ? PLAYER_ACCEL_BLEND : PLAYER_DECEL_BLEND;
+      const moveBlend = scaleBlend(wishLength > 0 ? PLAYER_ACCEL_BLEND : PLAYER_DECEL_BLEND, delta);
       game.player.vx = lerp(game.player.vx, wishX * moveTargetSpeed, moveBlend);
       game.player.vy = lerp(game.player.vy, wishY * moveTargetSpeed, moveBlend);
 
       if (wishLength === 0) {
-        game.player.vx *= PLAYER_STOP_FRICTION;
-        game.player.vy *= PLAYER_STOP_FRICTION;
+        const stopFriction = scaleDamping(PLAYER_STOP_FRICTION, delta);
+        game.player.vx *= stopFriction;
+        game.player.vy *= stopFriction;
       }
 
       const moved = tryMove(
@@ -1219,7 +1246,7 @@ const DoomApp = () => {
 
       const planarSpeed = Math.hypot(game.player.vx, game.player.vy) * 240;
       game.player.bobPhase += planarSpeed * 0.014;
-      game.player.bobStrength = lerp(game.player.bobStrength, clamp(planarSpeed * 0.08, 0, 1.8), 0.16);
+      game.player.bobStrength = lerp(game.player.bobStrength, clamp(planarSpeed * 0.08, 0, 1.8), scaleBlend(0.16, delta));
 
       if (keysRef.current[' ']) {
         if (game.player.weapon === 'pistol') tryShoot(now);
@@ -1253,15 +1280,9 @@ const DoomApp = () => {
           enemy.cooldownUntil = now + tuning.attackDuration + tuning.attackCooldown;
         }
 
-        if (!enemy.attackStartAt && distance > 1.1) {
-          const next = tryMove(
-            enemy,
-            enemy.x + (dx / distance) * delta * enemy.speed,
-            enemy.y + (dy / distance) * delta * enemy.speed,
-            ENEMY_RADIUS
-          );
-          enemy.x = next.x;
-          enemy.y = next.y;
+        if (distance > 1.1 && (!enemy.attackStartAt || attackElapsed < tuning.attackWindup * 0.55)) {
+          const attackSlowdown = enemy.attackStartAt ? 0.34 : 1;
+          moveEnemyTowardPlayer(enemy, dx, dy, distance, delta, now, attackSlowdown);
         }
       });
 
@@ -1545,18 +1566,15 @@ const DoomApp = () => {
 
     const frame = (timestamp) => {
       if (!game.lastFrameAt) game.lastFrameAt = timestamp;
-      const delta = Math.min(48, timestamp - game.lastFrameAt);
+      const delta = Math.min(MAX_FRAME_DELTA, timestamp - game.lastFrameAt);
       game.lastFrameAt = timestamp;
-      game.accumulator += delta;
-      const maxCatchUp = FIXED_TIMESTEP * (isLowPower ? 3 : 5);
-      if (game.accumulator > maxCatchUp) {
-        game.accumulator = maxCatchUp;
-      }
 
-      while (game.accumulator >= FIXED_TIMESTEP) {
-        game.simTime += FIXED_TIMESTEP;
-        updateStep(FIXED_TIMESTEP, game.simTime);
-        game.accumulator -= FIXED_TIMESTEP;
+      let remainingDelta = delta;
+      while (remainingDelta > 0) {
+        const step = Math.min(MAX_SIMULATION_STEP, remainingDelta);
+        game.simTime += step;
+        updateStep(step, game.simTime);
+        remainingDelta -= step;
       }
 
       drawViewport(game.simTime || timestamp);

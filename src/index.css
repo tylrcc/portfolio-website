@@ -2189,6 +2189,7 @@ body {
 }
 
 .doom-iframe {
+  display: block;
   width: 100%;
   aspect-ratio: 16 / 10;
   height: auto;
@@ -2196,8 +2197,11 @@ body {
   border-top-color: #8a8a8a;
   border-left-color: #8a8a8a;
   background: #080808;
-  image-rendering: auto;
+  image-rendering: pixelated;
   touch-action: none;
+  contain: content;
+  backface-visibility: hidden;
+  transform: translateZ(0);
   box-shadow:
     0 0 0 1px #000,
     inset 0 0 0 1px rgba(255, 255, 255, 0.06);
