@@ -901,6 +901,8 @@ const DoomApp = () => {
     ctx.imageSmoothingEnabled = true;
     ctx.imageSmoothingQuality = isLowPower ? 'low' : 'high';
     bctx.imageSmoothingEnabled = false;
+    const viewportImageData = bctx.createImageData(VIEW_WIDTH, VIEWPORT_HEIGHT);
+    const pixels = viewportImageData.data;
 
     let disposed = false;
     let frameWidth = 0;
@@ -1067,7 +1069,9 @@ const DoomApp = () => {
           firedShot: false,
           cooldownUntil: now + tuning.initialCooldown + index * 190,
           meleeAt: -999,
-          bobSeed: 0.4 + index * 0.74
+          bobSeed: 0.4 + index * 0.74,
+          losResult: false,
+          losCheckedAt: 0
         };
       });
 
@@ -1259,7 +1263,14 @@ const DoomApp = () => {
         const dx = game.player.x - enemy.x;
         const dy = game.player.y - enemy.y;
         const distance = Math.hypot(dx, dy);
-        const canSeePlayer = hasLineOfSight(enemy.x, enemy.y);
+        let canSeePlayer;
+        if (now - enemy.losCheckedAt > 150) {
+          canSeePlayer = hasLineOfSight(enemy.x, enemy.y);
+          enemy.losResult = canSeePlayer;
+          enemy.losCheckedAt = now;
+        } else {
+          canSeePlayer = enemy.losResult;
+        }
         const attackElapsed = enemy.attackStartAt ? now - enemy.attackStartAt : 0;
 
         if (enemy.attackStartAt) {
@@ -1320,48 +1331,65 @@ const DoomApp = () => {
       }
     };
 
-    const sampleTextureColor = (texture, u, v, shade) => {
-      const tx = ((Math.floor(u * texture.width) % texture.width) + texture.width) % texture.width;
-      const ty = ((Math.floor(v * texture.height) % texture.height) + texture.height) % texture.height;
-      const index = (ty * texture.width + tx) * 4;
-      return `rgb(${Math.round(texture.data[index] * shade)}, ${Math.round(texture.data[index + 1] * shade)}, ${Math.round(texture.data[index + 2] * shade)})`;
-    };
+
 
     const drawPlane = (isFloor, horizon) => {
       const dirX = Math.cos(game.player.angle);
       const dirY = Math.sin(game.player.angle);
-      const planeX = -dirY * Math.tan(FOV / 2);
-      const planeY = dirX * Math.tan(FOV / 2);
-      const rowStart = isFloor ? Math.ceil(horizon) : 0;
-      const rowEnd = isFloor ? VIEWPORT_HEIGHT : Math.ceil(horizon);
+      const halfTanFov = Math.tan(FOV / 2);
+      const planeX = -dirY * halfTanFov;
+      const planeY = dirX * halfTanFov;
+      const rowStart = isFloor ? Math.max(0, Math.ceil(horizon)) : 0;
+      const rowEnd = isFloor ? VIEWPORT_HEIGHT : Math.min(VIEWPORT_HEIGHT, Math.ceil(horizon));
+      const halfHeight = VIEWPORT_HEIGHT * 0.5;
+      const invMaxDist = 1 / MAX_VIEW_DISTANCE;
+      const leftDirX = dirX - planeX;
+      const leftDirY = dirY - planeY;
+      const spanDirX = (dirX + planeX) - leftDirX;
+      const spanDirY = (dirY + planeY) - leftDirY;
+      const invWidth = 1 / VIEW_WIDTH;
 
       for (let y = rowStart; y < rowEnd; y += 1) {
         const p = isFloor ? y - horizon : horizon - y;
-        if (Math.abs(p) < 0.001) continue;
+        if (p < 0.001) continue;
 
-        const rowDistance = (VIEWPORT_HEIGHT * 0.5) / p;
-        const leftRayX = dirX - planeX;
-        const leftRayY = dirY - planeY;
-        const rightRayX = dirX + planeX;
-        const rightRayY = dirY + planeY;
+        const rowDistance = halfHeight / p;
+        const stepX = rowDistance * spanDirX * invWidth;
+        const stepY = rowDistance * spanDirY * invWidth;
 
-        const stepX = (rowDistance * (rightRayX - leftRayX)) / VIEW_WIDTH;
-        const stepY = (rowDistance * (rightRayY - leftRayY)) / VIEW_WIDTH;
+        let worldX = game.player.x + rowDistance * leftDirX;
+        let worldY = game.player.y + rowDistance * leftDirY;
 
-        let worldX = game.player.x + rowDistance * leftRayX;
-        let worldY = game.player.y + rowDistance * leftRayY;
+        const shade = clamp(1 - rowDistance * invMaxDist, isFloor ? 0.18 : 0.15, isFloor ? 1 : 0.88);
+        const rowBase = y * VIEW_WIDTH << 2;
 
         for (let x = 0; x < VIEW_WIDTH; x += planeWallStride) {
           const textureKey = isFloor ? getFloorTextureKey(worldX, worldY) : getCeilingTextureKey(worldX, worldY);
           const texture = isFloor ? floorTextures[textureKey] : ceilingTextures[textureKey];
-          const shade = clamp(
-            1 - rowDistance / MAX_VIEW_DISTANCE,
-            isFloor ? 0.18 : 0.15,
-            isFloor ? 1 : 0.88
-          );
 
-          bctx.fillStyle = sampleTextureColor(texture, worldX * 0.25, worldY * 0.25, shade);
-          bctx.fillRect(x, y, planeWallStride, 1);
+          const tu = worldX * 0.25;
+          const tv = worldY * 0.25;
+          const tx = (((tu * texture.width | 0) % texture.width) + texture.width) % texture.width;
+          const tyy = (((tv * texture.height | 0) % texture.height) + texture.height) % texture.height;
+          const srcIdx = (tyy * texture.width + tx) << 2;
+
+          const r = texture.data[srcIdx] * shade | 0;
+          const g = texture.data[srcIdx + 1] * shade | 0;
+          const b = texture.data[srcIdx + 2] * shade | 0;
+
+          let pixIdx = rowBase + (x << 2);
+          pixels[pixIdx] = r;
+          pixels[pixIdx + 1] = g;
+          pixels[pixIdx + 2] = b;
+          pixels[pixIdx + 3] = 255;
+
+          if (planeWallStride === 2 && x + 1 < VIEW_WIDTH) {
+            pixIdx += 4;
+            pixels[pixIdx] = r;
+            pixels[pixIdx + 1] = g;
+            pixels[pixIdx + 2] = b;
+            pixels[pixIdx + 3] = 255;
+          }
 
           worldX += stepX * planeWallStride;
           worldY += stepY * planeWallStride;
@@ -1371,12 +1399,15 @@ const DoomApp = () => {
 
     const drawViewport = (now) => {
       bctx.clearRect(0, 0, VIEW_WIDTH, VIEW_HEIGHT);
+      pixels.fill(0);
 
       const hurtPulse = now - game.player.hurtAt < 130 ? (1 - (now - game.player.hurtAt) / 130) * 2.8 : 0;
       const bobOffset = Math.sin(game.player.bobPhase) * game.player.bobStrength;
       const horizon = VIEWPORT_HEIGHT / 2 + bobOffset + hurtPulse;
       drawPlane(false, horizon);
       drawPlane(true, horizon);
+
+      const invMaxDist = 1 / MAX_VIEW_DISTANCE;
 
       for (let x = 0; x < VIEW_WIDTH; x += planeWallStride) {
         const rayAngle = game.player.angle + ((x / VIEW_WIDTH) - 0.5) * FOV;
@@ -1389,22 +1420,50 @@ const DoomApp = () => {
         const wallTexture = wallTextures[hit.cell] || wallTextures['1'];
         const wallHeight = clamp(Math.floor(VIEWPORT_HEIGHT / perpendicularDistance), 8, VIEWPORT_HEIGHT * 1.8);
         const wallTop = Math.floor((VIEWPORT_HEIGHT - wallHeight) / 2 + bobOffset + hurtPulse);
-        const depthShadeBase = clamp(1 - perpendicularDistance / MAX_VIEW_DISTANCE, 0.2, 1);
+        const depthShadeBase = clamp(1 - perpendicularDistance * invMaxDist, 0.2, 1);
         const sideShade = hit.side === 1 ? 0.74 : 1;
 
+        const texU = hit.textureU;
+        const wallTx = (((texU * wallTexture.width | 0) % wallTexture.width) + wallTexture.width) % wallTexture.width;
+        const isPulsing4 = hit.cell === '4';
+        const isPulsing5 = !isPulsing4 && hit.cell === '5';
+        const pulse5Val = isPulsing5 ? 0.96 + Math.sin(now * 0.008) * 0.04 : 1;
+        const invWallHeight = 1 / Math.max(1, wallHeight);
+
         for (let y = 0; y < wallHeight; y += 1) {
-          const textureV = y / Math.max(1, wallHeight);
-          const pulse =
-            hit.cell === '4'
-              ? 0.92 + Math.sin(now * 0.012 + textureV * 4) * 0.08
-              : hit.cell === '5'
-                ? 0.96 + Math.sin(now * 0.008) * 0.04
-                : 1;
+          const screenY = wallTop + y;
+          if (screenY < 0 || screenY >= VIEWPORT_HEIGHT) continue;
+
+          const textureV = y * invWallHeight;
+          const pulse = isPulsing4
+            ? 0.92 + Math.sin(now * 0.012 + textureV * 4) * 0.08
+            : pulse5Val;
           const shade = depthShadeBase * sideShade * pulse;
-          bctx.fillStyle = sampleTextureColor(wallTexture, hit.textureU, textureV, shade);
-          bctx.fillRect(x, wallTop + y, planeWallStride, 1);
+
+          const wallTy = (((textureV * wallTexture.height | 0) % wallTexture.height) + wallTexture.height) % wallTexture.height;
+          const srcIdx = (wallTy * wallTexture.width + wallTx) << 2;
+
+          const r = wallTexture.data[srcIdx] * shade | 0;
+          const g = wallTexture.data[srcIdx + 1] * shade | 0;
+          const b = wallTexture.data[srcIdx + 2] * shade | 0;
+
+          let pixIdx = (screenY * VIEW_WIDTH + x) << 2;
+          pixels[pixIdx] = r;
+          pixels[pixIdx + 1] = g;
+          pixels[pixIdx + 2] = b;
+          pixels[pixIdx + 3] = 255;
+
+          if (planeWallStride === 2 && x + 1 < VIEW_WIDTH) {
+            pixIdx += 4;
+            pixels[pixIdx] = r;
+            pixels[pixIdx + 1] = g;
+            pixels[pixIdx + 2] = b;
+            pixels[pixIdx + 3] = 255;
+          }
         }
       }
+
+      bctx.putImageData(viewportImageData, 0, 0);
 
       const billboardActors = [
         ...game.enemies
