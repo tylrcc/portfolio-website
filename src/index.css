@@ -2846,9 +2846,7 @@ canvas {
 
 /* Welcome step needs a bit more room for the full-size About panel. */
 .wiz9--welcome {
-  width: 600px;
-  height: auto;
-  min-height: 360px;
+  width: 640px;
 }
 
 .wiz9-body {
@@ -2868,6 +2866,7 @@ canvas {
   justify-content: center;
   gap: 18px;
   padding: 18px 18px 6px;
+  overflow: hidden;
 }
 
 .wiz9-welcome-hero {
@@ -2879,6 +2878,7 @@ canvas {
 .wiz9-welcome-hero .about9 {
   width: 540px;
   max-width: 100%;
+  flex-shrink: 0;
   box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.35);
   animation: wiz9-about-fade-in 0.45s ease-out;
 }

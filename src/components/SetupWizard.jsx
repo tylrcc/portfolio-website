@@ -277,7 +277,7 @@ const SetupWizard = ({ onFinish, onCancel }) => {
   const isWelcome = step === 0;
 
   return (
-    <div className={`wiz9 ${isWelcome ? 'wiz9--welcome' : ''}`} key={step}>
+    <div className={`wiz9 ${isWelcome ? 'wiz9--welcome' : ''}`}>
       {isWelcome ? (
         <div className="wiz9-body wiz9-body--welcome">
           <div className="wiz9-welcome-hero">
