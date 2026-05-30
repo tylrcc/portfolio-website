@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 /** Set your live links here */
 const FOURSEAT_URL = 'https://fourseat.dev/';
-const QUANT_GITHUB_PROFILE_URL = 'https://github.com/tuwfy';
+const QUANT_GITHUB_PROFILE_URL = 'https://github.com/tylrcc';
 
 const CODE_LINES = [
   { key: 'l1', parts: [{ c: 'kw', t: 'import' }, { c: 'pl', t: ' numpy ' }, { c: 'kw', t: 'as' }, { c: 'var', t: ' np' }] },
