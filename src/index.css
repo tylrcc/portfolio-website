@@ -170,6 +170,11 @@ body {
   animation: window-open 0.18s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
+/* Hidden until layout/position are ready (prevents top-left shrink flash). */
+.mac-window--pending {
+  pointer-events: none;
+}
+
 /* Opacity only: react-draggable sets transform: translate() on this node, so animating
    transform here fights the drag layer and makes the centered title bar jump. */
 @keyframes window-open {

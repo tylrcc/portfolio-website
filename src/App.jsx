@@ -81,7 +81,7 @@ function App() {
       'Setup Assistant',
       <SetupWizard onFinish={close} onCancel={close} />,
       true,
-      { initialSize: { width: 648, height: 432 } }
+      { initialSize: { width: 648, height: 432 }, autoFit: false }
     );
   }, [openWindow, closeWindowById]);
 
@@ -482,6 +482,7 @@ function App() {
               minimized={win.minimized}
               onToggleMinimize={() => toggleMinimize(win.id)}
               initialSize={win.initialSize}
+              autoFit={win.autoFit ?? true}
             >
               {win.content}
             </Window>

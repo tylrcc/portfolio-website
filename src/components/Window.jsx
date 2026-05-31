@@ -54,7 +54,9 @@ const Window = ({
   onClick,
   minimized = false,
   onToggleMinimize,
-  initialSize = DEFAULT_WINDOW_SIZE
+  initialSize = DEFAULT_WINDOW_SIZE,
+  /** When false, keep initialSize and skip content measurement (avoids welcome-step shrink flash). */
+  autoFit = true
 }) => {
   const nodeRef = useRef(null);
   const isResizing = useRef(false);
@@ -65,6 +67,7 @@ const Window = ({
   const sizeRef = useRef(initialWindowSizeRef.current);
   const [size, setSize] = useState(initialWindowSizeRef.current);
   const [position, setPosition] = useState(() => computeCenteredTopLeft(initialWindowSizeRef.current));
+  const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
     sizeRef.current = size;
@@ -100,6 +103,7 @@ const Window = ({
   }, []);
 
   const measureAndFit = useCallback(() => {
+    if (!autoFit) return;
     if (userManuallySizedRef.current) return;
     if (!contentRef.current) return;
     const contentRoot = contentRef.current.firstElementChild || contentRef.current;
@@ -124,13 +128,16 @@ const Window = ({
       };
       return clampWindowPosition(next, fittedSize.width, fittedSize.height);
     });
-  }, [clampWindowPosition, getViewportLimits]);
+  }, [clampWindowPosition, getViewportLimits, autoFit]);
 
   useLayoutEffect(() => {
     hasUserMovedRef.current = false;
     userManuallySizedRef.current = false;
-    measureAndFit();
-  }, [children, measureAndFit]);
+    if (autoFit) {
+      measureAndFit();
+    }
+    setIsReady(true);
+  }, [children, measureAndFit, autoFit]);
 
   useEffect(() => {
     const handleViewportResize = () => {
@@ -140,8 +147,14 @@ const Window = ({
         const clampedHeight = Math.min(Math.max(MIN_HEIGHT, sizeRef.current.height), maxHeight);
         setSize({ width: clampedWidth, height: clampedHeight });
         setPosition((prev) => clampWindowPosition(prev, clampedWidth, clampedHeight));
-      } else {
+      } else if (autoFit) {
         measureAndFit();
+      } else {
+        setPosition((prev) => clampWindowPosition(
+          prev,
+          sizeRef.current.width,
+          sizeRef.current.height
+        ));
       }
     };
 
@@ -172,7 +185,7 @@ const Window = ({
       }
       if (observer) observer.disconnect();
     };
-  }, [children, clampWindowPosition, getViewportLimits, measureAndFit]);
+  }, [children, clampWindowPosition, getViewportLimits, measureAndFit, autoFit]);
 
   const handleResizeStart = (e) => {
     e.stopPropagation();
@@ -231,12 +244,13 @@ const Window = ({
     >
       <div
         ref={nodeRef}
-        className={`mac-window${minimized ? ' mac-window--minimized' : ''}`}
+        className={`mac-window${minimized ? ' mac-window--minimized' : ''}${!isReady ? ' mac-window--pending' : ''}`}
         style={{
           zIndex,
           width: size.width,
           height: minimized ? undefined : size.height,
-          resize: 'none'
+          resize: 'none',
+          visibility: isReady ? 'visible' : 'hidden'
         }}
       >
         <div
