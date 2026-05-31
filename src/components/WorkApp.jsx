@@ -1,8 +1,31 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 /** Set your live links here */
 const FOURSEAT_URL = 'https://fourseat.dev/';
 const QUANT_GITHUB_PROFILE_URL = 'https://github.com/tylrcc';
+const GITHUB_PROFILE_URL = 'https://github.com/tylrcc';
+const LINKEDIN_PROFILE_URL = 'https://www.linkedin.com/in/tylerriccardi/';
+const LEETCODE_PROFILE_URL = 'https://leetcode.com/u/tylrcc/';
+const LEETCODE_API_URL = 'https://alfa-leetcode-api.onrender.com/tylrcc/solved';
+
+/** Last-known stats; shown instantly and used if the live fetch fails. */
+const LEETCODE_FALLBACK = { total: 515, easy: 141, medium: 158, hard: 216 };
+
+const FOURSEAT_TECH = ['React', 'Node.js', 'LLMs', 'Vercel'];
+const QUANT_TECH = ['Python', 'NumPy', 'SciPy', 'pandas'];
+
+const SKILL_GROUPS = [
+  { group: 'Languages', items: ['Python', 'JavaScript', 'TypeScript', 'SQL', 'MATLAB'] },
+  { group: 'Quant & Data', items: ['NumPy', 'pandas', 'SciPy', 'scikit-learn'] },
+  { group: 'Web', items: ['React', 'Node.js', 'Vite'] },
+  { group: 'Finance', items: ['Modeling', 'QuickBooks', 'Bloomberg BMC'] },
+];
+
+const CONNECT_LINKS = [
+  { label: 'GitHub', handle: '@tylrcc', href: GITHUB_PROFILE_URL },
+  { label: 'LinkedIn', handle: 'in/tylerriccardi', href: LINKEDIN_PROFILE_URL },
+  { label: 'LeetCode', handle: '@tylrcc', href: LEETCODE_PROFILE_URL },
+];
 
 const CODE_LINES = [
   { key: 'l1', parts: [{ c: 'kw', t: 'import' }, { c: 'pl', t: ' numpy ' }, { c: 'kw', t: 'as' }, { c: 'var', t: ' np' }] },
@@ -315,11 +338,189 @@ function QuantCodeDemo() {
   );
 }
 
+function useCountUp(target, duration = 1000) {
+  const [value, setValue] = useState(0);
+  const fromRef = useRef(0);
+
+  useEffect(() => {
+    const from = fromRef.current;
+    const start = performance.now();
+    let raf;
+    const tick = (now) => {
+      const p = Math.min(1, (now - start) / duration);
+      const eased = 1 - (1 - p) ** 3;
+      setValue(Math.round(from + (target - from) * eased));
+      if (p < 1) {
+        raf = window.requestAnimationFrame(tick);
+      } else {
+        fromRef.current = target;
+      }
+    };
+    raf = window.requestAnimationFrame(tick);
+    return () => window.cancelAnimationFrame(raf);
+  }, [target, duration]);
+
+  return value;
+}
+
+function TechTags({ items }) {
+  return (
+    <div className="work-tech-tags" aria-label="Tech stack">
+      <span className="work-tech-label">Built with</span>
+      {items.map((t) => (
+        <span key={t} className="work-tech-tag">{t}</span>
+      ))}
+    </div>
+  );
+}
+
+function LeetCodeCard() {
+  const [stats, setStats] = useState(LEETCODE_FALLBACK);
+  const [live, setLive] = useState(false);
+  const total = useCountUp(stats.total);
+
+  useEffect(() => {
+    let cancelled = false;
+    const controller = new AbortController();
+    fetch(LEETCODE_API_URL, { signal: controller.signal })
+      .then((r) => (r.ok ? r.json() : Promise.reject(new Error('bad status'))))
+      .then((d) => {
+        if (cancelled || typeof d.solvedProblem !== 'number') return;
+        setStats({
+          total: d.solvedProblem,
+          easy: d.easySolved ?? 0,
+          medium: d.mediumSolved ?? 0,
+          hard: d.hardSolved ?? 0,
+        });
+        setLive(true);
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+      controller.abort();
+    };
+  }, []);
+
+  const rows = [
+    { key: 'easy', label: 'Easy', value: stats.easy },
+    { key: 'medium', label: 'Medium', value: stats.medium },
+    { key: 'hard', label: 'Hard', value: stats.hard },
+  ];
+  const maxVal = Math.max(stats.easy, stats.medium, stats.hard, 1);
+
+  return (
+    <article className="work-card work-card--leetcode">
+      <div className="work-mpw-shell">
+        <MpwTitlebar title="Macintosh HD:Apps:LeetCode" />
+        <div className="work-mpw-body">
+          <p className="work-card-kicker">Coding practice</p>
+          <h3>LeetCode</h3>
+          <p className="work-card-desc work-card-desc--compact">
+            Daily algorithm reps - data structures, dynamic programming, graphs, and
+            optimization. {live ? 'Counts pulled live from my profile.' : 'Recent profile snapshot.'}
+          </p>
+
+          <div className="lc-display">
+            <div className="lc-display-grid" aria-hidden="true" />
+            <div className="lc-display-num">{total.toLocaleString()}</div>
+            <div className="lc-display-label">
+              problems solved
+              <span className={`lc-live-dot${live ? ' lc-live-dot--on' : ''}`} />
+              {live ? 'live' : 'cached'}
+            </div>
+          </div>
+
+          <div className="lc-rows">
+            {rows.map((r) => (
+              <div key={r.key} className={`lc-row lc-row--${r.key}`}>
+                <span className="lc-row-label">{r.label}</span>
+                <span className="lc-row-track">
+                  <span
+                    className="lc-row-fill"
+                    style={{ width: `${Math.max(6, (r.value / maxVal) * 100)}%` }}
+                  />
+                </span>
+                <span className="lc-row-val">{r.value}</span>
+              </div>
+            ))}
+          </div>
+
+          <div className="work-card-footer">
+            <a
+              className="work-card-link work-card-link--mac"
+              href={LEETCODE_PROFILE_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              View LeetCode profile →
+            </a>
+          </div>
+        </div>
+      </div>
+    </article>
+  );
+}
+
+function ToolboxCard() {
+  return (
+    <article className="work-card work-card--toolbox">
+      <div className="work-mpw-shell">
+        <MpwTitlebar title="Macintosh HD:Control Panels:Toolbox" />
+        <div className="work-mpw-body">
+          <p className="work-card-kicker">Capabilities</p>
+          <h3>Toolbox</h3>
+          <p className="work-card-desc work-card-desc--compact">
+            The stack I reach for across product engineering, quantitative research, and finance.
+          </p>
+
+          <div className="skill-groups">
+            {SKILL_GROUPS.map((g) => (
+              <div key={g.group} className="skill-group">
+                <span className="skill-group-title">{g.group}</span>
+                <div className="skill-chips">
+                  {g.items.map((item) => (
+                    <span key={item} className="skill-chip">{item}</span>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </article>
+  );
+}
+
+function ConnectBar() {
+  return (
+    <section className="work-connect" aria-label="Find me online">
+      <span className="work-connect-label">Find me</span>
+      <div className="work-connect-links">
+        {CONNECT_LINKS.map((l) => (
+          <a
+            key={l.label}
+            className="work-connect-link"
+            href={l.href}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <span className="work-connect-link-name">{l.label}</span>
+            <span className="work-connect-link-handle">{l.handle}</span>
+          </a>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 const WorkApp = () => (
   <div className="mac-content-inner work-app-scroll work-projects">
     <header className="work-projects-intro">
-      <h2>Projects</h2>
-      <p>Product work and quantitative tooling; links open in a new tab.</p>
+      <h2>Work</h2>
+      <p>
+        Products I&apos;ve shipped, quantitative research, and where I sharpen the craft.
+        Everything below opens in a new tab.
+      </p>
     </header>
 
     <div className="work-projects-grid">
@@ -349,9 +550,12 @@ const WorkApp = () => (
               Each seat challenges the others before the Chairman locks the plan, so you get structured disagreement, not groupthink.
             </p>
             <FourSeatMiniPreview />
-            <a className="work-card-link work-card-link--mac" href={FOURSEAT_URL} target="_blank" rel="noopener noreferrer">
-              Open FourSeat site →
-            </a>
+            <div className="work-card-footer">
+              <TechTags items={FOURSEAT_TECH} />
+              <a className="work-card-link work-card-link--mac" href={FOURSEAT_URL} target="_blank" rel="noopener noreferrer">
+                Open FourSeat site →
+              </a>
+            </div>
           </div>
         </div>
       </article>
@@ -370,18 +574,28 @@ const WorkApp = () => (
             <div className="work-quant-demo-wrap">
               <QuantCodeDemo />
             </div>
-            <a
-              className="work-card-link work-card-link--mac"
-              href={QUANT_GITHUB_PROFILE_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              My GitHub profile →
-            </a>
+            <div className="work-card-footer">
+              <TechTags items={QUANT_TECH} />
+              <a
+                className="work-card-link work-card-link--mac"
+                href={QUANT_GITHUB_PROFILE_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                My GitHub profile →
+              </a>
+            </div>
           </div>
         </div>
       </article>
     </div>
+
+    <div className="work-secondary-grid">
+      <LeetCodeCard />
+      <ToolboxCard />
+    </div>
+
+    <ConnectBar />
   </div>
 );
 
