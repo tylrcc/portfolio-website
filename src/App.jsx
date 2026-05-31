@@ -483,6 +483,7 @@ function App() {
               onToggleMinimize={() => toggleMinimize(win.id)}
               initialSize={win.initialSize}
               autoFit={win.autoFit ?? true}
+              centered={win.isCentered}
             >
               {win.content}
             </Window>

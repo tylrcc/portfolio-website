@@ -56,7 +56,9 @@ const Window = ({
   onToggleMinimize,
   initialSize = DEFAULT_WINDOW_SIZE,
   /** When false, keep initialSize and skip content measurement (avoids welcome-step shrink flash). */
-  autoFit = true
+  autoFit = true,
+  /** Center in viewport via flex overlay instead of absolute top-left + translate. */
+  centered = false
 }) => {
   const nodeRef = useRef(null);
   const isResizing = useRef(false);
@@ -66,8 +68,12 @@ const Window = ({
   const initialWindowSizeRef = useRef(clampInitialWindowSize(initialSize));
   const sizeRef = useRef(initialWindowSizeRef.current);
   const [size, setSize] = useState(initialWindowSizeRef.current);
-  const [position, setPosition] = useState(() => computeCenteredTopLeft(initialWindowSizeRef.current));
-  const [isReady, setIsReady] = useState(false);
+  const [position, setPosition] = useState(() => (
+    centered
+      ? { x: 0, y: 0 }
+      : computeCenteredTopLeft(initialWindowSizeRef.current)
+  ));
+  const [isReady, setIsReady] = useState(centered && !autoFit);
 
   useEffect(() => {
     sizeRef.current = size;
@@ -116,6 +122,7 @@ const Window = ({
     };
     const prevSize = sizeRef.current;
     setSize(fittedSize);
+    if (centered) return;
     setPosition((prev) => {
       if (hasUserMovedRef.current) {
         return clampWindowPosition(prev, fittedSize.width, fittedSize.height);
@@ -128,7 +135,7 @@ const Window = ({
       };
       return clampWindowPosition(next, fittedSize.width, fittedSize.height);
     });
-  }, [clampWindowPosition, getViewportLimits, autoFit]);
+  }, [clampWindowPosition, getViewportLimits, autoFit, centered]);
 
   useLayoutEffect(() => {
     hasUserMovedRef.current = false;
@@ -146,10 +153,12 @@ const Window = ({
         const clampedWidth = Math.min(Math.max(MIN_WIDTH, sizeRef.current.width), maxWidth);
         const clampedHeight = Math.min(Math.max(MIN_HEIGHT, sizeRef.current.height), maxHeight);
         setSize({ width: clampedWidth, height: clampedHeight });
-        setPosition((prev) => clampWindowPosition(prev, clampedWidth, clampedHeight));
+        if (!centered) {
+          setPosition((prev) => clampWindowPosition(prev, clampedWidth, clampedHeight));
+        }
       } else if (autoFit) {
         measureAndFit();
-      } else {
+      } else if (!centered) {
         setPosition((prev) => clampWindowPosition(
           prev,
           sizeRef.current.width,
@@ -159,7 +168,7 @@ const Window = ({
     };
 
     let observer = null;
-    if (contentRef.current && typeof ResizeObserver !== 'undefined') {
+    if (autoFit && contentRef.current && typeof ResizeObserver !== 'undefined') {
       observer = new ResizeObserver(() => {
         measureAndFit();
       });
@@ -185,7 +194,7 @@ const Window = ({
       }
       if (observer) observer.disconnect();
     };
-  }, [children, clampWindowPosition, getViewportLimits, measureAndFit, autoFit]);
+  }, [children, clampWindowPosition, getViewportLimits, measureAndFit, autoFit, centered]);
 
   const handleResizeStart = (e) => {
     e.stopPropagation();
@@ -227,6 +236,92 @@ const Window = ({
     window.addEventListener('touchend', onEnd);
   };
 
+  const windowClassName = [
+    'mac-window',
+    minimized ? 'mac-window--minimized' : '',
+    centered ? 'mac-window--overlay' : '',
+    !isReady ? 'mac-window--pending' : ''
+  ].filter(Boolean).join(' ');
+
+  const windowStyle = {
+    zIndex,
+    width: size.width,
+    height: minimized ? undefined : size.height,
+    resize: 'none',
+    visibility: isReady ? 'visible' : 'hidden'
+  };
+
+  const windowNode = (
+    <div
+      ref={nodeRef}
+      className={windowClassName}
+      style={windowStyle}
+    >
+      <div
+        className="mac-titlebar"
+        onDoubleClick={(e) => {
+          if (onToggleMinimize) {
+            e.stopPropagation();
+            onToggleMinimize();
+          }
+        }}
+      >
+        <button
+          className="mac-close-btn"
+          onClick={(e) => {
+            e.stopPropagation();
+            onClose();
+          }}
+        ></button>
+
+        <div className="mac-titlebar-stripes"></div>
+        <div className="mac-titlebar-text">{title}</div>
+
+        <button
+          className="mac-zoom-btn"
+          aria-label={minimized ? 'Restore window' : 'Collapse window'}
+          onClick={(e) => {
+            e.stopPropagation();
+            if (onToggleMinimize) onToggleMinimize();
+          }}
+        ></button>
+      </div>
+
+      {!minimized && (
+        <div className="mac-content" ref={contentRef}>
+          {children}
+        </div>
+      )}
+
+      {!minimized && (
+        <div
+          className="mac-resize-handle"
+          onMouseDown={handleResizeStart}
+          onTouchStart={handleResizeStart}
+        ></div>
+      )}
+    </div>
+  );
+
+  if (centered) {
+    return (
+      <div className="mac-window-layer" style={{ zIndex }} onMouseDown={onClick}>
+        <Draggable
+          nodeRef={nodeRef}
+          defaultPosition={{ x: 0, y: 0 }}
+          bounds="parent"
+          onStart={() => {
+            hasUserMovedRef.current = true;
+          }}
+          handle=".mac-titlebar"
+          cancel=".mac-close-btn, .mac-content, .mac-resize-handle"
+        >
+          {windowNode}
+        </Draggable>
+      </div>
+    );
+  }
+
   return (
     <Draggable
       nodeRef={nodeRef}
@@ -242,61 +337,7 @@ const Window = ({
       handle=".mac-titlebar"
       cancel=".mac-close-btn, .mac-content, .mac-resize-handle"
     >
-      <div
-        ref={nodeRef}
-        className={`mac-window${minimized ? ' mac-window--minimized' : ''}${!isReady ? ' mac-window--pending' : ''}`}
-        style={{
-          zIndex,
-          width: size.width,
-          height: minimized ? undefined : size.height,
-          resize: 'none',
-          visibility: isReady ? 'visible' : 'hidden'
-        }}
-      >
-        <div
-          className="mac-titlebar"
-          onDoubleClick={(e) => {
-            if (onToggleMinimize) {
-              e.stopPropagation();
-              onToggleMinimize();
-            }
-          }}
-        >
-          <button
-            className="mac-close-btn"
-            onClick={(e) => {
-              e.stopPropagation();
-              onClose();
-            }}
-          ></button>
-
-          <div className="mac-titlebar-stripes"></div>
-          <div className="mac-titlebar-text">{title}</div>
-
-          <button
-            className="mac-zoom-btn"
-            aria-label={minimized ? 'Restore window' : 'Collapse window'}
-            onClick={(e) => {
-              e.stopPropagation();
-              if (onToggleMinimize) onToggleMinimize();
-            }}
-          ></button>
-        </div>
-
-        {!minimized && (
-          <div className="mac-content" ref={contentRef}>
-            {children}
-          </div>
-        )}
-
-        {!minimized && (
-          <div
-            className="mac-resize-handle"
-            onMouseDown={handleResizeStart}
-            onTouchStart={handleResizeStart}
-          ></div>
-        )}
-      </div>
+      {windowNode}
     </Draggable>
   );
 };

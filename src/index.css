@@ -92,6 +92,24 @@ body {
   pointer-events: auto;
 }
 
+/* Centered windows (Setup Assistant, About, etc.) — flex center, no top-left flash. */
+.mac-window-layer {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.mac-window-layer .mac-window--overlay {
+  position: relative;
+  top: auto;
+  left: auto;
+  flex-shrink: 0;
+  pointer-events: auto;
+}
+
 .mac-menubar {
   height: 28px;
   background-color: var(--mac-white);
