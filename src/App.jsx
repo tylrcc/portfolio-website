@@ -56,15 +56,15 @@ function App() {
     };
   }, [booted]);
 
-  const openWindow = useCallback((id, title, content, isCentered = false) => {
+  const openWindow = useCallback((id, title, content, isCentered = false, options = {}) => {
     setWindows((prev) => {
       const existing = prev.find((w) => w.id === id);
       if (existing) {
-        return prev.map((w) =>
-          w.id === id ? { ...w, title, content, minimized: false } : w
-        );
+        return prev.map((w) => (
+          w.id === id ? { ...w, title, content, minimized: false, ...options } : w
+        ));
       }
-      return [...prev, { id, title, content, isCentered, minimized: false }];
+      return [...prev, { id, title, content, isCentered, minimized: false, ...options }];
     });
     setActiveWindow(id);
   }, []);
@@ -80,7 +80,8 @@ function App() {
       'wizard',
       'Setup Assistant',
       <SetupWizard onFinish={close} onCancel={close} />,
-      true
+      true,
+      { initialSize: { width: 648, height: 432 } }
     );
   }, [openWindow, closeWindowById]);
 
@@ -480,6 +481,7 @@ function App() {
               onClose={() => closeWindow(win.id)}
               minimized={win.minimized}
               onToggleMinimize={() => toggleMinimize(win.id)}
+              initialSize={win.initialSize}
             >
               {win.content}
             </Window>

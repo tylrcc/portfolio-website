@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useCallback } from 'react';
+import React, { useState, useRef, useEffect, useLayoutEffect, useCallback } from 'react';
 import Draggable from 'react-draggable';
 
 const CHROME_WIDTH = 8;
@@ -17,6 +17,24 @@ const getViewportPadding = () => (window.innerWidth <= 768 ? MOBILE_VIEWPORT_PAD
 
 const DEFAULT_WINDOW_SIZE = { width: 420, height: 280 };
 
+function clampInitialWindowSize(targetSize) {
+  if (typeof window === 'undefined') return targetSize;
+  const viewportWidth = window.innerWidth;
+  const viewportHeight = getViewportContentHeight();
+  const viewportPadding = getViewportPadding();
+  const isMobile = viewportWidth <= 768;
+  const maxWidthRatio = isMobile ? MOBILE_MAX_WIDTH_RATIO : MAX_WIDTH_RATIO;
+  const maxWidth = Math.max(
+    MIN_WIDTH,
+    Math.min(viewportWidth - viewportPadding * 2, viewportWidth * maxWidthRatio)
+  );
+  const maxHeight = Math.max(MIN_HEIGHT, viewportHeight - viewportPadding * 2);
+  return {
+    width: Math.min(maxWidth, Math.max(MIN_WIDTH, targetSize.width)),
+    height: Math.min(maxHeight, Math.max(MIN_HEIGHT, targetSize.height))
+  };
+}
+
 function computeCenteredTopLeft(targetSize) {
   if (typeof window === 'undefined') return { x: 100, y: 80 };
   const viewportWidth = window.innerWidth;
@@ -28,15 +46,25 @@ function computeCenteredTopLeft(targetSize) {
   };
 }
 
-const Window = ({ title, children, onClose, zIndex, onClick, minimized = false, onToggleMinimize }) => {
+const Window = ({
+  title,
+  children,
+  onClose,
+  zIndex,
+  onClick,
+  minimized = false,
+  onToggleMinimize,
+  initialSize = DEFAULT_WINDOW_SIZE
+}) => {
   const nodeRef = useRef(null);
   const isResizing = useRef(false);
   const contentRef = useRef(null);
   const hasUserMovedRef = useRef(false);
   const userManuallySizedRef = useRef(false);
-  const sizeRef = useRef(DEFAULT_WINDOW_SIZE);
-  const [size, setSize] = useState(DEFAULT_WINDOW_SIZE);
-  const [position, setPosition] = useState(() => computeCenteredTopLeft(DEFAULT_WINDOW_SIZE));
+  const initialWindowSizeRef = useRef(clampInitialWindowSize(initialSize));
+  const sizeRef = useRef(initialWindowSizeRef.current);
+  const [size, setSize] = useState(initialWindowSizeRef.current);
+  const [position, setPosition] = useState(() => computeCenteredTopLeft(initialWindowSizeRef.current));
 
   useEffect(() => {
     sizeRef.current = size;
@@ -98,13 +126,10 @@ const Window = ({ title, children, onClose, zIndex, onClick, minimized = false, 
     });
   }, [clampWindowPosition, getViewportLimits]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     hasUserMovedRef.current = false;
     userManuallySizedRef.current = false;
-    const raf = requestAnimationFrame(() => {
-      measureAndFit();
-    });
-    return () => cancelAnimationFrame(raf);
+    measureAndFit();
   }, [children, measureAndFit]);
 
   useEffect(() => {
