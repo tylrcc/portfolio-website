@@ -12,18 +12,25 @@ const ProfilePhoto = ({ className = '', size = 'md' }) => {
   const [failed, setFailed] = useState(false);
   if (failed) {
     return (
-      <div className={`linkedin9-photo linkedin9-photo--fallback linkedin9-photo--${size} ${className}`}>
+      <div
+        className={`linkedin9-photo-wrap linkedin9-photo-wrap--${size} linkedin9-photo--fallback ${className}`}
+      >
         TR
       </div>
     );
   }
   return (
-    <img
-      src={LINKEDIN_PROFILE.photo}
-      alt={LINKEDIN_PROFILE.name}
-      className={`linkedin9-photo linkedin9-photo--${size} ${className}`}
-      onError={() => setFailed(true)}
-    />
+    <div
+      className={`linkedin9-photo-wrap linkedin9-photo-wrap--${size} ${className}`}
+      aria-hidden={false}
+    >
+      <img
+        src={LINKEDIN_PROFILE.photo}
+        alt={LINKEDIN_PROFILE.name}
+        className="linkedin9-photo"
+        onError={() => setFailed(true)}
+      />
+    </div>
   );
 };
 

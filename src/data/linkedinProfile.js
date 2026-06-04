@@ -8,7 +8,7 @@ export const LINKEDIN_PROFILE = {
   headline: 'Founder at Fourseat',
   location: 'Orlando, Florida, United States',
   connections: '500+',
-  followers: 733,
+  followers: '999+',
   profileUrl: 'linkedin.com/in/tylerriccardi',
   photo: '/linkedin/profile.jpg',
   experienceYears: '3 years 4 months',
@@ -69,7 +69,7 @@ export const LINKEDIN_PROFILE = {
       period: 'Jan 2023 – May 2023',
       location: 'Orlando, FL',
       current: false,
-      logo: null,
+      logo: '/linkedin/ucf.png',
       logoLabel: 'OTC',
       summary:
         'CNC machines, Fusion 360, SolidWorks, CAD/CAM, and shop safety with engineering students.',
