@@ -2403,7 +2403,23 @@ body {
   right: 0;
   bottom: 0;
   padding: 10px;
+  padding-bottom: 38px;
+  overflow: hidden;
   animation: desktop-fadein 0.6s ease-out;
+}
+
+/* Music + Connect strips — fixed above windows so they stay visible */
+.desktop-chrome {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10001;
+  pointer-events: none;
+}
+
+.desktop-chrome > * {
+  pointer-events: auto;
 }
 
 @keyframes desktop-fadein {
@@ -2715,10 +2731,9 @@ canvas {
 
 /* --- Social dock (matches control-strip / music bar) --- */
 .social-dock-wrap {
-  position: absolute;
+  position: fixed;
   right: 0;
   bottom: 0;
-  z-index: 520;
   display: flex;
   flex-direction: column;
   align-items: flex-end;
@@ -2854,7 +2869,7 @@ canvas {
 
 /* --- Control Strip --- */
 .control-strip {
-  position: absolute;
+  position: fixed;
   bottom: 0px;
   left: 0px;
   display: flex;

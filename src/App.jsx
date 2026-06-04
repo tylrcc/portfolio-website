@@ -16,6 +16,7 @@ import LinkedInApp from './components/LinkedInApp';
 import SocialDock from './components/SocialDock';
 import ContactPanel from './components/ContactPanel';
 import { AudioProvider } from './AudioProvider';
+import { getDesktopLayout, getViewportSize } from './desktopLayout';
 
 const clickDownAudio = typeof window !== 'undefined' ? new window.Audio('/click-down.mp3') : null;
 const clickUpAudio = typeof window !== 'undefined' ? new window.Audio('/click-release.mp3') : null;
@@ -27,8 +28,32 @@ function App() {
   const [selectedIcon, setSelectedIcon] = useState(null);
   const [finderViewMode, setFinderViewMode] = useState('icons');
   const [layoutVersion, setLayoutVersion] = useState(0);
+  const [viewport, setViewport] = useState(getViewportSize);
   const [customFolders, setCustomFolders] = useState([]);
   const folderCounterRef = useRef(0);
+
+  useEffect(() => {
+    let timeoutId;
+    const scheduleLayoutSync = (repositionIcons) => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        setViewport(getViewportSize());
+        if (repositionIcons) setLayoutVersion((v) => v + 1);
+      }, 80);
+    };
+
+    setViewport(getViewportSize());
+    const onResize = () => scheduleLayoutSync(true);
+    window.addEventListener('resize', onResize);
+    window.visualViewport?.addEventListener('resize', onResize);
+    window.visualViewport?.addEventListener('scroll', onResize);
+    return () => {
+      clearTimeout(timeoutId);
+      window.removeEventListener('resize', onResize);
+      window.visualViewport?.removeEventListener('resize', onResize);
+      window.visualViewport?.removeEventListener('scroll', onResize);
+    };
+  }, []);
 
   useEffect(() => {
     const playDown = () => {
@@ -392,12 +417,8 @@ function App() {
     return <BootScreen onBoot={handleBoot} />;
   }
 
-  const screenW = typeof window !== 'undefined' ? window.innerWidth : 1000;
-  const isMobile = screenW <= 768;
-  const isSmall = screenW <= 480;
-  const leftColumnX = isSmall ? 8 : isMobile ? 12 : 24;
-  const rightColumnX = isSmall ? Math.max(80, screenW - 76) : isMobile ? Math.max(100, screenW - 88) : Math.max(120, screenW - 108);
-  const iconY = (row) => (isSmall ? 10 + row * 70 : isMobile ? 12 + row * 76 : 20 + row * 82);
+  const layout = getDesktopLayout(viewport.width, viewport.height);
+  const { leftColumnX, rightColumnX, iconY } = layout;
 
   const leftColumnIds = ['readme', 'spotify', 'about', 'doom'];
   const leftApps = leftColumnIds
@@ -416,31 +437,33 @@ function App() {
 
         {leftApps.map((app, i) => (
           <DesktopIcon
-            key={`${app.id}-${layoutVersion}`}
+            key={app.id}
             label={app.label}
             icon={app.icon}
             selected={selectedIcon === app.id}
             onClick={() => setSelectedIcon(app.id)}
             onDoubleClick={app.action}
-            defaultPosition={{ x: leftColumnX, y: iconY(i) }}
+            layoutEpoch={layoutVersion}
+            position={{ x: leftColumnX, y: iconY(i) }}
           />
         ))}
 
         {rightApps.map((app, i) => (
           <DesktopIcon
-            key={`${app.id}-${layoutVersion}`}
+            key={app.id}
             label={app.label}
             icon={app.icon}
             selected={selectedIcon === app.id}
             onClick={() => setSelectedIcon(app.id)}
             onDoubleClick={app.action}
-            defaultPosition={{ x: rightColumnX, y: iconY(i) }}
+            layoutEpoch={layoutVersion}
+            position={{ x: rightColumnX, y: iconY(i) }}
           />
         ))}
 
         {customFolders.map((folder, i) => (
           <DesktopIcon
-            key={`${folder.id}-${layoutVersion}`}
+            key={folder.id}
             label={folder.label}
             icon="📁"
             selected={selectedIcon === folder.id}
@@ -454,8 +477,9 @@ function App() {
                 </div>
               )
             }
-            defaultPosition={{
-              x: isMobile ? leftColumnX + 90 : leftColumnX + 100,
+            layoutEpoch={layoutVersion}
+            position={{
+              x: layout.isMobile ? leftColumnX + 90 : leftColumnX + 100,
               y: iconY(i),
             }}
           />
@@ -481,6 +505,9 @@ function App() {
           ))}
         </div>
 
+      </div>
+
+      <div className="desktop-chrome" onClick={(e) => e.stopPropagation()}>
         <MusicBar />
         <SocialDock />
       </div>

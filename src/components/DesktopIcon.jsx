@@ -1,10 +1,23 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Draggable from 'react-draggable';
 
-const DesktopIcon = ({ label, icon, selected, onClick, onDoubleClick, defaultPosition }) => {
+const DesktopIcon = ({
+  label,
+  icon,
+  selected,
+  onClick,
+  onDoubleClick,
+  position,
+  layoutEpoch,
+}) => {
   const nodeRef = useRef(null);
   const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
   const dragStartPos = useRef(null);
+  const [pos, setPos] = useState(position);
+
+  useEffect(() => {
+    setPos(position);
+  }, [layoutEpoch, position.x, position.y]);
 
   const handleDragStart = (e, data) => {
     dragStartPos.current = { x: data.x, y: data.y };
@@ -16,29 +29,31 @@ const DesktopIcon = ({ label, icon, selected, onClick, onDoubleClick, defaultPos
     const dy = data.y - dragStartPos.current.y;
     const dist = Math.sqrt(dx * dx + dy * dy);
 
-    // If it barely moved, treat it as a tap
     if (dist < 5) {
       onClick();
-      // On mobile we simulate double click instantly upon tap
       if (isMobile && onDoubleClick) {
         onDoubleClick();
       }
+    } else {
+      setPos({ x: data.x, y: data.y });
     }
     dragStartPos.current = null;
   };
 
-  const isImageIcon = typeof icon === 'string' && (icon.startsWith('/') || icon.startsWith('./') || icon.startsWith('../'));
+  const isImageIcon =
+    typeof icon === 'string' &&
+    (icon.startsWith('/') || icon.startsWith('./') || icon.startsWith('../'));
 
   return (
-    <Draggable 
-      nodeRef={nodeRef} 
-      bounds="parent" 
-      grid={[20, 20]} 
-      defaultPosition={defaultPosition}
+    <Draggable
+      nodeRef={nodeRef}
+      bounds="parent"
+      grid={[20, 20]}
+      position={pos}
       onStart={handleDragStart}
       onStop={handleDragStop}
     >
-      <div 
+      <div
         ref={nodeRef}
         className={`icon-container ${selected ? 'selected' : ''}`}
         onDoubleClick={onDoubleClick}
@@ -51,4 +66,5 @@ const DesktopIcon = ({ label, icon, selected, onClick, onDoubleClick, defaultPos
     </Draggable>
   );
 };
+
 export default DesktopIcon;
