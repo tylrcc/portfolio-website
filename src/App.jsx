@@ -13,6 +13,8 @@ import CVApp from './components/CVApp';
 import DoomApp from './components/DoomApp';
 import FinderApp from './components/FinderApp';
 import LinkedInApp from './components/LinkedInApp';
+import SocialDock from './components/SocialDock';
+import ContactPanel from './components/ContactPanel';
 import { AudioProvider } from './AudioProvider';
 
 const clickDownAudio = typeof window !== 'undefined' ? new window.Audio('/click-down.mp3') : null;
@@ -128,18 +130,7 @@ function App() {
   }, [openWindow]);
 
   const openContact = useCallback(() => {
-    openWindow(
-      'contact',
-      'Contact',
-      <div className="mac-content-inner">
-        <p>
-          Email:{' '}
-          <a href="mailto:tylrrcc@gmail.com" rel="noopener noreferrer">
-            tylrrcc@gmail.com
-          </a>
-        </p>
-      </div>
-    );
+    openWindow('contact', 'Contact', <ContactPanel />);
   }, [openWindow]);
 
   const openHD = useCallback(() => {
@@ -491,6 +482,7 @@ function App() {
         </div>
 
         <MusicBar />
+        <SocialDock />
       </div>
     </AudioProvider>
   );
