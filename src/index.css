@@ -2713,11 +2713,11 @@ canvas {
   display: block;
 }
 
-/* --- Social dock (Anne Ouyang–style links, Mac OS 9 chrome) --- */
+/* --- Social dock (matches control-strip / music bar) --- */
 .social-dock-wrap {
   position: absolute;
-  right: 12px;
-  bottom: 36px;
+  right: 0;
+  bottom: 0;
   z-index: 520;
   display: flex;
   flex-direction: column;
@@ -2730,80 +2730,52 @@ canvas {
   pointer-events: auto;
 }
 
-.social-dock {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 4px 8px 4px 10px;
-  background: linear-gradient(#efefef, #d4d4d4);
-  border: 2px solid #000;
-  box-shadow:
-    2px 2px 0 #000,
-    inset 1px 1px 0 #fff,
-    inset -1px -1px 0 #8c8c8c;
+.control-strip--social {
+  position: relative;
+  border-bottom: none;
+  border-right: none;
+  border-radius: 4px 0 0 0;
 }
 
-.social-dock-label {
-  font-family: Geneva, Arial, Helvetica, sans-serif;
-  font-size: 11px;
+.control-strip--social .control-strip-module--connect {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 10px;
   font-weight: 700;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: #111;
-  padding-right: 4px;
-  border-right: 1px solid #666;
-  margin-right: 2px;
+  min-width: 4.5rem;
+  justify-content: center;
+}
+
+.control-strip-module-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.social-dock-icons {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.social-dock-link {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 34px;
-  height: 34px;
-  padding: 4px;
-  margin: 0;
-  box-sizing: border-box;
-  border: 1px solid #666;
+.control-strip-btn--icon {
+  width: 28px;
+  padding: 0 2px;
   background: #fff;
-  box-shadow: inset 1px 1px 0 #fff, inset -1px -1px 0 #999;
-  cursor: pointer;
   text-decoration: none;
-  color: #000;
-  flex-shrink: 0;
 }
 
-.social-dock-link:hover {
-  background: #f5f5ff;
-}
-
-.social-dock-link:active {
-  background: #000;
-  box-shadow: inset 1px 1px 0 #333;
-}
-
-.social-dock-link:active .social-dock-icon {
+.control-strip-btn--icon:active .control-strip-icon {
   filter: invert(1);
 }
 
-.social-dock-icon {
+.control-strip-icon {
   display: block;
-  width: 100%;
-  height: 100%;
+  width: 18px;
+  height: 18px;
   object-fit: contain;
   object-position: center;
   pointer-events: none;
 }
 
-.social-dock-link--leetcode .social-dock-icon {
-  padding: 1px;
+.control-strip-handle--end {
+  border-right: none;
+  border-left: 1px solid #000;
 }
 
 .social-wechat-card {
@@ -4500,25 +4472,20 @@ canvas {
     padding: 0 4px;
   }
 
-  .social-dock-wrap {
-    right: 8px;
-    bottom: 40px;
+  .control-strip--social .control-strip-module--connect {
+    min-width: 0;
+    padding: 0 6px;
+    font-size: 9px;
   }
 
-  .social-dock-label {
-    display: none;
-  }
-
-  .social-dock {
-    padding: 4px 6px;
-    gap: 4px;
-  }
-
-  .social-dock-link {
-    width: 40px;
-    height: 40px;
-    padding: 5px;
+  .control-strip-btn--icon {
+    width: 36px;
     -webkit-tap-highlight-color: transparent;
+  }
+
+  .control-strip-icon {
+    width: 22px;
+    height: 22px;
   }
 
   .social-wechat-card {

@@ -58,35 +58,35 @@ const SocialDock = () => {
         </div>
       )}
 
-      <nav className="social-dock" aria-label="Contact and social links">
-        <span className="social-dock-label">Connect</span>
-        <div className="social-dock-icons">
-          {DOCK_LINKS.map((item) => (
-            <a
-              key={item.id}
-              className="social-dock-link"
-              href={item.href}
-              {...(item.external
-                ? { target: '_blank', rel: 'noopener noreferrer' }
-                : {})}
-              title={item.label}
-              aria-label={item.label}
-            >
-              <img className="social-dock-icon" src={item.icon} alt="" draggable={false} />
-            </a>
-          ))}
-
-          <button
-            type="button"
-            className="social-dock-link social-dock-link--wechat"
-            title="WeChat"
-            aria-label="WeChat QR code"
-            aria-expanded={wechatOpen}
-            onClick={() => setWechatOpen((open) => !open)}
-          >
-            <img className="social-dock-icon" src="/social-icons/wechat.png" alt="" draggable={false} />
-          </button>
+      <nav className="control-strip control-strip--social" aria-label="Contact and social links">
+        <div className="control-strip-module control-strip-module--connect">
+          <span className="control-strip-module-text">Connect</span>
         </div>
+        {DOCK_LINKS.map((item) => (
+          <a
+            key={item.id}
+            className="control-strip-btn control-strip-btn--icon"
+            href={item.href}
+            {...(item.external
+              ? { target: '_blank', rel: 'noopener noreferrer' }
+              : {})}
+            title={item.label}
+            aria-label={item.label}
+          >
+            <img className="control-strip-icon" src={item.icon} alt="" draggable={false} />
+          </a>
+        ))}
+        <button
+          type="button"
+          className="control-strip-btn control-strip-btn--icon"
+          title="WeChat"
+          aria-label="WeChat QR code"
+          aria-expanded={wechatOpen}
+          onClick={() => setWechatOpen((open) => !open)}
+        >
+          <img className="control-strip-icon" src="/social-icons/wechat.png" alt="" draggable={false} />
+        </button>
+        <div className="control-strip-handle control-strip-handle--end" aria-hidden="true" />
       </nav>
     </div>
   );
