@@ -3374,19 +3374,18 @@ canvas {
   flex: 1;
   min-width: 0;
   display: flex;
-  flex-direction: row;
-  gap: 12px;
-  padding: 4px 4px 4px 12px;
+  flex-direction: column;
+  gap: 10px;
+  padding: 4px 6px 4px 12px;
   overflow: hidden;
 }
 
 .wiz9-preview-col {
-  flex: 0 0 min(252px, 40%);
-  min-width: 168px;
+  flex: 0 0 auto;
+  width: 100%;
   display: flex;
   flex-direction: column;
   gap: 4px;
-  min-height: 0;
 }
 
 .wiz9-preview-caption {
@@ -3399,8 +3398,8 @@ canvas {
 }
 
 .wiz9-preview-frame {
-  flex: 1;
-  min-height: 140px;
+  flex: 0 0 auto;
+  height: 156px;
   padding: 5px;
   border: 2px solid #8f8f8f;
   background: linear-gradient(#c8c8c8, #b0b0b0);
@@ -3411,6 +3410,7 @@ canvas {
 }
 
 .wiz9-preview-frame--about {
+  height: 188px;
   background: linear-gradient(#d6d6d6, #c2c2c2);
 }
 
@@ -3422,7 +3422,6 @@ canvas {
 .wiz9-preview {
   width: 100%;
   height: 100%;
-  min-height: 132px;
   border: 1px solid #000;
   box-shadow: inset 1px 1px 0 #fff, inset -1px -1px 0 #999;
   background: var(--mac-bg, #5a749c);
@@ -3431,9 +3430,10 @@ canvas {
 }
 
 .wiz9-content-panel {
-  flex: 1;
+  flex: 1 1 auto;
   min-width: 0;
-  padding: 6px 8px 4px 10px;
+  min-height: 0;
+  padding: 8px 10px 6px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -3766,7 +3766,7 @@ canvas {
   left: 50%;
   width: 540px !important;
   max-width: none !important;
-  transform: translate(-50%, -50%) scale(0.46);
+  transform: translate(-50%, -50%) scale(0.58);
   transform-origin: center center;
   box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.35);
   animation: wiz9-preview-about-fade-in 0.4s ease-out;
@@ -3775,11 +3775,11 @@ canvas {
 @keyframes wiz9-preview-about-fade-in {
   from {
     opacity: 0;
-    transform: translate(-50%, -50%) scale(0.4);
+    transform: translate(-50%, -50%) scale(0.5);
   }
   to {
     opacity: 1;
-    transform: translate(-50%, -50%) scale(0.46);
+    transform: translate(-50%, -50%) scale(0.58);
   }
 }
 
@@ -4160,16 +4160,16 @@ canvas {
   }
 
   .wiz9-preview-frame {
-    min-height: 150px;
+    height: 140px;
   }
 
-  .wiz9-preview {
-    min-height: 140px;
+  .wiz9-preview-frame--about {
+    height: 168px;
   }
 
   .wiz9-content-panel {
-    flex: 0 0 auto;
-    min-height: 120px;
+    flex: 1 1 auto;
+    min-height: 100px;
   }
 }
 
