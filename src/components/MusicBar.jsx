@@ -5,7 +5,7 @@ const MusicBar = () => {
   const { currentTrack, isPlaying, togglePlay, isMuted, toggleMute } = useContext(AudioContext);
 
   return (
-    <div className="control-strip" onClick={(e) => e.stopPropagation()}>
+    <div className="control-strip control-strip--music" onClick={(e) => e.stopPropagation()}>
       <div className="control-strip-handle"></div>
       <button 
         onClick={toggleMute}

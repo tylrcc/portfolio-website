@@ -39,16 +39,20 @@ def find_icon_groups(strip: Image.Image) -> list[tuple[int, int]]:
 
 
 def export_icon(strip: Image.Image, box: tuple[int, int, int, int], dest: Path) -> None:
-    crop = strip.crop(box)
+    crop = strip.crop(box).convert('RGBA')
+    arr = np.array(crop)
+    # Drop near-white strip background so icons sit on platinum buttons.
+    light = arr[:, :, :3].min(axis=2) > 248
+    arr[light, 3] = 0
+    crop = Image.fromarray(arr)
+
     cw, ch = crop.size
     side = max(cw, ch)
-    square = Image.new('RGBA', (side, side), (255, 255, 255, 0))
-    square.paste(crop, ((side - cw) // 2, (side - ch) // 2))
+    square = Image.new('RGBA', (side, side), (0, 0, 0, 0))
+    square.paste(crop, ((side - cw) // 2, (side - ch) // 2), crop)
     square = square.resize((OUT_SIZE, OUT_SIZE), Image.Resampling.LANCZOS)
-    bg = Image.new('RGBA', (OUT_SIZE, OUT_SIZE), (255, 255, 255, 255))
-    bg.paste(square, mask=square.split()[3])
     dest.parent.mkdir(parents=True, exist_ok=True)
-    bg.save(dest)
+    square.save(dest)
 
 
 def main() -> None:

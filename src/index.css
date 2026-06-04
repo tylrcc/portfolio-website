@@ -2745,10 +2745,15 @@ canvas {
   pointer-events: auto;
 }
 
-.control-strip--social {
-  position: relative;
+/* Must override .control-strip { left: 0 } which is defined later in this file */
+.social-dock-wrap .control-strip.control-strip--social {
+  position: fixed;
+  right: 0;
+  left: auto;
+  bottom: 0;
   border-bottom: none;
   border-right: none;
+  border-left: 1px solid #000;
   border-radius: 4px 0 0 0;
 }
 
@@ -2771,7 +2776,7 @@ canvas {
 .control-strip-btn--icon {
   width: 28px;
   padding: 0 2px;
-  background: #fff;
+  background: transparent;
   text-decoration: none;
 }
 
@@ -2868,6 +2873,12 @@ canvas {
 }
 
 /* --- Control Strip --- */
+.control-strip--music {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+}
+
 .control-strip {
   position: fixed;
   bottom: 0px;

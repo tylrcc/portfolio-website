@@ -10,7 +10,7 @@ const DOCK_LINKS = [
     id: 'leetcode',
     label: 'LeetCode',
     href: LEETCODE_URL,
-    icon: '/social-icons/leetcode.svg',
+    icon: '/social-icons/leetcode.png',
     external: true,
   },
 ];
