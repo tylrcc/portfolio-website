@@ -514,6 +514,15 @@ body {
   user-select: text;
 }
 
+/* Setup Assistant fills the window and scrolls internally */
+.mac-content:has(.wiz9) {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 0;
+  min-height: 0;
+}
+
 .mac-content-inner {
   background: #f2f2f2;
   border: 2px solid #8f8f8f;
@@ -3334,10 +3343,12 @@ canvas {
    ============================================================ */
 
 .wiz9 {
-  width: 640px;
-  max-width: 96vw;
-  height: 400px;
-  max-height: 78vh;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  max-width: none;
+  max-height: none;
   display: flex;
   flex-direction: column;
   background: #d8d8d8;
@@ -3346,45 +3357,77 @@ canvas {
   line-height: 1.45;
   color: #000;
   -webkit-font-smoothing: antialiased;
-}
-
-/* Welcome step needs a bit more room for the full-size About panel. */
-.wiz9--welcome {
-  width: 640px;
+  box-sizing: border-box;
 }
 
 .wiz9-body {
-  flex: 1;
+  flex: 1 1 auto;
   display: flex;
   flex-direction: row;
   gap: 14px;
-  padding: 14px 16px 0;
+  padding: 14px 16px 8px;
   min-height: 0;
+  overflow: hidden;
 }
 
-/* Welcome step: full-width hero layout. The About panel takes the
-   center stage and the welcome heading sits underneath. */
+/* Welcome: scrollable hero so footer never overlaps on short windows */
 .wiz9-body--welcome {
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 18px;
-  padding: 18px 18px 6px;
-  overflow: hidden;
+  justify-content: flex-start;
+  gap: 12px;
+  padding: 12px 14px 8px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  container-type: size;
+  container-name: wiz-welcome;
 }
 
 .wiz9-welcome-hero {
   display: flex;
   justify-content: center;
   width: 100%;
+  flex-shrink: 0;
 }
 
 .wiz9-welcome-hero .about9 {
-  width: 540px;
+  width: min(540px, 100%);
   max-width: 100%;
   flex-shrink: 0;
   box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.35);
   animation: wiz9-welcome-about-fade-in 0.45s ease-out;
+}
+
+@container wiz-welcome (max-height: 360px) {
+  .wiz9-welcome-hero .about9 {
+    transform: scale(0.88);
+    transform-origin: top center;
+    margin-bottom: -24px;
+  }
+
+  .wiz9-welcome-hero .about9-title {
+    font-size: 52px;
+  }
+
+  .wiz9-welcome-heading {
+    font-size: 22px;
+  }
+}
+
+@container wiz-welcome (max-height: 300px) {
+  .wiz9-welcome-hero .about9 {
+    transform: scale(0.76);
+    margin-bottom: -48px;
+  }
+
+  .wiz9-welcome-hero .about9-title {
+    font-size: 44px;
+  }
+
+  .wiz9-welcome-heading {
+    font-size: 20px;
+  }
 }
 
 @keyframes wiz9-welcome-about-fade-in {
@@ -3394,19 +3437,24 @@ canvas {
 
 .wiz9-welcome-heading {
   margin: 0;
+  flex-shrink: 0;
   font-family: 'VT323', monospace;
   font-size: 28px;
   font-weight: 400;
-  line-height: 1;
+  line-height: 1.15;
   letter-spacing: 0.5px;
   text-align: center;
   color: #000;
+  padding: 0 8px 4px;
 }
 
 .wiz9-preview {
-  flex: 0 0 240px;
-  width: 240px;
-  height: 100%;
+  flex: 0 0 min(240px, 38%);
+  width: min(240px, 38%);
+  min-width: 160px;
+  height: auto;
+  min-height: 140px;
+  align-self: stretch;
   border: 1px solid #000;
   box-shadow: inset 1px 1px 0 #fff, inset -1px -1px 0 #999;
   background: #5d7e8f;
@@ -3489,10 +3537,12 @@ canvas {
   margin: 2px 0;
 }
 
-/* Footer / buttons */
+/* Footer / buttons — always pinned below scrollable body */
 .wiz9-footer {
+  flex: 0 0 auto;
   flex-shrink: 0;
-  padding: 12px 16px 14px;
+  padding: 10px 16px 12px;
+  background: #d8d8d8;
 }
 
 .wiz9-footer-rule {
@@ -4028,27 +4078,45 @@ canvas {
    Wizard - mobile
    ============================================================ */
 
-@media (max-width: 640px) {
-  .wiz9 {
-    width: 96vw;
-    height: auto;
-    max-height: 80vh;
-  }
-  .wiz9-body {
+@media (max-width: 720px) {
+  .wiz9-body:not(.wiz9-body--welcome) {
     flex-direction: column;
-    gap: 12px;
+    overflow-y: auto;
   }
+
   .wiz9-preview {
-    flex: 0 0 160px;
+    flex: 0 0 150px;
     width: 100%;
-    height: 160px;
+    min-width: 0;
+    height: 150px;
+    align-self: auto;
   }
+
+  .wiz9-content {
+    flex: 0 0 auto;
+  }
+}
+
+@media (max-width: 640px) {
+  .wiz9-body {
+    padding: 10px 12px 6px;
+  }
+
+  .wiz9-welcome-heading {
+    font-size: 22px;
+  }
+
   .wiz9-step-title {
     font-size: 18px;
   }
+
   .wiz9-btn {
     min-width: 64px;
     padding: 5px 12px;
+  }
+
+  .wiz9-footer {
+    padding: 8px 12px 10px;
   }
 }
 

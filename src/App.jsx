@@ -108,7 +108,7 @@ function App() {
       'Setup Assistant',
       <SetupWizard onFinish={close} onCancel={close} />,
       true,
-      { initialSize: { width: 648, height: 432 }, autoFit: false }
+      { initialSize: { width: 648, height: 480 }, autoFit: false }
     );
   }, [openWindow, closeWindowById]);
 
