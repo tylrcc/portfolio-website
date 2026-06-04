@@ -2788,30 +2788,17 @@ canvas {
   box-shadow: inset 1px 1px 0 #333;
 }
 
-.social-dock-link:active .social-dock-sprite {
+.social-dock-link:active .social-dock-icon {
   filter: invert(1);
 }
 
-.social-dock-link:active .social-dock-lc {
-  color: #fff;
-}
-
-.social-dock-sprite {
+.social-dock-icon {
   display: block;
   width: 22px;
   height: 22px;
-  background-image: url('/social-icons-strip.png');
-  background-repeat: no-repeat;
-  background-size: 600% 100%;
-  image-rendering: -webkit-optimize-contrast;
-}
-
-.social-dock-link--leetcode .social-dock-lc {
-  font-family: Geneva, Arial, Helvetica, sans-serif;
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: -0.04em;
-  line-height: 1;
+  object-fit: contain;
+  object-position: center;
+  pointer-events: none;
 }
 
 .social-wechat-card {
@@ -4528,7 +4515,7 @@ canvas {
     -webkit-tap-highlight-color: transparent;
   }
 
-  .social-dock-sprite {
+  .social-dock-icon {
     width: 24px;
     height: 24px;
   }

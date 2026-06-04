@@ -1,11 +1,18 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { GITHUB_URL, LEETCODE_URL, LINKEDIN_URL, MAILTO, TWITTER_URL } from '../socialLinks';
 
-const STRIP_ICONS = [
-  { id: 'email', label: 'Email', href: MAILTO, external: false, spriteIndex: 0 },
-  { id: 'github', label: 'GitHub', href: GITHUB_URL, external: true, spriteIndex: 1 },
-  { id: 'linkedin', label: 'LinkedIn', href: LINKEDIN_URL, external: true, spriteIndex: 2 },
-  { id: 'twitter', label: 'X (Twitter)', href: TWITTER_URL, external: true, spriteIndex: 3 },
+const DOCK_LINKS = [
+  { id: 'email', label: 'Email', href: MAILTO, icon: '/social-icons/email.png', external: false },
+  { id: 'github', label: 'GitHub', href: GITHUB_URL, icon: '/social-icons/github.png', external: true },
+  { id: 'linkedin', label: 'LinkedIn', href: LINKEDIN_URL, icon: '/social-icons/linkedin.png', external: true },
+  { id: 'twitter', label: 'X (Twitter)', href: TWITTER_URL, icon: '/social-icons/twitter.png', external: true },
+  {
+    id: 'leetcode',
+    label: 'LeetCode',
+    href: LEETCODE_URL,
+    icon: '/social-icons/leetcode.png',
+    external: true,
+  },
 ];
 
 const SocialDock = () => {
@@ -54,7 +61,7 @@ const SocialDock = () => {
       <nav className="social-dock" aria-label="Contact and social links">
         <span className="social-dock-label">Connect</span>
         <div className="social-dock-icons">
-          {STRIP_ICONS.map((item) => (
+          {DOCK_LINKS.map((item) => (
             <a
               key={item.id}
               className="social-dock-link"
@@ -65,26 +72,9 @@ const SocialDock = () => {
               title={item.label}
               aria-label={item.label}
             >
-              <span
-                className="social-dock-sprite"
-                style={{ backgroundPosition: `${(item.spriteIndex / 5) * 100}% 0` }}
-                aria-hidden="true"
-              />
+              <img className="social-dock-icon" src={item.icon} alt="" width={22} height={22} />
             </a>
           ))}
-
-          <a
-            className="social-dock-link social-dock-link--leetcode"
-            href={LEETCODE_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            title="LeetCode"
-            aria-label="LeetCode"
-          >
-            <span className="social-dock-lc" aria-hidden="true">
-              LC
-            </span>
-          </a>
 
           <button
             type="button"
@@ -94,10 +84,12 @@ const SocialDock = () => {
             aria-expanded={wechatOpen}
             onClick={() => setWechatOpen((open) => !open)}
           >
-            <span
-              className="social-dock-sprite"
-              style={{ backgroundPosition: '100% 0' }}
-              aria-hidden="true"
+            <img
+              className="social-dock-icon"
+              src="/social-icons/wechat.png"
+              alt=""
+              width={22}
+              height={22}
             />
           </button>
         </div>
