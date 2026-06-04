@@ -100,6 +100,8 @@ body {
   align-items: center;
   justify-content: center;
   pointer-events: none;
+  padding: 12px;
+  box-sizing: border-box;
 }
 
 .mac-window-layer .mac-window--overlay {
@@ -108,6 +110,18 @@ body {
   left: auto;
   flex-shrink: 0;
   pointer-events: auto;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.mac-window--fill {
+  width: 100% !important;
+  max-width: 100% !important;
+  height: 100% !important;
+  max-height: 100% !important;
+  flex: 1 1 auto;
+  min-height: 0;
+  min-width: 0;
 }
 
 .mac-menubar {
@@ -2334,7 +2348,9 @@ body {
   right: 0;
   bottom: 0;
   padding: 10px;
-  padding-bottom: 38px;
+  padding-left: max(10px, env(safe-area-inset-left));
+  padding-right: max(10px, env(safe-area-inset-right));
+  padding-bottom: max(38px, calc(38px + env(safe-area-inset-bottom)));
   overflow: hidden;
   animation: desktop-fadein 0.6s ease-out;
 }
@@ -3429,8 +3445,6 @@ canvas {
   background: #d8d8d8;
   border-color: #666;
   box-shadow: none;
-  container-type: size;
-  container-name: wiz-about-prev;
 }
 
 .wiz9-preview {
@@ -3483,7 +3497,7 @@ canvas {
 }
 
 .wiz9--welcome .wiz9-preview-col {
-  flex: 1 1 62%;
+  flex: 1 1 72%;
   min-height: 0;
   display: flex;
   flex-direction: column;
@@ -3491,6 +3505,18 @@ canvas {
 
 .wiz9--welcome .wiz9-preview-caption {
   display: none;
+}
+
+.wiz9--welcome .wiz9-preview-frame--about {
+  padding: 0;
+  border: none;
+  box-shadow: none;
+  background: #d8d8d8;
+}
+
+.wiz9--welcome .wiz9-preview-frame--about .wiz9-preview {
+  border: none;
+  box-shadow: none;
 }
 
 .wiz9--welcome .wiz9-content-panel {
@@ -3818,34 +3844,25 @@ canvas {
   background: #d8d8d8;
 }
 
-.wiz9-prev-about {
+.wiz9-about-fill {
   position: absolute;
   inset: 0;
-  background: #d8d8d8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   overflow: hidden;
+  background: #d8d8d8;
 }
 
-.wiz9-prev-about .about9 {
-  position: absolute;
-  top: 50%;
-  left: 50%;
+.wiz9-about-fill-inner {
+  transform-origin: center center;
+  flex-shrink: 0;
+}
+
+.wiz9-about-fill-inner .about9 {
   width: 540px !important;
   max-width: none !important;
-  transform: translate(-50%, -50%) scale(calc(min(100cqw / 540px, 100cqh / 380px)));
-  transform-origin: center center;
   box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.35);
-  animation: wiz9-preview-about-fade-in 0.4s ease-out;
-}
-
-@keyframes wiz9-preview-about-fade-in {
-  from {
-    opacity: 0;
-    transform: translate(-50%, -50%) scale(calc(min(100cqw / 540px, 100cqh / 380px) * 0.92));
-  }
-  to {
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(calc(min(100cqw / 540px, 100cqh / 380px)));
-  }
 }
 
 /* ============================================================
@@ -4268,6 +4285,78 @@ canvas {
 
 /* --- Mobile Responsiveness --- */
 @media (max-width: 768px) {
+  .mac-window-layer {
+    align-items: stretch;
+    justify-content: stretch;
+    padding: 8px;
+    padding-top: max(8px, env(safe-area-inset-top));
+    padding-bottom: max(40px, calc(40px + env(safe-area-inset-bottom)));
+    padding-left: max(8px, env(safe-area-inset-left));
+    padding-right: max(8px, env(safe-area-inset-right));
+  }
+
+  .mac-window-layer .mac-window--overlay {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: 100% !important;
+    max-height: 100% !important;
+    flex: 1 1 auto;
+    min-height: 0;
+  }
+
+  .desktop-area {
+    padding: 8px;
+    padding-bottom: max(44px, calc(44px + env(safe-area-inset-bottom)));
+  }
+
+  .desktop-chrome {
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .icon-container {
+    width: 72px;
+    padding: 6px 4px;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .icon-container .icon-box {
+    width: 52px;
+    height: 52px;
+  }
+
+  .desktop-icon-image {
+    width: 40px;
+    height: 40px;
+  }
+
+  .icon-label {
+    font-size: 11px;
+    max-width: 68px;
+  }
+
+  .wiz9-body {
+    padding: 6px 8px 4px;
+  }
+
+  .wiz9-step-rail {
+    flex: 0 0 auto;
+    max-height: none;
+  }
+
+  .wiz9--welcome .wiz9-preview-col {
+    flex: 1 1 58%;
+    min-height: 140px;
+  }
+
+  .wiz9-btn {
+    min-height: 36px;
+    min-width: 72px;
+    font-size: 13px;
+    padding: 6px 14px 5px;
+  }
+
   .mac-menubar {
     overflow-x: auto;
     overflow-y: visible;
@@ -4329,11 +4418,12 @@ canvas {
     height: 0px;
   }
 
-  /* Inset from screen edges so the desktop shows through and the close box is easier to tap. Gutter must match Window.jsx MOBILE_VIEWPORT_PADDING (28px each side). */
-  .mac-window {
+  /* Full-width windows in window-container; centered overlays use mac-window-layer rules above. */
+  .window-container .mac-window:not(.mac-window--overlay) {
     min-width: unset;
-    width: calc(100vw - 56px) !important;
-    max-width: calc(100vw - 56px);
+    width: calc(100vw - 24px) !important;
+    max-width: calc(100vw - 24px);
+    max-height: calc(100dvh - 88px) !important;
   }
 
   .winamp-player {

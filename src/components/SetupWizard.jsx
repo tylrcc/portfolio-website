@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import AboutWindow from './AboutWindow';
+import WizAboutFill from './WizAboutFill';
 
 const WIZ_ICONS = {
   work: '/desktop-icons/work.png',
@@ -76,9 +76,7 @@ const StepRail = ({ step, steps }) => (
 
 const PreviewWelcome = () => (
   <div className="wiz9-prev wiz9-prev--welcome">
-    <div className="wiz9-prev-about">
-      <AboutWindow />
-    </div>
+    <WizAboutFill />
   </div>
 );
 

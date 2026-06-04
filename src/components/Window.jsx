@@ -10,7 +10,7 @@ const MIN_WIDTH = 240;
 const MIN_HEIGHT = 150;
 const MAX_WIDTH_RATIO = 0.97;
 /** On mobile, cap width so windows stay visibly inset even when content is wide. */
-const MOBILE_MAX_WIDTH_RATIO = 0.92;
+const MOBILE_MAX_WIDTH_RATIO = 0.98;
 
 const getViewportContentHeight = () => (window.visualViewport?.height ?? window.innerHeight) - 28;
 const getViewportPadding = () => (window.innerWidth <= 768 ? MOBILE_VIEWPORT_PADDING : VIEWPORT_PADDING);
@@ -57,6 +57,8 @@ const Window = ({
   initialSize = DEFAULT_WINDOW_SIZE,
   /** When false, keep initialSize and skip content measurement (avoids welcome-step shrink flash). */
   autoFit = true,
+  /** Size window to the largest area that fits the viewport (Setup Assistant, etc.). */
+  fillViewport = false,
   /** Center in viewport via flex overlay instead of absolute top-left + translate. */
   centered = false
 }) => {
@@ -65,7 +67,27 @@ const Window = ({
   const contentRef = useRef(null);
   const hasUserMovedRef = useRef(false);
   const userManuallySizedRef = useRef(false);
-  const initialWindowSizeRef = useRef(clampInitialWindowSize(initialSize));
+  const initialWindowSizeRef = useRef(
+    fillViewport && typeof window !== 'undefined'
+      ? (() => {
+          const { maxWidth, maxHeight } = (() => {
+            const viewportWidth = window.innerWidth;
+            const viewportHeight = getViewportContentHeight();
+            const viewportPadding = getViewportPadding();
+            const isMobile = viewportWidth <= 768;
+            const maxWidthRatio = isMobile ? MOBILE_MAX_WIDTH_RATIO : MAX_WIDTH_RATIO;
+            return {
+              maxWidth: Math.max(
+                MIN_WIDTH,
+                Math.min(viewportWidth - viewportPadding * 2, viewportWidth * maxWidthRatio)
+              ),
+              maxHeight: Math.max(MIN_HEIGHT, viewportHeight - viewportPadding * 2)
+            };
+          })();
+          return { width: maxWidth, height: maxHeight };
+        })()
+      : clampInitialWindowSize(initialSize)
+  );
   const sizeRef = useRef(initialWindowSizeRef.current);
   const [size, setSize] = useState(initialWindowSizeRef.current);
   const [position, setPosition] = useState(() => (
@@ -108,7 +130,16 @@ const Window = ({
     };
   }, []);
 
+  const applyFillViewport = useCallback(() => {
+    const { maxWidth, maxHeight } = getViewportLimits();
+    setSize({ width: maxWidth, height: maxHeight });
+  }, [getViewportLimits]);
+
   const measureAndFit = useCallback(() => {
+    if (fillViewport) {
+      applyFillViewport();
+      return;
+    }
     if (!autoFit) return;
     if (userManuallySizedRef.current) return;
     if (!contentRef.current) return;
@@ -135,16 +166,18 @@ const Window = ({
       };
       return clampWindowPosition(next, fittedSize.width, fittedSize.height);
     });
-  }, [clampWindowPosition, getViewportLimits, autoFit, centered]);
+  }, [clampWindowPosition, getViewportLimits, autoFit, centered, fillViewport, applyFillViewport]);
 
   useLayoutEffect(() => {
     hasUserMovedRef.current = false;
     userManuallySizedRef.current = false;
-    if (autoFit) {
+    if (fillViewport) {
+      applyFillViewport();
+    } else if (autoFit) {
       measureAndFit();
     }
     setIsReady(true);
-  }, [children, measureAndFit, autoFit]);
+  }, [children, measureAndFit, autoFit, fillViewport, applyFillViewport]);
 
   useEffect(() => {
     const handleViewportResize = () => {
@@ -156,6 +189,8 @@ const Window = ({
         if (!centered) {
           setPosition((prev) => clampWindowPosition(prev, clampedWidth, clampedHeight));
         }
+      } else if (fillViewport) {
+        applyFillViewport();
       } else if (autoFit) {
         measureAndFit();
       } else if (!centered) {
@@ -194,7 +229,7 @@ const Window = ({
       }
       if (observer) observer.disconnect();
     };
-  }, [children, clampWindowPosition, getViewportLimits, measureAndFit, autoFit, centered]);
+  }, [children, clampWindowPosition, getViewportLimits, measureAndFit, autoFit, centered, fillViewport, applyFillViewport]);
 
   const handleResizeStart = (e) => {
     e.stopPropagation();
@@ -240,6 +275,7 @@ const Window = ({
     'mac-window',
     minimized ? 'mac-window--minimized' : '',
     centered ? 'mac-window--overlay' : '',
+    fillViewport ? 'mac-window--fill' : '',
     !isReady ? 'mac-window--pending' : ''
   ].filter(Boolean).join(' ');
 
