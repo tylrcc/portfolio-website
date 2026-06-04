@@ -3324,6 +3324,10 @@ canvas {
   overflow: hidden;
 }
 
+.wiz9--welcome .wiz9-body {
+  overflow: hidden;
+}
+
 /* Left step list — classic Setup Assistant outline */
 .wiz9-step-rail {
   flex: 0 0 108px;
@@ -3418,7 +3422,8 @@ canvas {
 
 .wiz9-preview-frame--about {
   flex: 0 0 auto;
-  height: 220px;
+  height: 200px;
+  min-height: 200px;
   padding: 0;
   background: #d8d8d8;
   box-shadow: inset 1px 1px 0 #fff, inset -1px -1px 0 #999;
@@ -3476,9 +3481,11 @@ canvas {
   min-height: 0;
 }
 
-/* Welcome: show all copy without scrolling; preview takes most of the column */
+/* Welcome: preview fixed height; text panel gets remaining space */
 .wiz9--welcome .wiz9-main {
+  flex: 1 1 auto;
   min-height: 0;
+  overflow: hidden;
 }
 
 .wiz9--welcome .wiz9-preview-col {
@@ -3493,13 +3500,8 @@ canvas {
 }
 
 .wiz9--welcome .wiz9-preview-frame--about {
-  flex: 0 0 auto;
-  height: 220px;
-  min-height: 220px;
-  padding: 0;
   border: 1px solid #666;
   box-shadow: inset 1px 1px 0 #fff, inset -1px -1px 0 #999;
-  background: #d8d8d8;
 }
 
 .wiz9--welcome .wiz9-preview-frame--about .wiz9-preview {
@@ -3509,33 +3511,38 @@ canvas {
 }
 
 .wiz9--welcome .wiz9-content-panel {
-  flex: 0 0 auto;
-  overflow: visible;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .wiz9--welcome .wiz9-step-title {
-  font-size: 18px;
-  margin-bottom: 6px;
-  padding-bottom: 6px;
+  font-size: 17px;
+  margin-bottom: 5px;
+  padding-bottom: 5px;
+  flex-shrink: 0;
 }
 
 .wiz9--welcome .wiz9-step-body {
   flex: 0 0 auto;
   overflow: visible;
   font-size: 12px;
-  line-height: 1.35;
+  line-height: 1.33;
 }
 
 .wiz9--welcome .wiz9-step-body p {
-  margin-bottom: 6px;
+  margin-bottom: 5px;
 }
 
 .wiz9--welcome .wiz9-section-label {
-  margin-top: 6px !important;
+  margin-top: 4px !important;
 }
 
 .wiz9--welcome .wiz9-tour-list {
   font-size: 12px;
+  margin-top: 2px;
+  padding-bottom: 4px;
 }
 
 .wiz9--welcome .wiz9-tour-list li {
@@ -4234,8 +4241,8 @@ canvas {
   }
 
   .wiz9--welcome .wiz9-preview-frame--about {
-    height: 180px;
-    min-height: 180px;
+    height: 168px;
+    min-height: 168px;
   }
 
   .wiz9-content-panel {
