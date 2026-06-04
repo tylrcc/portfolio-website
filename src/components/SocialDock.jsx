@@ -10,7 +10,7 @@ const DOCK_LINKS = [
     id: 'leetcode',
     label: 'LeetCode',
     href: LEETCODE_URL,
-    icon: '/social-icons/leetcode.png',
+    icon: '/social-icons/leetcode.svg',
     external: true,
   },
 ];
@@ -72,7 +72,7 @@ const SocialDock = () => {
               title={item.label}
               aria-label={item.label}
             >
-              <img className="social-dock-icon" src={item.icon} alt="" width={22} height={22} />
+              <img className="social-dock-icon" src={item.icon} alt="" draggable={false} />
             </a>
           ))}
 
@@ -84,13 +84,7 @@ const SocialDock = () => {
             aria-expanded={wechatOpen}
             onClick={() => setWechatOpen((open) => !open)}
           >
-            <img
-              className="social-dock-icon"
-              src="/social-icons/wechat.png"
-              alt=""
-              width={22}
-              height={22}
-            />
+            <img className="social-dock-icon" src="/social-icons/wechat.png" alt="" draggable={false} />
           </button>
         </div>
       </nav>
