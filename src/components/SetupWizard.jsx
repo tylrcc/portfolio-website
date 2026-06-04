@@ -310,8 +310,10 @@ const SetupWizard = ({ onFinish, onCancel }) => {
   const current = STEPS[step];
   const Preview = current.preview;
 
+  const isWelcome = step === 0;
+
   return (
-    <div className="wiz9">
+    <div className={`wiz9${isWelcome ? ' wiz9--welcome' : ''}`}>
       <div className="wiz9-body">
         <StepRail step={step} steps={STEPS} />
         <div className="wiz9-main">
@@ -319,7 +321,7 @@ const SetupWizard = ({ onFinish, onCancel }) => {
             <div className="wiz9-preview-caption">{current.panelLabel}</div>
             <div
               className={`wiz9-preview-frame ${
-                step === 0 ? 'wiz9-preview-frame--about' : ''
+                isWelcome ? 'wiz9-preview-frame--about' : 'wiz9-preview-frame--compact'
               }`}
             >
               <div className="wiz9-preview">
