@@ -226,7 +226,7 @@ function App() {
         icon: '/desktop-icons/linkedin.png',
         action: () =>
           openWindow('linkedin', 'LinkedIn', <LinkedInApp />, true, {
-            initialSize: { width: 620, height: 440 },
+            initialSize: { width: 680, height: 520 },
             autoFit: false,
           }),
       },

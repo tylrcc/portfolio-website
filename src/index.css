@@ -1943,14 +1943,11 @@ body {
   border-left-color: #fff;
 }
 
-/* LinkedIn profile viewer — Mac OS 9.2 platinum UI */
+/* LinkedIn — Mac OS 9 shell + early-2000s web profile (real photos/logos) */
 .linkedin9 {
-  width: min(640px, 96vw);
-  min-width: 280px;
-  padding: 8px 10px 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+  width: min(720px, 96vw);
+  min-width: 300px;
+  padding: 0;
   font-family: Geneva, 'Lucida Grande', Charcoal, system-ui, sans-serif;
   font-size: 12px;
   line-height: 1.45;
@@ -1958,148 +1955,202 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-.linkedin9-toolbar {
+.linkedin9-app {
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  padding: 6px 8px;
-  border: 2px solid #8f8f8f;
-  background: linear-gradient(180deg, #ececec, #d6d6d6);
-  box-shadow: inset 1px 1px 0 #fff, inset -1px -1px 0 #b5b5b5;
-}
-
-.linkedin9-toolbar-brand {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  min-width: 0;
-}
-
-.linkedin9-toolbar-icon {
-  image-rendering: pixelated;
-  image-rendering: crisp-edges;
-  flex-shrink: 0;
-}
-
-.linkedin9-toolbar-title {
-  font-family: Chicago, Charcoal, Geneva, system-ui, sans-serif;
-  font-size: 14px;
-  font-weight: 700;
-  line-height: 1.2;
-}
-
-.linkedin9-toolbar-sub {
-  font-size: 10px;
-  color: #444;
-  margin-top: 1px;
-}
-
-.linkedin9-open-btn {
-  font-family: Geneva, 'Lucida Grande', Charcoal, system-ui, sans-serif;
-  font-size: 11px;
-  font-weight: 700;
-  padding: 4px 12px;
-  min-height: 24px;
-  text-decoration: none;
-}
-
-.linkedin9-shell {
-  display: flex;
-  gap: 10px;
-  min-width: 0;
+  flex-direction: column;
   border: 2px solid #8f8f8f;
   background: #e8e8e8;
   box-shadow: inset 1px 1px 0 #fff, inset -1px -1px 0 #b5b5b5;
-  padding: 8px;
+  min-height: 360px;
 }
 
-.linkedin9-card {
-  flex: 0 0 168px;
+.linkedin9-menubar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 10px;
+  padding: 4px 8px;
+  background: linear-gradient(180deg, #f4f4f4, #ddd);
+  border-bottom: 1px solid #888;
+  font-size: 11px;
+}
+
+.linkedin9-menu-item--bold {
+  font-weight: 700;
+}
+
+.linkedin9-menu-item {
+  color: #222;
+}
+
+.linkedin9-urlbar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 8px;
+  background: #ddd;
+  border-bottom: 1px solid #888;
+}
+
+.linkedin9-url-label {
+  font-size: 10px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.linkedin9-url-field {
+  flex: 1;
   min-width: 0;
-  padding: 10px 8px;
-  background: #f6f6f6;
+  padding: 3px 6px;
+  font-family: Monaco, Menlo, 'Courier New', monospace;
+  font-size: 10px;
+  background: #fff;
   border: 1px solid #000;
-  box-shadow: inset 1px 1px 0 #fff, inset -1px -1px 0 #999;
-  text-align: center;
+  box-shadow: inset 1px 1px 0 #808080;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.linkedin9-avatar {
-  width: 64px;
-  height: 64px;
-  margin: 0 auto 8px;
+.linkedin9-go-btn {
+  flex-shrink: 0;
+  font-family: Geneva, 'Lucida Grande', Charcoal, system-ui, sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 10px;
+  text-decoration: none;
+}
+
+.linkedin9-web-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  background: linear-gradient(180deg, #1a6faa 0%, #0a4d7a 55%, #083a5c 100%);
+  border-bottom: 2px solid #000;
+  color: #fff;
+}
+
+.linkedin9-in-logo {
+  width: 36px;
+  height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
+  background: linear-gradient(180deg, #2b8fd4, #0a66c2);
   border: 2px solid #000;
+  box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.45);
+  font-weight: 800;
+  font-size: 15px;
+  letter-spacing: -0.04em;
+}
+
+.linkedin9-tagline {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 700;
+  text-shadow: 1px 1px 0 #000;
+}
+
+.linkedin9-hero {
+  display: flex;
+  gap: 12px;
+  padding: 12px;
+  background: linear-gradient(180deg, #fff 0%, #eef4fa 100%);
+  border-bottom: 1px solid #999;
+}
+
+.linkedin9-photo {
+  object-fit: cover;
+  border: 2px solid #000;
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.35);
+  background: #ccc;
+  flex-shrink: 0;
+}
+
+.linkedin9-photo--lg {
+  width: 96px;
+  height: 96px;
+}
+
+.linkedin9-photo--xs {
+  width: 32px;
+  height: 32px;
+}
+
+.linkedin9-photo--fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background: linear-gradient(180deg, #5a749c, #3d5270);
   color: #fff;
   font-family: Chicago, Charcoal, Geneva, system-ui, sans-serif;
-  font-size: 22px;
   font-weight: 700;
-  letter-spacing: 0.04em;
-  box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.35);
+}
+
+.linkedin9-photo--fallback.linkedin9-photo--lg {
+  font-size: 28px;
+}
+
+.linkedin9-photo--fallback.linkedin9-photo--xs {
+  font-size: 11px;
+}
+
+.linkedin9-hero-info {
+  flex: 1;
+  min-width: 0;
 }
 
 .linkedin9-name {
   margin: 0 0 4px;
   font-family: Chicago, Charcoal, Geneva, system-ui, sans-serif;
-  font-size: 14px;
+  font-size: 18px;
   font-weight: 700;
-  line-height: 1.2;
+  line-height: 1.15;
 }
 
 .linkedin9-headline {
-  margin: 0 0 6px;
-  font-size: 11px;
+  margin: 0 0 4px;
+  font-size: 12px;
   font-weight: 700;
-  color: #222;
-  line-height: 1.35;
+  color: #0a4d7a;
 }
 
 .linkedin9-location {
   margin: 0 0 8px;
-  font-size: 10px;
-  color: #444;
-  line-height: 1.35;
-}
-
-.linkedin9-stats {
-  width: 100%;
-  margin: 0 0 10px;
-  font-size: 10px;
-  border-collapse: collapse;
-}
-
-.linkedin9-stats td {
-  padding: 2px 0;
-  text-align: left;
-}
-
-.linkedin9-stats-label {
-  font-weight: 700;
-  padding-right: 6px;
+  font-size: 11px;
   color: #333;
 }
 
-.linkedin9-card-btn {
-  display: inline-flex;
-  width: 100%;
-  justify-content: center;
+.linkedin9-stat-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.linkedin9-stat-chip {
+  font-size: 10px;
+  padding: 2px 6px;
+  border: 1px solid #666;
+  background: linear-gradient(180deg, #fafafa, #e4e4e4);
+  box-shadow: inset 1px 1px 0 #fff;
+}
+
+.linkedin9-connect-btn {
   font-family: Geneva, 'Lucida Grande', Charcoal, system-ui, sans-serif;
   font-size: 11px;
   font-weight: 700;
+  padding: 4px 12px;
   text-decoration: none;
-  min-height: 22px;
 }
 
-.linkedin9-main {
+.linkedin9-workspace {
   flex: 1;
-  min-width: 0;
+  min-height: 0;
   display: flex;
   flex-direction: column;
-  min-height: 280px;
+  padding: 8px;
+  background: #e0e0e0;
 }
 
 .linkedin9-tabs {
@@ -2317,6 +2368,188 @@ body {
   margin: 8px 0 0;
   font-size: 10px;
   color: #555;
+}
+
+.linkedin9-fieldset {
+  margin: 0 0 10px;
+  padding: 8px 8px 10px;
+  border: 1px solid #666;
+  background: #fafafa;
+  box-shadow: inset 1px 1px 0 #fff;
+}
+
+.linkedin9-fieldset legend {
+  padding: 0 5px;
+  font-family: Chicago, Charcoal, Geneva, system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 11px;
+}
+
+.linkedin9-org-logo {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  border: 1px solid #000;
+  background: #fff;
+  box-shadow: 1px 1px 0 rgba(0, 0, 0, 0.25);
+  flex-shrink: 0;
+  image-rendering: auto;
+}
+
+.linkedin9-org-logo--fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  font-weight: 700;
+  background: linear-gradient(180deg, #e8e8e8, #c8c8c8);
+  color: #222;
+}
+
+.linkedin9-exp-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.linkedin9-exp-card {
+  display: flex;
+  gap: 10px;
+  padding: 10px;
+  margin-bottom: 8px;
+  background: #fff;
+  border: 1px solid #000;
+  box-shadow: 1px 1px 0 #fff, 2px 2px 0 rgba(0, 0, 0, 0.2);
+}
+
+.linkedin9-exp-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.linkedin9-exp-title {
+  font-size: 13px;
+}
+
+.linkedin9-exp-company {
+  font-size: 12px;
+  font-weight: 700;
+  color: #0a4d7a;
+  margin-top: 1px;
+}
+
+.linkedin9-edu-hero {
+  display: flex;
+  gap: 12px;
+  padding: 12px;
+  margin-bottom: 12px;
+  background: linear-gradient(180deg, #fff, #f0f4f8);
+  border: 1px solid #000;
+  box-shadow: inset 1px 1px 0 #fff;
+}
+
+.linkedin9-edu-hero .linkedin9-org-logo {
+  width: 56px;
+  height: 56px;
+}
+
+.linkedin9-edu-school {
+  margin: 0 0 4px;
+  font-family: Chicago, Charcoal, Geneva, system-ui, sans-serif;
+  font-size: 14px;
+}
+
+.linkedin9-badge-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.linkedin9-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  width: 72px;
+  padding: 6px 4px;
+  font-size: 9px;
+  text-align: center;
+  border: 1px solid #666;
+  background: #fff;
+  box-shadow: inset 1px 1px 0 #fff;
+}
+
+.linkedin9-badge .linkedin9-org-logo {
+  width: 32px;
+  height: 32px;
+}
+
+.linkedin9-cert-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.linkedin9-cert-row {
+  display: flex;
+  gap: 8px;
+  padding: 6px 0;
+  border-bottom: 1px dotted #ccc;
+}
+
+.linkedin9-cert-row:last-child {
+  border-bottom: none;
+}
+
+.linkedin9-feed {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.linkedin9-feed-card {
+  padding: 10px;
+  margin-bottom: 8px;
+  background: #fff;
+  border: 1px solid #888;
+  border-left: 4px solid #0a66c2;
+  box-shadow: 1px 1px 0 #fff;
+}
+
+.linkedin9-feed-head {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.linkedin9-feed-meta {
+  font-size: 10px;
+  color: #555;
+}
+
+.linkedin9-feed-title {
+  margin: 0 0 4px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.linkedin9-feed-card p {
+  margin: 0;
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+.linkedin9-statusbar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 4px;
+  padding: 4px 8px;
+  font-size: 10px;
+  color: #444;
+  background: linear-gradient(180deg, #e8e8e8, #d0d0d0);
+  border-top: 1px solid #888;
+  box-shadow: inset 0 1px 0 #fff;
 }
 
 .linkedin9 a {
@@ -4419,16 +4652,28 @@ canvas {
   }
 
   .linkedin9 {
-    padding: 6px 6px 8px;
-  }
-
-  .linkedin9-shell {
-    flex-direction: column;
-  }
-
-  .linkedin9-card {
-    flex: 0 0 auto;
     width: 100%;
+    min-width: 0;
+  }
+
+  .linkedin9-hero {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .linkedin9-hero-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .linkedin9-stat-chips {
+    justify-content: center;
+  }
+
+  .linkedin9-urlbar {
+    flex-wrap: wrap;
   }
 
   .linkedin9-tab {
@@ -4436,8 +4681,14 @@ canvas {
     font-size: 10px;
   }
 
-  .linkedin9-main {
-    min-height: 220px;
+  .linkedin9-workspace {
+    min-height: 200px;
+  }
+
+  .linkedin9-exp-card,
+  .linkedin9-edu-hero {
+    flex-direction: column;
+    align-items: flex-start;
   }
 
   .cv-content {
