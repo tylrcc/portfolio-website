@@ -18,10 +18,10 @@ const WizAboutFill = () => {
       const about = inner.querySelector('.about9');
       const contentW = about?.offsetWidth || ABOUT_BASE_WIDTH;
       const contentH = about?.offsetHeight || 400;
-      const pad = 2;
-      const sw = (host.clientWidth - pad) / contentW;
-      const sh = (host.clientHeight - pad) / contentH;
-      setScale(Math.min(sw, sh, 1.25));
+      const sw = host.clientWidth / contentW;
+      const sh = host.clientHeight / contentH;
+      /* Cover the preview pane — no gray letterboxing around the About panel */
+      setScale(Math.max(sw, sh));
     };
 
     fit();
@@ -36,7 +36,7 @@ const WizAboutFill = () => {
       <div
         ref={innerRef}
         className="wiz9-about-fill-inner"
-        style={{ transform: `scale(${scale})` }}
+        style={{ transform: `translate(-50%, -50%) scale(${scale})` }}
       >
         <AboutWindow />
       </div>

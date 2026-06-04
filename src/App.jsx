@@ -108,7 +108,7 @@ function App() {
       'Setup Assistant',
       <SetupWizard onFinish={close} onCancel={close} />,
       true,
-      { fillViewport: true, autoFit: false }
+      { initialSize: { width: 648, height: 480 }, autoFit: false }
     );
   }, [openWindow, closeWindowById]);
 
@@ -502,7 +502,6 @@ function App() {
               onToggleMinimize={() => toggleMinimize(win.id)}
               initialSize={win.initialSize}
               autoFit={win.autoFit ?? true}
-              fillViewport={win.fillViewport ?? false}
               centered={win.isCentered}
             >
               {win.content}
