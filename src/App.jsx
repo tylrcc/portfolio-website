@@ -224,7 +224,11 @@ function App() {
         kind: 'alias',
         size: '2 K',
         icon: '/desktop-icons/linkedin.png',
-        action: () => openWindow('linkedin', 'LinkedIn', <LinkedInApp />, true),
+        action: () =>
+          openWindow('linkedin', 'LinkedIn', <LinkedInApp />, true, {
+            initialSize: { width: 620, height: 440 },
+            autoFit: false,
+          }),
       },
       {
         id: 'contact',
