@@ -22,8 +22,9 @@ export function getDesktopLayout(width, height) {
   const rowGap = isSmall ? 70 : isMobile ? 76 : ICON_ROW_HEIGHT;
   const topY = isSmall ? 10 : isMobile ? 12 : 20;
 
+  const contentWidth = width - pad * 2;
   const leftColumnX = isSmall ? 0 : isMobile ? 2 : pad;
-  const maxX = Math.max(leftColumnX, width - pad - ICON_WIDTH);
+  const maxX = Math.max(leftColumnX, contentWidth - ICON_WIDTH);
   const rightColumnX = Math.max(leftColumnX + ICON_WIDTH + 8, maxX);
   const maxY = Math.max(topY, height - pad - ICON_ROW_HEIGHT);
 

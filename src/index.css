@@ -2655,18 +2655,17 @@ body {
   cursor: pointer;
   padding: 4px;
   user-select: none;
-  position: absolute; /* Added absolute for Draggable */
+  position: absolute;
 }
 
 .icon-container .icon-box {
   width: 48px;
   height: 48px;
-  border: 1px solid transparent;
+  border: 1px dotted transparent;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 24px;
-  margin-bottom: 5px;
+  margin-bottom: 4px;
   transition: transform 0.1s ease;
 }
 
@@ -2675,30 +2674,60 @@ body {
 }
 
 .desktop-icon-image {
-  width: 46px;
-  height: 46px;
+  width: 32px;
+  height: 32px;
   object-fit: contain;
   image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  pointer-events: none;
 }
 
+/* Mac OS 9 desktop labels: plain text on the desktop, reverse-video when selected */
 .icon-label {
-  background: var(--mac-white);
-  border: 1px solid var(--mac-black);
-  padding: 0 6px;
+  background: transparent;
+  border: none;
+  padding: 1px 5px 2px;
   text-align: center;
-  font-size: 1rem;
+  font-family: Geneva, 'Lucida Grande', Arial, Helvetica, sans-serif;
+  font-size: 12px;
+  line-height: 1.15;
+  font-weight: 400;
+  letter-spacing: 0;
+  color: #fff;
   white-space: nowrap;
+  max-width: 76px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-shadow:
+    1px 0 0 #000,
+    -1px 0 0 #000,
+    0 1px 0 #000,
+    0 -1px 0 #000;
+  -webkit-font-smoothing: antialiased;
 }
 
 .icon-container:active .icon-box,
 .icon-container.selected .icon-box {
   filter: invert(100%);
+  border-color: transparent;
 }
 
 .icon-container:active .icon-label,
 .icon-container.selected .icon-label {
-  background: var(--mac-black);
-  color: var(--mac-white);
+  background: #000;
+  color: #fff;
+  text-shadow: none;
+  border: none;
+}
+
+/* Windows: same Geneva stack + pixel icons (no emoji, no VT323 labels) */
+body.os-windows .icon-label {
+  font-family: Geneva, 'Lucida Grande', Tahoma, Arial, sans-serif;
+}
+
+body.os-windows .desktop-icon-image {
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
 }
 
 /* Rainbow Logo colors */
@@ -4562,8 +4591,8 @@ canvas {
   }
 
   .icon-label {
-    font-size: 0.82rem;
-    padding: 0 4px;
+    font-size: 11px;
+    padding: 1px 4px 2px;
   }
 
   .control-strip--social .control-strip-module--connect {
@@ -4770,7 +4799,7 @@ canvas {
   }
 
   .icon-label {
-    font-size: 0.75rem;
-    padding: 0 3px;
+    font-size: 10px;
+    padding: 1px 3px 2px;
   }
 }

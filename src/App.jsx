@@ -178,7 +178,7 @@ function App() {
         shortName: 'Resume',
         kind: 'document',
         size: '84 K',
-        icon: '📝',
+        icon: '/desktop-icons/readme.png',
         action: openReadmeResume,
       },
       {
@@ -187,7 +187,7 @@ function App() {
         shortName: 'Music',
         kind: 'application',
         size: '112 K',
-        icon: '🎵',
+        icon: '/desktop-icons/spotify.png',
         action: () => openWindow('spotify', 'Spotify Player', <SpotifyApp />),
       },
       {
@@ -196,7 +196,7 @@ function App() {
         shortName: 'About',
         kind: 'document',
         size: '14 K',
-        icon: '👤',
+        icon: '/desktop-icons/about.png',
         action: openAboutMe,
       },
       {
@@ -214,7 +214,7 @@ function App() {
         shortName: 'HD',
         kind: 'disk',
         size: '-',
-        icon: '💾',
+        icon: '/desktop-icons/hd.png',
         action: openHD,
       },
       {
@@ -223,7 +223,7 @@ function App() {
         shortName: 'Link',
         kind: 'alias',
         size: '2 K',
-        icon: '🔗',
+        icon: '/desktop-icons/linkedin.png',
         action: () => openWindow('linkedin', 'LinkedIn', <LinkedInApp />, true),
       },
       {
@@ -232,7 +232,7 @@ function App() {
         shortName: 'Email',
         kind: 'document',
         size: '4 K',
-        icon: '✉️',
+        icon: '/desktop-icons/contact.png',
         action: openContact,
       },
       {
@@ -241,7 +241,7 @@ function App() {
         shortName: 'Work',
         kind: 'folder',
         size: '-',
-        icon: '📂',
+        icon: '/desktop-icons/work.png',
         action: () => openWindow('work', 'Work', <WorkApp />),
       },
       {
@@ -250,7 +250,7 @@ function App() {
         shortName: 'CV',
         kind: 'document',
         size: '42 K',
-        icon: '📄',
+        icon: '/desktop-icons/cv.png',
         action: () => openWindow('cv', 'CV', <CVApp />, true),
       },
     ],

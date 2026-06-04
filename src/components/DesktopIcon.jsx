@@ -42,7 +42,12 @@ const DesktopIcon = ({
 
   const isImageIcon =
     typeof icon === 'string' &&
-    (icon.startsWith('/') || icon.startsWith('./') || icon.startsWith('../'));
+    (icon.startsWith('/') ||
+      icon.startsWith('./') ||
+      icon.startsWith('../') ||
+      icon.endsWith('.png') ||
+      icon.endsWith('.svg') ||
+      icon.endsWith('.gif'));
 
   return (
     <Draggable
