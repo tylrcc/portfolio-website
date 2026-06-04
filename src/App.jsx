@@ -205,7 +205,7 @@ function App() {
         shortName: 'Doom',
         kind: 'application',
         size: '2.1 MB',
-        icon: '/doom-icon.png',
+        icon: '/desktop-icons/doom.png',
         action: () => openWindow('doom', 'Doom', <DoomApp />),
       },
       {

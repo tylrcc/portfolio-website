@@ -1,0 +1,4 @@
+Desktop icons (except doom.png) are derived from bearz314/MacOS9-icons (MIT).
+https://github.com/bearz314/MacOS9-icons
+
+Processed to 48×48 PNG with transparent backgrounds via scripts/install-macos9-desktop-icons.py.
