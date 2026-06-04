@@ -3380,8 +3380,9 @@ canvas {
   max-height: none;
   display: flex;
   flex-direction: column;
-  background: #d8d8d8;
-  font-family: Charcoal, 'Geneva', 'Lucida Grande', system-ui, sans-serif;
+  background:
+    linear-gradient(180deg, #e4e4e4 0%, #d4d4d4 48%, #cacaca 100%);
+  font-family: Geneva, 'Lucida Grande', Charcoal, system-ui, sans-serif;
   font-size: 12px;
   line-height: 1.45;
   color: #000;
@@ -3393,120 +3394,143 @@ canvas {
   flex: 1 1 auto;
   display: flex;
   flex-direction: row;
-  gap: 14px;
-  padding: 14px 16px 8px;
+  gap: 0;
+  padding: 10px 12px 6px;
   min-height: 0;
   overflow: hidden;
 }
 
-/* Welcome: scrollable hero so footer never overlaps on short windows */
-.wiz9-body--welcome {
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 12px;
-  padding: 12px 14px 8px;
-  overflow-x: hidden;
+/* Left step list — classic Setup Assistant outline */
+.wiz9-step-rail {
+  flex: 0 0 108px;
+  min-width: 88px;
+  padding: 6px 10px 6px 4px;
+  border-right: 1px solid #8a8a8a;
+  box-shadow: 1px 0 0 #fff;
   overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-  container-type: size;
-  container-name: wiz-welcome;
 }
 
-.wiz9-welcome-hero {
-  display: flex;
-  justify-content: center;
-  width: 100%;
-  flex-shrink: 0;
-}
-
-.wiz9-welcome-hero .about9 {
-  width: min(540px, 100%);
-  max-width: 100%;
-  flex-shrink: 0;
-  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.35);
-  animation: wiz9-welcome-about-fade-in 0.45s ease-out;
-}
-
-@container wiz-welcome (max-height: 360px) {
-  .wiz9-welcome-hero .about9 {
-    transform: scale(0.88);
-    transform-origin: top center;
-    margin-bottom: -24px;
-  }
-
-  .wiz9-welcome-hero .about9-title {
-    font-size: 52px;
-  }
-
-  .wiz9-welcome-heading {
-    font-size: 22px;
-  }
-}
-
-@container wiz-welcome (max-height: 300px) {
-  .wiz9-welcome-hero .about9 {
-    transform: scale(0.76);
-    margin-bottom: -48px;
-  }
-
-  .wiz9-welcome-hero .about9-title {
-    font-size: 44px;
-  }
-
-  .wiz9-welcome-heading {
-    font-size: 20px;
-  }
-}
-
-@keyframes wiz9-welcome-about-fade-in {
-  from { opacity: 0; transform: translateY(6px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-.wiz9-welcome-heading {
+.wiz9-step-rail-list {
+  list-style: none;
   margin: 0;
-  flex-shrink: 0;
-  font-family: 'VT323', monospace;
-  font-size: 28px;
-  font-weight: 400;
-  line-height: 1.15;
-  letter-spacing: 0.5px;
-  text-align: center;
+  padding: 0;
+}
+
+.wiz9-step-rail-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 5px;
+  padding: 5px 4px;
+  font-size: 11px;
+  line-height: 1.25;
+  color: #666;
+}
+
+.wiz9-step-rail-item--current {
   color: #000;
-  padding: 0 8px 4px;
+  font-weight: 700;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.55), transparent);
+}
+
+.wiz9-step-rail-item--done {
+  color: #333;
+}
+
+.wiz9-step-rail-bullet {
+  flex-shrink: 0;
+  width: 12px;
+  font-family: Chicago, Charcoal, Geneva, system-ui, sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.wiz9-step-rail-label {
+  flex: 1;
+}
+
+.wiz9-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  padding: 4px 4px 4px 12px;
+  overflow: hidden;
+}
+
+.wiz9-preview-col {
+  flex: 0 0 min(252px, 40%);
+  min-width: 168px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-height: 0;
+}
+
+.wiz9-preview-caption {
+  font-family: Chicago, Charcoal, Geneva, system-ui, sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: #444;
+  padding-left: 2px;
+}
+
+.wiz9-preview-frame {
+  flex: 1;
+  min-height: 140px;
+  padding: 5px;
+  border: 2px solid #8f8f8f;
+  background: linear-gradient(#c8c8c8, #b0b0b0);
+  box-shadow:
+    inset 1px 1px 0 #fff,
+    inset -1px -1px 0 #666,
+    1px 1px 0 rgba(0, 0, 0, 0.15);
+}
+
+.wiz9-preview-frame--about {
+  background: linear-gradient(#d6d6d6, #c2c2c2);
+}
+
+.wiz9-preview-frame--about .wiz9-preview {
+  background: #d4d4d4;
+  box-shadow: inset 1px 1px 0 #eee, inset -1px -1px 0 #999;
 }
 
 .wiz9-preview {
-  flex: 0 0 min(240px, 38%);
-  width: min(240px, 38%);
-  min-width: 160px;
-  height: auto;
-  min-height: 140px;
-  align-self: stretch;
+  width: 100%;
+  height: 100%;
+  min-height: 132px;
   border: 1px solid #000;
   box-shadow: inset 1px 1px 0 #fff, inset -1px -1px 0 #999;
-  background: #5d7e8f;
+  background: var(--mac-bg, #5a749c);
   position: relative;
   overflow: hidden;
 }
 
-.wiz9-content {
+.wiz9-content-panel {
   flex: 1;
   min-width: 0;
-  padding-right: 4px;
+  padding: 6px 8px 4px 10px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  border: 2px solid #8f8f8f;
+  background: #f4f4f4;
+  box-shadow:
+    inset 1px 1px 0 #fff,
+    inset -1px -1px 0 #b5b5b5;
 }
 
 .wiz9-step-title {
-  font-family: Chicago, Charcoal, 'Geneva', 'Lucida Grande', system-ui, sans-serif;
-  font-size: 22px;
+  font-family: Chicago, Charcoal, Geneva, 'Lucida Grande', system-ui, sans-serif;
+  font-size: 20px;
   font-weight: 700;
-  letter-spacing: 0.2px;
-  margin: 0 0 12px;
-  line-height: 1.1;
+  letter-spacing: 0.15px;
+  margin: 0 0 10px;
+  line-height: 1.15;
+  padding-bottom: 8px;
+  border-bottom: 1px dotted #888;
 }
 
 .wiz9-step-body {
@@ -3570,15 +3594,29 @@ canvas {
 .wiz9-footer {
   flex: 0 0 auto;
   flex-shrink: 0;
-  padding: 10px 16px 12px;
-  background: #d8d8d8;
+  padding: 8px 14px 11px;
+  background: linear-gradient(180deg, #d6d6d6, #cacaca);
 }
 
 .wiz9-footer-rule {
   height: 0;
   border-top: 1px solid #8a8a8a;
   border-bottom: 1px solid #ffffff;
-  margin: 0 0 12px;
+  margin: 0 0 10px;
+}
+
+.wiz9-footer-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.wiz9-footer-status {
+  font-family: Geneva, 'Lucida Grande', Charcoal, system-ui, sans-serif;
+  font-size: 11px;
+  color: #444;
+  flex-shrink: 0;
 }
 
 .wiz9-footer-buttons {
@@ -3586,31 +3624,27 @@ canvas {
   justify-content: flex-end;
   align-items: center;
   gap: 8px;
+  flex-wrap: wrap;
 }
 
-/* Mac OS 9 dialog buttons: square-ish platinum rectangles with a
-   thin 1px black border and very subtle rounding. The default button
-   gets a heavy 2px solid black ring around it (no pulse). Font is
-   VT323 to match the rest of the wizard text and the existing site
-   buttons, so the chrome reads as the same era throughout. */
+/* Mac OS 9.2 dialog buttons — Geneva, platinum bevel, default ring */
 .wiz9-btn {
-  font-family: 'VT323', monospace;
-  font-size: 17px;
-  font-weight: 400;
-  letter-spacing: 0.3px;
+  font-family: Geneva, 'Lucida Grande', Charcoal, system-ui, sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0;
   color: #000;
   background: linear-gradient(#fafafa, #c4c4c4);
   border: 1px solid #000;
-  border-radius: 2px;
+  border-radius: 3px;
   box-shadow:
     inset 1px 1px 0 rgba(255, 255, 255, 0.9),
     inset -1px -1px 0 rgba(0, 0, 0, 0.22);
-  padding: 2px 18px 1px;
-  min-width: 84px;
-  height: 26px;
+  padding: 3px 16px 2px;
+  min-width: 76px;
+  height: 24px;
   cursor: pointer;
-  -webkit-font-smoothing: none;
-  font-smooth: never;
+  -webkit-font-smoothing: antialiased;
 }
 
 .wiz9-btn:hover:not(:disabled) {
@@ -3681,11 +3715,12 @@ canvas {
 
 .wiz9-mini-titlebar {
   height: 14px;
-  background: #cfcfcf;
+  background: var(--mac-platinum, #ccc);
   border-bottom: 1px solid #000;
   position: relative;
   display: flex;
   align-items: center;
+  justify-content: space-between;
   padding: 0 3px;
 }
 
@@ -3696,6 +3731,19 @@ canvas {
   border: 1px solid #000;
   border-radius: 1px;
   flex-shrink: 0;
+  box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.45);
+  z-index: 2;
+}
+
+.wiz9-mini-zoom {
+  width: 7px;
+  height: 7px;
+  background: #fff;
+  border: 1px solid #000;
+  border-radius: 1px;
+  flex-shrink: 0;
+  box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.8);
+  z-index: 2;
 }
 
 .wiz9-mini-stripes {
@@ -3796,20 +3844,20 @@ canvas {
   left: 50%;
   width: 540px !important;
   max-width: none !important;
-  transform: translate(-50%, -50%) scale(0.42);
+  transform: translate(-50%, -50%) scale(0.46);
   transform-origin: center center;
-  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.3);
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.35);
   animation: wiz9-preview-about-fade-in 0.4s ease-out;
 }
 
 @keyframes wiz9-preview-about-fade-in {
   from {
     opacity: 0;
-    transform: translate(-50%, -50%) scale(0.36);
+    transform: translate(-50%, -50%) scale(0.4);
   }
   to {
     opacity: 1;
-    transform: translate(-50%, -50%) scale(0.42);
+    transform: translate(-50%, -50%) scale(0.46);
   }
 }
 
@@ -3821,38 +3869,58 @@ canvas {
   position: absolute;
   top: 14px;
   left: 18px;
-  width: 60px;
+  width: 56px;
   text-align: center;
   color: #fff;
-  font-family: Chicago, Charcoal, system-ui, sans-serif;
+  font-family: Geneva, 'Lucida Grande', Charcoal, system-ui, sans-serif;
 }
 
-.wiz9-prev-icon-glyph {
-  font-size: 32px;
-  line-height: 1;
+.wiz9-prev-icon-img {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  display: block;
+  margin: 0 auto;
+  filter: drop-shadow(1px 1px 0 rgba(0, 0, 0, 0.35));
 }
 
 .wiz9-prev-icon-label {
-  margin-top: 2px;
-  font-size: 10px;
-  background: rgba(0, 0, 0, 0.0);
-  padding: 1px 4px;
+  margin-top: 3px;
+  font-size: 9px;
+  font-weight: 400;
+  background: transparent;
+  border: none;
+  padding: 1px 3px;
   display: inline-block;
+  max-width: 56px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-shadow:
+    1px 0 0 #000,
+    -1px 0 0 #000,
+    0 1px 0 #000,
+    0 -1px 0 #000;
 }
 
-.wiz9-prev-icon--anim {
+.wiz9-prev-icon--anim .wiz9-prev-icon-img {
   animation: wiz9-icon-select 4s ease-in-out infinite;
 }
 
 @keyframes wiz9-icon-select {
   0%, 30%, 90%, 100% {
     transform: scale(1);
+    filter: drop-shadow(1px 1px 0 rgba(0, 0, 0, 0.35));
   }
   35%, 45% {
-    transform: scale(0.92);
+    transform: scale(0.94);
+    filter: invert(100%) drop-shadow(1px 1px 0 rgba(0, 0, 0, 0.35));
   }
   50% {
     transform: scale(1);
+    filter: drop-shadow(1px 1px 0 rgba(0, 0, 0, 0.35));
   }
 }
 
@@ -3989,58 +4057,84 @@ canvas {
   display: flex;
   flex-direction: column;
   align-items: center;
-  color: #000;
-  font-family: Chicago, Charcoal, system-ui, sans-serif;
+  color: #fff;
+  font-family: Geneva, 'Lucida Grande', Charcoal, system-ui, sans-serif;
   font-size: 8px;
-  opacity: 0.7;
+  opacity: 0.75;
 }
 
 .wiz9-prev-app-ico {
-  font-size: 22px;
-  line-height: 1;
+  width: 26px;
+  height: 26px;
+  object-fit: contain;
   margin-bottom: 2px;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
   filter: drop-shadow(1px 1px 0 rgba(0, 0, 0, 0.35));
 }
 
-.wiz9-prev-app-ico--img {
-  width: 24px;
-  height: 24px;
-  object-fit: contain;
-  display: block;
-}
-
 .wiz9-prev-app-lab {
-  background: #ffffff;
-  border: 1px solid #000;
-  padding: 0 3px;
+  background: transparent;
+  border: none;
+  padding: 1px 2px;
   line-height: 1.2;
   -webkit-font-smoothing: antialiased;
   white-space: nowrap;
+  max-width: 64px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-shadow:
+    1px 0 0 #000,
+    -1px 0 0 #000,
+    0 1px 0 #000,
+    0 -1px 0 #000;
 }
 
 /* Stagger highlight across the icons */
-.wiz9-prev-app--1 { animation: wiz9-app-pulse 4.5s ease-in-out infinite 0.0s; }
+.wiz9-prev-app--1 { animation: wiz9-app-pulse 4.5s ease-in-out infinite 0s; }
 .wiz9-prev-app--2 { animation: wiz9-app-pulse 4.5s ease-in-out infinite 0.4s; }
 .wiz9-prev-app--3 { animation: wiz9-app-pulse 4.5s ease-in-out infinite 0.8s; }
 .wiz9-prev-app--4 { animation: wiz9-app-pulse 4.5s ease-in-out infinite 1.2s; }
 .wiz9-prev-app--5 { animation: wiz9-app-pulse 4.5s ease-in-out infinite 1.6s; }
-.wiz9-prev-app--6 { animation: wiz9-app-pulse 4.5s ease-in-out infinite 2.0s; }
+.wiz9-prev-app--6 { animation: wiz9-app-pulse 4.5s ease-in-out infinite 2s; }
 .wiz9-prev-app--7 { animation: wiz9-app-pulse 4.5s ease-in-out infinite 2.4s; }
 .wiz9-prev-app--8 { animation: wiz9-app-pulse 4.5s ease-in-out infinite 2.8s; }
 .wiz9-prev-app--9 { animation: wiz9-app-pulse 4.5s ease-in-out infinite 3.2s; }
 
 @keyframes wiz9-app-pulse {
   0%, 100% {
-    opacity: 0.55;
+    opacity: 0.65;
     transform: scale(1);
   }
   15% {
     opacity: 1;
-    transform: scale(1.18);
+    transform: scale(1.1);
   }
   30% {
-    opacity: 0.55;
+    opacity: 0.65;
     transform: scale(1);
+  }
+}
+
+.wiz9-prev-app--1 .wiz9-prev-app-ico { animation: wiz9-app-icon-flash 4.5s ease-in-out infinite 0s; }
+.wiz9-prev-app--2 .wiz9-prev-app-ico { animation: wiz9-app-icon-flash 4.5s ease-in-out infinite 0.4s; }
+.wiz9-prev-app--3 .wiz9-prev-app-ico { animation: wiz9-app-icon-flash 4.5s ease-in-out infinite 0.8s; }
+.wiz9-prev-app--4 .wiz9-prev-app-ico { animation: wiz9-app-icon-flash 4.5s ease-in-out infinite 1.2s; }
+.wiz9-prev-app--5 .wiz9-prev-app-ico { animation: wiz9-app-icon-flash 4.5s ease-in-out infinite 1.6s; }
+.wiz9-prev-app--6 .wiz9-prev-app-ico { animation: wiz9-app-icon-flash 4.5s ease-in-out infinite 2s; }
+.wiz9-prev-app--7 .wiz9-prev-app-ico { animation: wiz9-app-icon-flash 4.5s ease-in-out infinite 2.4s; }
+.wiz9-prev-app--8 .wiz9-prev-app-ico { animation: wiz9-app-icon-flash 4.5s ease-in-out infinite 2.8s; }
+.wiz9-prev-app--9 .wiz9-prev-app-ico { animation: wiz9-app-icon-flash 4.5s ease-in-out infinite 3.2s; }
+
+@keyframes wiz9-app-icon-flash {
+  0%, 100% {
+    filter: drop-shadow(1px 1px 0 rgba(0, 0, 0, 0.35));
+  }
+  15% {
+    filter: invert(100%) drop-shadow(1px 1px 0 rgba(0, 0, 0, 0.35));
+  }
+  30% {
+    filter: drop-shadow(1px 1px 0 rgba(0, 0, 0, 0.35));
   }
 }
 
@@ -4108,44 +4202,80 @@ canvas {
    ============================================================ */
 
 @media (max-width: 720px) {
-  .wiz9-body:not(.wiz9-body--welcome) {
+  .wiz9-body {
     flex-direction: column;
     overflow-y: auto;
   }
 
-  .wiz9-preview {
-    flex: 0 0 150px;
-    width: 100%;
-    min-width: 0;
-    height: 150px;
-    align-self: auto;
+  .wiz9-step-rail {
+    flex: 0 0 auto;
+    border-right: none;
+    border-bottom: 1px solid #8a8a8a;
+    box-shadow: 0 1px 0 #fff;
+    padding: 6px 8px;
   }
 
-  .wiz9-content {
+  .wiz9-step-rail-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 10px;
+  }
+
+  .wiz9-step-rail-item {
+    padding: 2px 4px;
+  }
+
+  .wiz9-main {
+    flex-direction: column;
+    padding: 8px 6px 4px;
+    overflow: visible;
+  }
+
+  .wiz9-preview-col {
     flex: 0 0 auto;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .wiz9-preview-frame {
+    min-height: 150px;
+  }
+
+  .wiz9-preview {
+    min-height: 140px;
+  }
+
+  .wiz9-content-panel {
+    flex: 0 0 auto;
+    min-height: 120px;
   }
 }
 
 @media (max-width: 640px) {
   .wiz9-body {
-    padding: 10px 12px 6px;
-  }
-
-  .wiz9-welcome-heading {
-    font-size: 22px;
+    padding: 8px 10px 4px;
   }
 
   .wiz9-step-title {
-    font-size: 18px;
+    font-size: 17px;
   }
 
   .wiz9-btn {
     min-width: 64px;
-    padding: 5px 12px;
+    padding: 4px 12px 3px;
   }
 
   .wiz9-footer {
-    padding: 8px 12px 10px;
+    padding: 6px 10px 9px;
+  }
+
+  .wiz9-footer-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .wiz9-footer-buttons {
+    justify-content: center;
   }
 }
 
