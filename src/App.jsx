@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 import BootScreen from './components/BootScreen';
 import MenuBar from './components/MenuBar';
 import DesktopIcon from './components/DesktopIcon';
@@ -518,6 +519,7 @@ function App() {
         <MusicBar />
         <SocialDock />
       </div>
+      <SpeedInsights />
     </AudioProvider>
   );
 }
