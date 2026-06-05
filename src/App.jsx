@@ -16,10 +16,8 @@ import LinkedInApp from './components/LinkedInApp';
 import SocialDock from './components/SocialDock';
 import ContactPanel from './components/ContactPanel';
 import { AudioProvider } from './AudioProvider';
+import { attachClickSounds } from './clickSounds';
 import { getDesktopLayout, getResponsiveWindowSize, getViewportSize } from './desktopLayout';
-
-const clickDownAudio = typeof window !== 'undefined' ? new window.Audio('/click-down.mp3') : null;
-const clickUpAudio = typeof window !== 'undefined' ? new window.Audio('/click-release.mp3') : null;
 
 function App() {
   const [booted, setBooted] = useState(false);
@@ -56,31 +54,8 @@ function App() {
   }, []);
 
   useEffect(() => {
-    const playDown = () => {
-      if (!clickDownAudio) return;
-      clickDownAudio.currentTime = 0;
-      clickDownAudio.volume = 0.5;
-      clickDownAudio.play().catch(() => {});
-    };
-    const playUp = () => {
-      if (!clickUpAudio) return;
-      clickUpAudio.currentTime = 0;
-      clickUpAudio.volume = 0.5;
-      clickUpAudio.play().catch(() => {});
-    };
-
-    if (booted) {
-      window.addEventListener('mousedown', playDown);
-      window.addEventListener('touchstart', playDown, { passive: true });
-      window.addEventListener('mouseup', playUp);
-      window.addEventListener('touchend', playUp, { passive: true });
-    }
-    return () => {
-      window.removeEventListener('mousedown', playDown);
-      window.removeEventListener('touchstart', playDown);
-      window.removeEventListener('mouseup', playUp);
-      window.removeEventListener('touchend', playUp);
-    };
+    if (!booted) return undefined;
+    return attachClickSounds();
   }, [booted]);
 
   const openWindow = useCallback((id, title, content, isCentered = false, options = {}) => {

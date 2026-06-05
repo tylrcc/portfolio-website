@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react';
+import { armClickSounds } from '../clickSounds';
 
 const BootScreen = ({ onBoot }) => {
   const [booting, setBooting] = useState(false);
@@ -8,6 +9,7 @@ const BootScreen = ({ onBoot }) => {
     if (booting || startedRef.current) return;
     startedRef.current = true;
     setBooting(true);
+    armClickSounds();
 
     const audio = new window.Audio('/Mac Startup Sound.mp3');
     audio.play().catch(() => {});

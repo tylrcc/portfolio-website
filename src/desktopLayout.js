@@ -28,12 +28,22 @@ export function getViewportContentHeight() {
   return Math.round(fullHeight - MENU_BAR_HEIGHT - BOTTOM_CHROME_HEIGHT);
 }
 
+export function getViewportWidth() {
+  if (typeof window === 'undefined') {
+    return 1000;
+  }
+  return Math.round(window.visualViewport?.width ?? window.innerWidth);
+}
+
+export function isMobileViewport() {
+  return getViewportWidth() <= 768;
+}
+
 export function getViewportPadding() {
   if (typeof window === 'undefined') {
     return 20;
   }
-  const width = window.visualViewport?.width ?? window.innerWidth;
-  return width <= 768 ? MOBILE_EDGE_PADDING : 20;
+  return isMobileViewport() ? MOBILE_EDGE_PADDING : 20;
 }
 
 /** Clamp a preferred window size to the current viewport (mobile-first). */
@@ -41,10 +51,10 @@ export function getResponsiveWindowSize(preferred) {
   if (typeof window === 'undefined') {
     return preferred;
   }
-  const width = window.visualViewport?.width ?? window.innerWidth;
+  const width = getViewportWidth();
   const height = getViewportContentHeight();
   const padding = getViewportPadding();
-  const isMobile = width <= 768;
+  const isMobile = isMobileViewport();
   const maxWidth = Math.max(240, width - padding * 2);
   const maxHeight = Math.max(180, height - padding * 2);
   if (!isMobile) {
@@ -54,8 +64,8 @@ export function getResponsiveWindowSize(preferred) {
     };
   }
   return {
-    width: Math.min(preferred.width, maxWidth),
-    height: Math.min(preferred.height, Math.floor(maxHeight * 0.92)),
+    width: maxWidth,
+    height: Math.min(preferred.height, Math.floor(maxHeight * 0.9)),
   };
 }
 

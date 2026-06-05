@@ -1,6 +1,11 @@
 import React, { useState, useRef, useEffect, useLayoutEffect, useCallback } from 'react';
 import Draggable from 'react-draggable';
-import { getViewportContentHeight, getViewportPadding } from '../desktopLayout';
+import {
+  getViewportContentHeight,
+  getViewportPadding,
+  getViewportWidth,
+  isMobileViewport,
+} from '../desktopLayout';
 
 const CHROME_WIDTH = 8;
 const CHROME_HEIGHT = 32;
@@ -14,10 +19,10 @@ const DEFAULT_WINDOW_SIZE = { width: 420, height: 280 };
 
 function clampInitialWindowSize(targetSize) {
   if (typeof window === 'undefined') return targetSize;
-  const viewportWidth = window.innerWidth;
+  const viewportWidth = getViewportWidth();
   const viewportHeight = getViewportContentHeight();
   const viewportPadding = getViewportPadding();
-  const isMobile = viewportWidth <= 768;
+  const isMobile = isMobileViewport();
   const maxWidthRatio = isMobile ? MOBILE_MAX_WIDTH_RATIO : MAX_WIDTH_RATIO;
   const maxWidth = Math.max(
     MIN_WIDTH,
@@ -32,7 +37,7 @@ function clampInitialWindowSize(targetSize) {
 
 function computeCenteredTopLeft(targetSize) {
   if (typeof window === 'undefined') return { x: 100, y: 80 };
-  const viewportWidth = window.innerWidth;
+  const viewportWidth = getViewportWidth();
   const viewportHeight = getViewportContentHeight();
   const viewportPadding = getViewportPadding();
   return {
@@ -69,16 +74,30 @@ const Window = ({
       : computeCenteredTopLeft(initialWindowSizeRef.current)
   ));
   const [isReady, setIsReady] = useState(centered && !autoFit);
+  const [mobileFit, setMobileFit] = useState(() => (
+    typeof window !== 'undefined' && isMobileViewport()
+  ));
 
   useEffect(() => {
     sizeRef.current = size;
   }, [size]);
 
+  useEffect(() => {
+    const syncMobile = () => setMobileFit(isMobileViewport());
+    syncMobile();
+    window.addEventListener('resize', syncMobile);
+    window.visualViewport?.addEventListener('resize', syncMobile);
+    return () => {
+      window.removeEventListener('resize', syncMobile);
+      window.visualViewport?.removeEventListener('resize', syncMobile);
+    };
+  }, []);
+
   const getViewportLimits = useCallback(() => {
-    const viewportWidth = window.innerWidth;
+    const viewportWidth = getViewportWidth();
     const viewportHeight = getViewportContentHeight();
     const viewportPadding = getViewportPadding();
-    const isMobile = viewportWidth <= 768;
+    const isMobile = isMobileViewport();
     const maxWidthRatio = isMobile ? MOBILE_MAX_WIDTH_RATIO : MAX_WIDTH_RATIO;
     return {
       maxWidth: Math.max(
@@ -90,7 +109,7 @@ const Window = ({
   }, []);
 
   const clampWindowPosition = useCallback((pos, width, height) => {
-    const viewportWidth = window.innerWidth;
+    const viewportWidth = getViewportWidth();
     const viewportHeight = getViewportContentHeight();
     const viewportPadding = getViewportPadding();
     const minX = viewportPadding;
@@ -153,6 +172,9 @@ const Window = ({
         }
       } else if (autoFit) {
         measureAndFit();
+      } else if (isMobileViewport()) {
+        const clamped = clampInitialWindowSize(initialSize);
+        setSize(clamped);
       } else if (!centered) {
         setPosition((prev) => clampWindowPosition(
           prev,
@@ -189,7 +211,7 @@ const Window = ({
       }
       if (observer) observer.disconnect();
     };
-  }, [children, clampWindowPosition, getViewportLimits, measureAndFit, autoFit, centered]);
+  }, [children, clampWindowPosition, getViewportLimits, measureAndFit, autoFit, centered, initialSize]);
 
   const handleResizeStart = (e) => {
     e.stopPropagation();
@@ -235,15 +257,18 @@ const Window = ({
     'mac-window',
     minimized ? 'mac-window--minimized' : '',
     centered ? 'mac-window--overlay' : '',
+    mobileFit ? 'mac-window--mobile-fit' : '',
     !isReady ? 'mac-window--pending' : ''
   ].filter(Boolean).join(' ');
 
   const windowStyle = {
     zIndex,
-    width: size.width,
+    width: mobileFit ? '100%' : size.width,
+    maxWidth: mobileFit ? `${size.width}px` : undefined,
     height: minimized ? undefined : size.height,
+    maxHeight: mobileFit ? `min(${size.height}px, calc(100dvh - 74px))` : undefined,
     resize: 'none',
-    visibility: isReady ? 'visible' : 'hidden'
+    visibility: isReady ? 'visible' : 'hidden',
   };
 
   const windowNode = (
