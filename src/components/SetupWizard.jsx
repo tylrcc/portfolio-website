@@ -67,7 +67,10 @@ const StepRail = ({ step, steps }) => (
           <span className="wiz9-step-rail-bullet" aria-hidden="true">
             {i < step ? '✓' : i === step ? '▸' : '○'}
           </span>
-          <span className="wiz9-step-rail-label">{s.railLabel}</span>
+          <span className="wiz9-step-rail-label" title={s.railLabel}>
+            <span className="wiz9-step-rail-label-long">{s.railLabel}</span>
+            <span className="wiz9-step-rail-label-short">{s.shortRailLabel || s.railLabel}</span>
+          </span>
         </li>
       ))}
     </ol>
@@ -170,6 +173,7 @@ const STEPS = [
   {
     id: 'welcome',
     railLabel: 'Introduction',
+    shortRailLabel: 'Intro',
     panelLabel: 'Introduction',
     title: "Welcome to ty's Portfolio",
     preview: PreviewWelcome,
@@ -202,6 +206,7 @@ const STEPS = [
   {
     id: 'open',
     railLabel: 'Open icons',
+    shortRailLabel: 'Icons',
     panelLabel: 'Desktop',
     title: 'Open icons',
     preview: PreviewOpenIcon,
@@ -220,6 +225,7 @@ const STEPS = [
   {
     id: 'move',
     railLabel: 'Windows',
+    shortRailLabel: 'Windows',
     panelLabel: 'Windows',
     title: 'Move & resize windows',
     preview: PreviewMoveWindow,
@@ -240,6 +246,7 @@ const STEPS = [
   {
     id: 'apps',
     railLabel: 'Applications',
+    shortRailLabel: 'Apps',
     panelLabel: 'Desktop',
     title: 'Try the apps',
     preview: PreviewApps,
@@ -267,6 +274,7 @@ const STEPS = [
   {
     id: 'done',
     railLabel: 'Complete',
+    shortRailLabel: 'Done',
     panelLabel: 'Finished',
     title: 'Setup Complete!',
     preview: PreviewComplete,

@@ -126,13 +126,20 @@ const Window = ({
     if (!autoFit) return;
     if (userManuallySizedRef.current) return;
     if (!contentRef.current) return;
-    const contentRoot = contentRef.current.firstElementChild || contentRef.current;
+    const shell = contentRef.current.firstElementChild;
+    const contentRoot =
+      shell?.firstElementChild ||
+      shell ||
+      contentRef.current;
     const { maxWidth, maxHeight } = getViewportLimits();
     const measuredWidth = Math.max(contentRoot.scrollWidth, contentRoot.clientWidth) + CHROME_WIDTH;
     const measuredHeight = Math.max(contentRoot.scrollHeight, contentRoot.clientHeight) + CHROME_HEIGHT;
+    const mobile = isMobileViewport();
     const fittedSize = {
-      width: Math.min(maxWidth, Math.max(MIN_WIDTH, measuredWidth)),
-      height: Math.min(maxHeight, Math.max(MIN_HEIGHT, measuredHeight))
+      width: mobile
+        ? maxWidth
+        : Math.min(maxWidth, Math.max(MIN_WIDTH, measuredWidth)),
+      height: Math.min(maxHeight, Math.max(MIN_HEIGHT, measuredHeight)),
     };
     const prevSize = sizeRef.current;
     setSize(fittedSize);
@@ -309,7 +316,9 @@ const Window = ({
 
       {!minimized && (
         <div className="mac-content" ref={contentRef}>
-          {children}
+          <div className={mobileFit ? 'mac-app-shell mac-app-shell--mobile' : 'mac-app-shell'}>
+            {children}
+          </div>
         </div>
       )}
 

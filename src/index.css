@@ -529,6 +529,23 @@ body {
   min-height: 0;
 }
 
+.mac-app-shell {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+}
+
+.mac-app-shell--mobile {
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.mac-app-shell--mobile > * {
+  max-width: 100%;
+  min-width: 0 !important;
+  box-sizing: border-box;
+}
+
 .mac-content-inner {
   background: #f2f2f2;
   border: 2px solid #8f8f8f;
@@ -1869,6 +1886,68 @@ body {
 
 .word95-font-select {
   min-width: 132px;
+}
+
+.word95--mobile .word95-menu-extra,
+.word95--mobile .word95-toolbar-extra,
+.word95--mobile .word95-ruler,
+.word95--mobile .word95-status-extra {
+  display: none !important;
+}
+
+.word95--mobile {
+  font-size: 11px;
+}
+
+.word95--mobile .word95-menu-row {
+  height: 22px;
+  padding: 0 4px;
+}
+
+.word95--mobile .word95-menu-row span {
+  padding: 2px 5px;
+  font-size: 11px;
+}
+
+.word95--mobile .word95-toolbar {
+  min-height: 24px;
+  padding: 2px 4px;
+  gap: 2px;
+  flex-wrap: nowrap;
+}
+
+.word95--mobile .word95-icon-btn {
+  min-width: 38px;
+  height: 20px;
+  font-size: 10px;
+}
+
+.word95--mobile.readme-resume {
+  min-height: 0 !important;
+}
+
+.word95--mobile .word95-document-shell {
+  min-height: 0 !important;
+  height: auto !important;
+  flex: 1 1 auto;
+  padding: 4px 4px 6px;
+}
+
+.word95--mobile .word95-resume-frame {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-height: 160px;
+  margin: 0;
+}
+
+.word95--mobile .word95-statusbar {
+  min-height: 20px;
+  padding: 2px 4px;
+  font-size: 10px;
+}
+
+.wiz9-step-rail-label-short {
+  display: none;
 }
 
 .word95-ruler {
@@ -4816,19 +4895,98 @@ canvas {
     flex-basis: 100%;
   }
 
+  .mac-app-shell--mobile {
+    font-size: 11px;
+  }
+
+  .mac-app-shell--mobile .mac-content-inner {
+    padding: 4px;
+    margin: 0;
+    min-height: 0;
+    font-size: 1rem;
+  }
+
   .about9,
   .cv-content,
   .readme-resume,
   .linkedin9,
   .work-app-scroll,
-  .doom-app {
-    min-width: 0;
-    width: 100%;
+  .doom-app,
+  .winamp-player,
+  .finder-app,
+  .wiz9 {
+    min-width: 0 !important;
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+
+  .cv-content {
+    min-width: 0 !important;
+    padding: 10px 12px;
+    font-size: 1rem;
+    line-height: 1.38;
   }
 
   .linkedin9 {
-    width: 100%;
-    min-width: 0;
+    font-size: 10px;
+  }
+
+  .linkedin9-app {
+    min-height: 0;
+  }
+
+  .linkedin9-hero-photo.linkedin9-photo-wrap--lg {
+    width: 72px;
+    height: 72px;
+  }
+
+  .linkedin9-photo-wrap--lg .linkedin9-photo {
+    width: 18px;
+    height: 18px;
+    transform: scale(4);
+  }
+
+  .linkedin9-name {
+    font-size: 15px;
+  }
+
+  .wiz9-step-rail-label-long {
+    display: none;
+  }
+
+  .wiz9-step-rail-label-short {
+    display: inline;
+  }
+
+  .wiz9-step-rail-item {
+    font-size: 11px;
+    padding: 2px 4px;
+  }
+
+  .wiz9--welcome .wiz9-preview-frame--about {
+    height: 100px;
+    min-height: 100px;
+  }
+
+  .wiz9-preview-frame--compact {
+    height: 88px;
+  }
+
+  .wiz9-step-title {
+    font-size: 16px;
+  }
+
+  .wiz9-content-panel {
+    font-size: 12px;
+    line-height: 1.42;
+  }
+
+  .wiz9-body {
+    padding: 4px 6px 2px;
+  }
+
+  .wiz9-footer-status {
+    font-size: 11px;
   }
 
   .linkedin9-hero {
@@ -4883,63 +5041,14 @@ canvas {
     letter-spacing: 0.03em;
   }
 
-  .word95-menu-row {
-    height: 26px;
-    padding: 0 3px;
-    overflow-x: auto;
-    scrollbar-width: none;
-  }
-
-  .word95-menu-row::-webkit-scrollbar,
-  .word95-toolbar::-webkit-scrollbar {
-    display: none;
-  }
-
-  .word95-menu-row span {
-    padding: 4px 6px;
-  }
-
-  .word95-toolbar {
-    min-height: 32px;
-    padding: 4px;
-  }
-
-  .word95-font-select {
-    min-width: 116px;
-  }
-
-  .word95-ruler {
-    height: 20px;
-    margin-left: 12px;
-  }
-
-  .word95-document-shell {
-    height: min(58vh, 470px);
-    padding: 10px 8px 12px;
-  }
-
-  .readme-resume.word95 {
-    min-height: 0;
-  }
-
-  .readme-resume .word95-document-shell {
-    height: auto;
-    min-height: min(44vh, 400px);
-    flex: 1 1 auto;
-  }
-
-  .readme-resume .word95-resume-frame {
-    min-height: min(40vh, 360px);
-  }
-
-  .word95-resume-frame {
-    width: 100%;
-    box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.3);
-  }
-
   .word95-statusbar {
     overflow-x: auto;
     white-space: nowrap;
+  }
+
+  .doom-app {
+    min-width: 0 !important;
+    width: 100% !important;
   }
 
   .doom-app {
@@ -5374,11 +5483,20 @@ canvas {
   }
 
   .wiz9--welcome .wiz9-preview-frame--about {
-    height: 112px;
-    min-height: 112px;
+    height: 88px;
+    min-height: 88px;
   }
 
   .wiz9-content-panel {
-    font-size: 14px;
+    font-size: 13px;
+  }
+
+  .wiz9-step-title {
+    font-size: 15px;
+  }
+
+  .linkedin9-photo-wrap--lg {
+    width: 64px;
+    height: 64px;
   }
 }

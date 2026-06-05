@@ -65,7 +65,7 @@ export function getResponsiveWindowSize(preferred) {
   }
   return {
     width: maxWidth,
-    height: Math.min(preferred.height, Math.floor(maxHeight * 0.9)),
+    height: Math.min(preferred.height, Math.floor(maxHeight * 0.82)),
   };
 }
 

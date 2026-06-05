@@ -78,7 +78,7 @@ function App() {
 
   const openSetupWizard = useCallback(() => {
     const close = () => closeWindowById('wizard');
-    const initialSize = getResponsiveWindowSize({ width: 648, height: 520 });
+    const initialSize = getResponsiveWindowSize({ width: 648, height: 460 });
     openWindow(
       'wizard',
       'Setup Assistant',
@@ -109,7 +109,10 @@ function App() {
   };
 
   const openReadmeResume = useCallback(() => {
-    openWindow('readme-resume', 'readme.txt', <ReadmeResumeApp />, true);
+    openWindow('readme-resume', 'readme.txt', <ReadmeResumeApp />, true, {
+      initialSize: getResponsiveWindowSize({ width: 560, height: 400 }),
+      autoFit: false,
+    });
   }, [openWindow]);
 
   const openAboutMe = useCallback(() => {
@@ -131,7 +134,10 @@ function App() {
   }, [openWindow]);
 
   const openContact = useCallback(() => {
-    openWindow('contact', 'Contact', <ContactPanel />);
+    openWindow('contact', 'Contact', <ContactPanel />, true, {
+      initialSize: getResponsiveWindowSize({ width: 400, height: 320 }),
+      autoFit: false,
+    });
   }, [openWindow]);
 
   const openHD = useCallback(() => {
@@ -164,7 +170,11 @@ function App() {
         kind: 'application',
         size: '112 K',
         icon: '/desktop-icons/spotify.png',
-        action: () => openWindow('spotify', 'Spotify Player', <SpotifyApp />),
+        action: () =>
+          openWindow('spotify', 'Spotify Player', <SpotifyApp />, true, {
+            initialSize: getResponsiveWindowSize({ width: 300, height: 340 }),
+            autoFit: false,
+          }),
       },
       {
         id: 'about',
@@ -182,7 +192,11 @@ function App() {
         kind: 'application',
         size: '2.1 MB',
         icon: '/desktop-icons/doom.png',
-        action: () => openWindow('doom', 'Doom', <DoomApp />),
+        action: () =>
+          openWindow('doom', 'Doom', <DoomApp />, true, {
+            initialSize: getResponsiveWindowSize({ width: 520, height: 380 }),
+            autoFit: false,
+          }),
       },
       {
         id: 'hd',
@@ -222,7 +236,11 @@ function App() {
         kind: 'folder',
         size: '-',
         icon: '/desktop-icons/work.png',
-        action: () => openWindow('work', 'Work', <WorkApp />),
+        action: () =>
+          openWindow('work', 'Work', <WorkApp />, true, {
+            initialSize: getResponsiveWindowSize({ width: 520, height: 400 }),
+            autoFit: false,
+          }),
       },
       {
         id: 'cv',
@@ -231,7 +249,11 @@ function App() {
         kind: 'document',
         size: '42 K',
         icon: '/desktop-icons/cv.png',
-        action: () => openWindow('cv', 'CV', <CVApp />, true),
+        action: () =>
+          openWindow('cv', 'CV', <CVApp />, true, {
+            initialSize: getResponsiveWindowSize({ width: 520, height: 420 }),
+            autoFit: false,
+          }),
       },
     ],
     [openWindow, openReadmeResume, openAboutMe, openContact, openHD]
@@ -409,7 +431,12 @@ function App() {
   return (
     <AudioProvider>
       <MenuBar
-        onOpenHelp={() => openWindow('help', 'Wiz Tree', <HelpWindow />, true)}
+        onOpenHelp={() =>
+          openWindow('help', 'Wiz Tree', <HelpWindow />, true, {
+            initialSize: getResponsiveWindowSize({ width: 480, height: 380 }),
+            autoFit: false,
+          })
+        }
         onOpenFinder={() => openFinder()}
         menuActions={menuActions}
       />
