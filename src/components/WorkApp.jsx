@@ -255,31 +255,29 @@ function FourSeatMiniPreview() {
         </div>
         <div className="work-fourseat-mini-viewport">
           <div className="work-fourseat-faux" aria-hidden="true">
-            <div className="work-fourseat-faux-nav">
-              <span className="work-fourseat-faux-logo">fourseat</span>
-              <span className="work-fourseat-faux-nav-links">Oracle · Decks · Memory</span>
-            </div>
-            <div className="work-fourseat-faux-hero">
-              <span className="work-fourseat-faux-kicker">Revenue intelligence</span>
-              <p className="work-fourseat-faux-head">
-                Your company&apos;s
-                <br />
-                <em>brain</em> for signals
-              </p>
-              <p className="work-fourseat-faux-sub">Connect Stripe, GitHub, Linear — convene the board.</p>
-              <div className="work-fourseat-faux-row">
-                <span className="work-fourseat-faux-btn">Get early access</span>
-                <span className="work-fourseat-faux-btn work-fourseat-faux-btn--ghost">See Oracle</span>
+            <div
+              className="work-fourseat-faux-bg"
+              style={{ backgroundImage: 'url(/work/fourseat/hero-poster.jpg)' }}
+            />
+            <div className="work-fourseat-faux-scrim" />
+            <nav className="work-fourseat-faux-nav">
+              <div className="work-fourseat-faux-brand">
+                <img src="/work/fourseat/logo-circle.png" alt="" />
+                <span>fourseat</span>
               </div>
-            </div>
-            <div className="work-fourseat-faux-board">
-              {FOURSEAT.roles.map((role) => (
-                <span key={role}>{role}</span>
-              ))}
+              <div className="work-fourseat-faux-nav-right">
+                <span>Oracle</span>
+                <span className="work-fourseat-faux-nav-hide-sm">How it works</span>
+                <span className="work-fourseat-faux-cta">Get access</span>
+              </div>
+            </nav>
+            <div className="work-fourseat-faux-hero">
+              <p className="work-fourseat-faux-eyebrow">The Context Layer</p>
+              <p className="work-fourseat-faux-word">fourseat</p>
+              <p className="work-fourseat-faux-tag">Built for the modern company</p>
             </div>
           </div>
           <div className="work-fourseat-mini-shine" aria-hidden="true" />
-          <div className="work-fourseat-mini-scan" aria-hidden="true" />
         </div>
       </div>
       <span className="work-fourseat-mini-caption">
