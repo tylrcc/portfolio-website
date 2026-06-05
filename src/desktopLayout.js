@@ -1,7 +1,11 @@
 export const MENU_BAR_HEIGHT = 28;
+export const BOTTOM_CHROME_HEIGHT = 34;
 export const DESKTOP_PADDING = 10;
+export const MOBILE_EDGE_PADDING = 12;
 export const ICON_WIDTH = 80;
 export const ICON_ROW_HEIGHT = 82;
+export const MOBILE_ICON_WIDTH = 68;
+export const MOBILE_ICON_ROW_HEIGHT = 58;
 
 export function getViewportSize() {
   if (typeof window === 'undefined') {
@@ -10,7 +14,48 @@ export function getViewportSize() {
   const vv = window.visualViewport;
   return {
     width: Math.round(vv?.width ?? window.innerWidth),
-    height: Math.round((vv?.height ?? window.innerHeight) - MENU_BAR_HEIGHT),
+    height: Math.round(getViewportContentHeight()),
+  };
+}
+
+/** Usable height below the menu bar and above the bottom control strips. */
+export function getViewportContentHeight() {
+  if (typeof window === 'undefined') {
+    return 700;
+  }
+  const vv = window.visualViewport;
+  const fullHeight = vv?.height ?? window.innerHeight;
+  return Math.round(fullHeight - MENU_BAR_HEIGHT - BOTTOM_CHROME_HEIGHT);
+}
+
+export function getViewportPadding() {
+  if (typeof window === 'undefined') {
+    return 20;
+  }
+  const width = window.visualViewport?.width ?? window.innerWidth;
+  return width <= 768 ? MOBILE_EDGE_PADDING : 20;
+}
+
+/** Clamp a preferred window size to the current viewport (mobile-first). */
+export function getResponsiveWindowSize(preferred) {
+  if (typeof window === 'undefined') {
+    return preferred;
+  }
+  const width = window.visualViewport?.width ?? window.innerWidth;
+  const height = getViewportContentHeight();
+  const padding = getViewportPadding();
+  const isMobile = width <= 768;
+  const maxWidth = Math.max(240, width - padding * 2);
+  const maxHeight = Math.max(180, height - padding * 2);
+  if (!isMobile) {
+    return {
+      width: Math.min(preferred.width, maxWidth),
+      height: Math.min(preferred.height, maxHeight),
+    };
+  }
+  return {
+    width: Math.min(preferred.width, maxWidth),
+    height: Math.min(preferred.height, Math.floor(maxHeight * 0.92)),
   };
 }
 
@@ -18,15 +63,18 @@ export function getViewportSize() {
 export function getDesktopLayout(width, height) {
   const isMobile = width <= 768;
   const isSmall = width <= 480;
-  const pad = DESKTOP_PADDING;
-  const rowGap = isSmall ? 70 : isMobile ? 76 : ICON_ROW_HEIGHT;
-  const topY = isSmall ? 10 : isMobile ? 12 : 20;
+  const pad = isMobile ? 4 : DESKTOP_PADDING;
+  const iconWidth = isMobile ? MOBILE_ICON_WIDTH : ICON_WIDTH;
+  const rowGap = isSmall ? MOBILE_ICON_ROW_HEIGHT : isMobile ? MOBILE_ICON_ROW_HEIGHT + 2 : ICON_ROW_HEIGHT;
+  const topY = isSmall ? 2 : isMobile ? 4 : 20;
 
   const contentWidth = width - pad * 2;
-  const leftColumnX = isSmall ? 0 : isMobile ? 2 : pad;
-  const maxX = Math.max(leftColumnX, contentWidth - ICON_WIDTH);
-  const rightColumnX = Math.max(leftColumnX + ICON_WIDTH + 8, maxX);
-  const maxY = Math.max(topY, height - pad - ICON_ROW_HEIGHT);
+  const leftColumnX = isMobile ? 0 : pad;
+  const rightColumnX = isMobile
+    ? Math.min(iconWidth + 4, Math.max(iconWidth + 4, contentWidth - iconWidth))
+    : Math.max(leftColumnX + ICON_WIDTH + 8, contentWidth - ICON_WIDTH);
+  const maxX = Math.max(leftColumnX, contentWidth - iconWidth);
+  const maxY = Math.max(topY, height - pad - rowGap);
 
   const iconY = (row) => topY + row * rowGap;
 
@@ -38,6 +86,7 @@ export function getDesktopLayout(width, height) {
     iconY,
     maxX,
     maxY,
+    iconWidth,
     contentWidth: width - pad * 2,
     contentHeight: height - pad * 2,
   };

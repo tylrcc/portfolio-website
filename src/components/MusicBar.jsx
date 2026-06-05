@@ -22,8 +22,8 @@ const MusicBar = () => {
       >
         {isPlaying ? '⏸' : '▶'}
       </button>
-      <div className="control-strip-module">
-        <span style={{ fontFamily: 'Arial, sans-serif', fontSize: '10px', overflow: 'hidden', maxWidth: '100px', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+      <div className="control-strip-module control-strip-module--track">
+        <span className="control-strip-track-label">
           {currentTrack ? currentTrack.name : 'Ready'}
         </span>
       </div>

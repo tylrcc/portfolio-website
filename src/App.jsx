@@ -16,7 +16,7 @@ import LinkedInApp from './components/LinkedInApp';
 import SocialDock from './components/SocialDock';
 import ContactPanel from './components/ContactPanel';
 import { AudioProvider } from './AudioProvider';
-import { getDesktopLayout, getViewportSize } from './desktopLayout';
+import { getDesktopLayout, getResponsiveWindowSize, getViewportSize } from './desktopLayout';
 
 const clickDownAudio = typeof window !== 'undefined' ? new window.Audio('/click-down.mp3') : null;
 const clickUpAudio = typeof window !== 'undefined' ? new window.Audio('/click-release.mp3') : null;
@@ -103,12 +103,13 @@ function App() {
 
   const openSetupWizard = useCallback(() => {
     const close = () => closeWindowById('wizard');
+    const initialSize = getResponsiveWindowSize({ width: 648, height: 520 });
     openWindow(
       'wizard',
       'Setup Assistant',
       <SetupWizard onFinish={close} onCancel={close} />,
       true,
-      { initialSize: { width: 648, height: 520 }, autoFit: false }
+      { initialSize, autoFit: false }
     );
   }, [openWindow, closeWindowById]);
 
@@ -226,7 +227,7 @@ function App() {
         icon: '/desktop-icons/linkedin.png',
         action: () =>
           openWindow('linkedin', 'LinkedIn', <LinkedInApp />, true, {
-            initialSize: { width: 680, height: 520 },
+            initialSize: getResponsiveWindowSize({ width: 680, height: 520 }),
             autoFit: false,
           }),
       },

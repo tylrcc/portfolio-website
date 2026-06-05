@@ -1,19 +1,14 @@
 import React, { useState, useRef, useEffect, useLayoutEffect, useCallback } from 'react';
 import Draggable from 'react-draggable';
+import { getViewportContentHeight, getViewportPadding } from '../desktopLayout';
 
 const CHROME_WIDTH = 8;
 const CHROME_HEIGHT = 32;
-const VIEWPORT_PADDING = 20;
-/** Horizontal and vertical inset from the desktop edge on small screens (must match CSS `.mac-window` gutter). */
-const MOBILE_VIEWPORT_PADDING = 28;
 const MIN_WIDTH = 240;
 const MIN_HEIGHT = 150;
 const MAX_WIDTH_RATIO = 0.97;
 /** On mobile, cap width so windows stay visibly inset even when content is wide. */
-const MOBILE_MAX_WIDTH_RATIO = 0.92;
-
-const getViewportContentHeight = () => (window.visualViewport?.height ?? window.innerHeight) - 28;
-const getViewportPadding = () => (window.innerWidth <= 768 ? MOBILE_VIEWPORT_PADDING : VIEWPORT_PADDING);
+const MOBILE_MAX_WIDTH_RATIO = 0.94;
 
 const DEFAULT_WINDOW_SIZE = { width: 420, height: 280 };
 
