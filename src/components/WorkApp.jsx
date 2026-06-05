@@ -1,31 +1,11 @@
-import React, { useEffect, useRef, useState } from 'react';
-
-/** Set your live links here */
-const FOURSEAT_URL = 'https://fourseat.dev/';
-const QUANT_GITHUB_PROFILE_URL = 'https://github.com/tylrcc';
-const GITHUB_PROFILE_URL = 'https://github.com/tylrcc';
-const LINKEDIN_PROFILE_URL = 'https://www.linkedin.com/in/tylerriccardi/';
-const LEETCODE_PROFILE_URL = 'https://leetcode.com/u/tylrcc/';
-const LEETCODE_API_URL = 'https://alfa-leetcode-api.onrender.com/tylrcc/solved';
-
-/** Last-known stats; shown instantly and used if the live fetch fails. */
-const LEETCODE_FALLBACK = { total: 515, easy: 141, medium: 158, hard: 216 };
-
-const FOURSEAT_TECH = ['React', 'Node.js', 'LLMs', 'Vercel'];
-const QUANT_TECH = ['Python', 'NumPy', 'SciPy', 'pandas'];
-
-const SKILL_GROUPS = [
-  { group: 'Languages', items: ['Python', 'JavaScript', 'TypeScript', 'SQL', 'MATLAB'] },
-  { group: 'Quant & Data', items: ['NumPy', 'pandas', 'SciPy', 'scikit-learn'] },
-  { group: 'Web', items: ['React', 'Node.js', 'Vite'] },
-  { group: 'Finance', items: ['Modeling', 'QuickBooks', 'Bloomberg BMC'] },
-];
-
-const CONNECT_LINKS = [
-  { label: 'GitHub', handle: '@tylrcc', href: GITHUB_PROFILE_URL },
-  { label: 'LinkedIn', handle: 'in/tylerriccardi', href: LINKEDIN_PROFILE_URL },
-  { label: 'LeetCode', handle: '@tylrcc', href: LEETCODE_PROFILE_URL },
-];
+import React, { useEffect, useState } from 'react';
+import {
+  CONNECT_LINKS,
+  FOURSEAT,
+  FOURSEAT_URL,
+  PINNED_OPENSOURCE,
+  QUANT_ALGO,
+} from '../data/workProjects';
 
 const CODE_LINES = [
   { key: 'l1', parts: [{ c: 'kw', t: 'import' }, { c: 'pl', t: ' numpy ' }, { c: 'kw', t: 'as' }, { c: 'var', t: ' np' }] },
@@ -216,7 +196,48 @@ function MpwTitlebar({ title }) {
   );
 }
 
-const FOURSEAT_ROLES = ['Strategist', 'CFO', 'CTO', 'Contrarian'];
+function WorkFinderChrome() {
+  return (
+    <div className="work-finder-chrome">
+      <div className="work-finder-menubar" aria-hidden="true">
+        <span>File</span>
+        <span>View</span>
+        <span className="work-finder-menubar-fill" />
+        <span className="work-finder-menubar-pill">Work</span>
+      </div>
+      <div className="work-finder-path" aria-label="Current folder">
+        <img src="/finder-logo-classic.png" alt="" className="work-finder-path-icon" />
+        <span>Macintosh HD</span>
+        <span className="work-finder-chev">▸</span>
+        <span>tyler</span>
+        <span className="work-finder-chev">▸</span>
+        <strong>Work</strong>
+      </div>
+    </div>
+  );
+}
+
+function TechTags({ items }) {
+  return (
+    <div className="work-tech-tags" aria-label="Tech stack">
+      <span className="work-tech-label">Built with</span>
+      {items.map((t) => (
+        <span key={t} className="work-tech-tag">{t}</span>
+      ))}
+    </div>
+  );
+}
+
+function MacButton({ href, children, external = true }) {
+  const props = external
+    ? { target: '_blank', rel: 'noopener noreferrer' }
+    : {};
+  return (
+    <a className="work-card-link work-card-link--mac" href={href} {...props}>
+      {children}
+    </a>
+  );
+}
 
 function FourSeatMiniPreview() {
   return (
@@ -233,34 +254,28 @@ function FourSeatMiniPreview() {
           <span className="work-fourseat-mini-zoom" />
         </div>
         <div className="work-fourseat-mini-viewport">
-          {/*
-            Live site uses X-Frame-Options: DENY; embed a compact animated mock
-            of the marketing page; click still opens the real app.
-          */}
           <div className="work-fourseat-faux" aria-hidden="true">
             <div className="work-fourseat-faux-nav">
-              <span className="work-fourseat-faux-logo">Fourseat AI</span>
-              <span className="work-fourseat-faux-nav-links">How it works · Pricing · About</span>
+              <span className="work-fourseat-faux-logo">fourseat</span>
+              <span className="work-fourseat-faux-nav-links">Oracle · Decks · Memory</span>
             </div>
             <div className="work-fourseat-faux-hero">
-              <span className="work-fourseat-faux-kicker">Early access is now open</span>
+              <span className="work-fourseat-faux-kicker">Revenue intelligence</span>
               <p className="work-fourseat-faux-head">
-                Fourseat,
+                Your company&apos;s
                 <br />
-                your personal <em>board of directors</em>
+                <em>brain</em> for signals
               </p>
-              <p className="work-fourseat-faux-sub">Full-time AI that debates every decision.</p>
+              <p className="work-fourseat-faux-sub">Connect Stripe, GitHub, Linear — convene the board.</p>
               <div className="work-fourseat-faux-row">
                 <span className="work-fourseat-faux-btn">Get early access</span>
-                <span className="work-fourseat-faux-btn work-fourseat-faux-btn--ghost">See pricing</span>
+                <span className="work-fourseat-faux-btn work-fourseat-faux-btn--ghost">See Oracle</span>
               </div>
             </div>
             <div className="work-fourseat-faux-board">
-              <span>Strategist</span>
-              <span>CFO</span>
-              <span>CTO</span>
-              <span>Contrarian</span>
-              <span className="work-fourseat-faux-board-chair">Chair</span>
+              {FOURSEAT.roles.map((role) => (
+                <span key={role}>{role}</span>
+              ))}
             </div>
           </div>
           <div className="work-fourseat-mini-shine" aria-hidden="true" />
@@ -268,7 +283,7 @@ function FourSeatMiniPreview() {
         </div>
       </div>
       <span className="work-fourseat-mini-caption">
-        Mini landing (animated) - opens <strong>fourseat.dev</strong> in a new tab
+        Live preview — opens <strong>fourseat.dev</strong>
       </span>
     </a>
   );
@@ -305,7 +320,7 @@ function QuantCodeDemo() {
   return (
     <div className="quant-demo">
       <div className="quant-window">
-        <MpwTitlebar title="Macintosh HD:MPW:Projects:walk_forward_stack.py" />
+        <MpwTitlebar title="MPW:quantalgo-propfirms:walk_forward.py" />
         <pre className="quant-code">
           {visible.map(({ line, full, max }) => (
             <div key={line.key} className="quant-code-line">
@@ -320,7 +335,7 @@ function QuantCodeDemo() {
         </pre>
       </div>
       <div className="quant-terminal">
-        <MpwTitlebar title="MPW Shell - Output" />
+        <MpwTitlebar title="MPW Shell — Output" />
         <div className={`quant-terminal-body${lineIdx >= CODE_LINES.length ? ' quant-terminal-body--live' : ''}`}>
           {lineIdx >= CODE_LINES.length
             && TERMINAL_LINES.map((t, i) => (
@@ -338,163 +353,33 @@ function QuantCodeDemo() {
   );
 }
 
-function useCountUp(target, duration = 1000) {
-  const [value, setValue] = useState(0);
-  const fromRef = useRef(0);
-
-  useEffect(() => {
-    const from = fromRef.current;
-    const start = performance.now();
-    let raf;
-    const tick = (now) => {
-      const p = Math.min(1, (now - start) / duration);
-      const eased = 1 - (1 - p) ** 3;
-      setValue(Math.round(from + (target - from) * eased));
-      if (p < 1) {
-        raf = window.requestAnimationFrame(tick);
-      } else {
-        fromRef.current = target;
-      }
-    };
-    raf = window.requestAnimationFrame(tick);
-    return () => window.cancelAnimationFrame(raf);
-  }, [target, duration]);
-
-  return value;
-}
-
-function TechTags({ items }) {
+function OssProjectRow({ project, index }) {
   return (
-    <div className="work-tech-tags" aria-label="Tech stack">
-      <span className="work-tech-label">Built with</span>
-      {items.map((t) => (
-        <span key={t} className="work-tech-tag">{t}</span>
-      ))}
-    </div>
-  );
-}
-
-function LeetCodeCard() {
-  const [stats, setStats] = useState(LEETCODE_FALLBACK);
-  const [live, setLive] = useState(false);
-  const total = useCountUp(stats.total);
-
-  useEffect(() => {
-    let cancelled = false;
-    const controller = new AbortController();
-    fetch(LEETCODE_API_URL, { signal: controller.signal })
-      .then((r) => (r.ok ? r.json() : Promise.reject(new Error('bad status'))))
-      .then((d) => {
-        if (cancelled || typeof d.solvedProblem !== 'number') return;
-        setStats({
-          total: d.solvedProblem,
-          easy: d.easySolved ?? 0,
-          medium: d.mediumSolved ?? 0,
-          hard: d.hardSolved ?? 0,
-        });
-        setLive(true);
-      })
-      .catch(() => {});
-    return () => {
-      cancelled = true;
-      controller.abort();
-    };
-  }, []);
-
-  const rows = [
-    { key: 'easy', label: 'Easy', value: stats.easy },
-    { key: 'medium', label: 'Medium', value: stats.medium },
-    { key: 'hard', label: 'Hard', value: stats.hard },
-  ];
-  const maxVal = Math.max(stats.easy, stats.medium, stats.hard, 1);
-
-  return (
-    <article className="work-card work-card--leetcode">
-      <div className="work-mpw-shell">
-        <MpwTitlebar title="Macintosh HD:Apps:LeetCode" />
-        <div className="work-mpw-body">
-          <p className="work-card-kicker">Coding practice</p>
-          <h3>LeetCode</h3>
-          <p className="work-card-desc work-card-desc--compact">
-            Daily algorithm reps - data structures, dynamic programming, graphs, and
-            optimization. {live ? 'Counts pulled live from my profile.' : 'Recent profile snapshot.'}
-          </p>
-
-          <div className="lc-display">
-            <div className="lc-display-grid" aria-hidden="true" />
-            <div className="lc-display-num">{total.toLocaleString()}</div>
-            <div className="lc-display-label">
-              problems solved
-              <span className={`lc-live-dot${live ? ' lc-live-dot--on' : ''}`} />
-              {live ? 'live' : 'cached'}
-            </div>
-          </div>
-
-          <div className="lc-rows">
-            {rows.map((r) => (
-              <div key={r.key} className={`lc-row lc-row--${r.key}`}>
-                <span className="lc-row-label">{r.label}</span>
-                <span className="lc-row-track">
-                  <span
-                    className="lc-row-fill"
-                    style={{ width: `${Math.max(6, (r.value / maxVal) * 100)}%` }}
-                  />
-                </span>
-                <span className="lc-row-val">{r.value}</span>
-              </div>
-            ))}
-          </div>
-
-          <div className="work-card-footer">
-            <a
-              className="work-card-link work-card-link--mac"
-              href={LEETCODE_PROFILE_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              View LeetCode profile →
-            </a>
-          </div>
-        </div>
-      </div>
-    </article>
-  );
-}
-
-function ToolboxCard() {
-  return (
-    <article className="work-card work-card--toolbox">
-      <div className="work-mpw-shell">
-        <MpwTitlebar title="Macintosh HD:Control Panels:Toolbox" />
-        <div className="work-mpw-body">
-          <p className="work-card-kicker">Capabilities</p>
-          <h3>Toolbox</h3>
-          <p className="work-card-desc work-card-desc--compact">
-            The stack I reach for across product engineering, quantitative research, and finance.
-          </p>
-
-          <div className="skill-groups">
-            {SKILL_GROUPS.map((g) => (
-              <div key={g.group} className="skill-group">
-                <span className="skill-group-title">{g.group}</span>
-                <div className="skill-chips">
-                  {g.items.map((item) => (
-                    <span key={item} className="skill-chip">{item}</span>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    </article>
+    <a
+      href={project.url}
+      className="work-oss-row"
+      target="_blank"
+      rel="noopener noreferrer"
+      style={{ animationDelay: `${0.08 + index * 0.07}s` }}
+    >
+      <span className="work-oss-row-icon" aria-hidden="true">{project.icon}</span>
+      <span className="work-oss-row-main">
+        <span className="work-oss-row-name">{project.title}</span>
+        <span className="work-oss-row-desc">{project.description}</span>
+      </span>
+      <span className="work-oss-row-meta">
+        <span className="work-oss-row-lang">{project.language}</span>
+        <span className="work-oss-row-stars">★ {project.stars}</span>
+      </span>
+      <span className="work-oss-row-go" aria-hidden="true">▸</span>
+    </a>
   );
 }
 
 function ConnectBar() {
   return (
     <section className="work-connect" aria-label="Find me online">
-      <span className="work-connect-label">Find me</span>
+      <span className="work-connect-label">Connect</span>
       <div className="work-connect-links">
         {CONNECT_LINKS.map((l) => (
           <a
@@ -514,85 +399,99 @@ function ConnectBar() {
 }
 
 const WorkApp = () => (
-  <div className="mac-content-inner work-app-scroll work-projects">
-    <header className="work-projects-intro">
-      <h2>Work</h2>
-      <p>
-        Products I&apos;ve shipped, quantitative research, and where I sharpen the craft.
-        Everything below opens in a new tab.
-      </p>
+  <div className="mac-content-inner work-app">
+    <WorkFinderChrome />
+
+    <header className="work-intro-panel">
+      <div className="work-intro-icon" aria-hidden="true">
+        <img src="/desktop-icons/work.png" alt="" />
+      </div>
+      <div>
+        <h2>Work</h2>
+        <p>
+          Products I ship, quant research, and pinned open source from{' '}
+          <a href="https://github.com/tylrcc" target="_blank" rel="noopener noreferrer">@tylrcc</a>.
+          Everything opens in a new tab.
+        </p>
+      </div>
     </header>
 
-    <div className="work-projects-grid">
-      <article className="work-card work-card--fourseat">
-        <div className="work-mpw-shell work-mpw-shell--tall">
-          <MpwTitlebar title="Macintosh HD:Projects:FourSeat" />
+    <div className="work-stack">
+      <article className="work-panel work-panel--fourseat">
+        <div className="work-mpw-shell">
+          <MpwTitlebar title={`Macintosh HD:Projects:${FOURSEAT.name}`} />
           <div className="work-mpw-body">
-            <p className="work-card-kicker">Product</p>
-            <h3>FourSeat</h3>
-            <p className="work-card-desc">
-              FourSeat is an AI-powered decision-making platform that gives founders and operators a personal board of directors.
-              Instead of one flat model reply or pure instinct, every decision runs through four independent AI members, then they debate,
-              and a Chairman synthesizes the thread into a single verdict with risks, opportunities, and concrete next steps.
-            </p>
+            <div className="work-panel-head">
+              <img src={FOURSEAT.logo} alt="" className="work-panel-logo" />
+              <div>
+                <p className="work-card-kicker">{FOURSEAT.kicker}</p>
+                <h3>{FOURSEAT.title}</h3>
+              </div>
+            </div>
+            <p className="work-card-desc">{FOURSEAT.description}</p>
             <div className="work-fourseat-roles" aria-label="Board members">
-              {FOURSEAT_ROLES.map((role, i) => (
+              {FOURSEAT.roles.map((role, i) => (
                 <span
                   key={role}
                   className="work-role-chip"
-                  style={{ animationDelay: `${0.12 + i * 0.1}s` }}
+                  style={{ animationDelay: `${0.12 + i * 0.08}s` }}
                 >
                   {role}
                 </span>
               ))}
             </div>
-            <p className="work-card-desc work-card-desc--compact">
-              Each seat challenges the others before the Chairman locks the plan, so you get structured disagreement, not groupthink.
-            </p>
             <FourSeatMiniPreview />
             <div className="work-card-footer">
-              <TechTags items={FOURSEAT_TECH} />
-              <a className="work-card-link work-card-link--mac" href={FOURSEAT_URL} target="_blank" rel="noopener noreferrer">
-                Open FourSeat site →
-              </a>
+              <TechTags items={FOURSEAT.tech} />
+              <MacButton href={FOURSEAT.url}>Open fourseat.dev →</MacButton>
             </div>
           </div>
         </div>
       </article>
 
-      <article className="work-card work-card--quant">
-        <div className="work-mpw-shell work-mpw-shell--tall">
-          <MpwTitlebar title="Macintosh HD:Projects:QuantResearch" />
-          <div className="work-mpw-body work-mpw-body--quant-intro">
-            <p className="work-card-kicker">Quant research</p>
-            <h3>Quant algo project</h3>
-            <p className="work-card-desc">
-              Private research codebase I iterate on solo: multi-window walk-forward validation, rank IC and factor hygiene, CVaR-style
-              objectives with turnover and leverage constraints, post-cost simulation, and regime-aware blends. Nothing here is a public
-              product; the link below is just my GitHub profile.
-            </p>
+      <article className="work-panel work-panel--quant">
+        <div className="work-mpw-shell">
+          <MpwTitlebar title={`Macintosh HD:Projects:${QUANT_ALGO.name}`} />
+          <div className="work-mpw-body work-mpw-body--quant">
+            <p className="work-card-kicker">{QUANT_ALGO.kicker}</p>
+            <h3>{QUANT_ALGO.title}</h3>
+            <p className="work-card-desc">{QUANT_ALGO.description}</p>
             <div className="work-quant-demo-wrap">
               <QuantCodeDemo />
             </div>
             <div className="work-card-footer">
-              <TechTags items={QUANT_TECH} />
-              <a
-                className="work-card-link work-card-link--mac"
-                href={QUANT_GITHUB_PROFILE_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                My GitHub profile →
-              </a>
+              <TechTags items={QUANT_ALGO.tech} />
+              <MacButton href={QUANT_ALGO.url}>View on GitHub →</MacButton>
             </div>
           </div>
         </div>
       </article>
-    </div>
 
-    <div className="work-secondary-grid">
-      <LeetCodeCard />
-      <ToolboxCard />
+      <section className="work-oss-panel">
+        <div className="work-mpw-shell">
+          <MpwTitlebar title="Macintosh HD:Open Source (pinned)" />
+          <div className="work-mpw-body work-mpw-body--oss">
+            <p className="work-card-kicker">Open source</p>
+            <h3>Pinned on GitHub</h3>
+            <p className="work-card-desc work-card-desc--compact">
+              Public repos I&apos;m building alongside Fourseat and quant work.
+            </p>
+            <div className="work-oss-list" role="list">
+              {PINNED_OPENSOURCE.map((project, i) => (
+                <OssProjectRow key={project.id} project={project} index={i} />
+              ))}
+            </div>
+            <div className="work-oss-tags">
+              {PINNED_OPENSOURCE.map((p) => (
+                <div key={p.id} className="work-oss-tag-group">
+                  <span className="work-oss-tag-name">{p.name}</span>
+                  <TechTags items={p.tech} />
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
 
     <ConnectBar />
