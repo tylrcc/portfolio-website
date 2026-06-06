@@ -1,24 +1,32 @@
-import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
-import { SpeedInsights } from '@vercel/speed-insights/react';
+import React, { useState, useEffect, useMemo, useCallback, useRef, lazy, Suspense } from 'react';
 import BootScreen from './components/BootScreen';
 import MenuBar from './components/MenuBar';
 import DesktopIcon from './components/DesktopIcon';
 import Window from './components/Window';
 import MusicBar from './components/MusicBar';
-import HelpWindow from './components/HelpWindow';
-import SetupWizard from './components/SetupWizard';
-import SpotifyApp from './components/SpotifyApp';
-import WorkApp from './components/WorkApp';
-import ReadmeResumeApp from './components/ReadmeResumeApp';
-import CVApp from './components/CVApp';
-import DoomApp from './components/DoomApp';
-import FinderApp from './components/FinderApp';
-import LinkedInApp from './components/LinkedInApp';
 import SocialDock from './components/SocialDock';
-import ContactPanel from './components/ContactPanel';
 import { AudioProvider } from './AudioProvider';
 import { attachClickSounds } from './clickSounds';
 import { getDesktopLayout, getResponsiveWindowSize, getViewportSize } from './desktopLayout';
+
+const SetupWizard = lazy(() => import('./components/SetupWizard'));
+const SpotifyApp = lazy(() => import('./components/SpotifyApp'));
+const WorkApp = lazy(() => import('./components/WorkApp'));
+const ReadmeResumeApp = lazy(() => import('./components/ReadmeResumeApp'));
+const CVApp = lazy(() => import('./components/CVApp'));
+const DoomApp = lazy(() => import('./components/DoomApp'));
+const FinderApp = lazy(() => import('./components/FinderApp'));
+const LinkedInApp = lazy(() => import('./components/LinkedInApp'));
+const HelpWindow = lazy(() => import('./components/HelpWindow'));
+const ContactPanel = lazy(() => import('./components/ContactPanel'));
+
+function LazyPane({ children }) {
+  return (
+    <Suspense fallback={<div className="mac-content-inner mac-lazy-loading"><p>Loading…</p></div>}>
+      {children}
+    </Suspense>
+  );
+}
 
 function App() {
   const [booted, setBooted] = useState(false);
@@ -83,7 +91,7 @@ function App() {
     openWindow(
       'wizard',
       'Setup Assistant',
-      <SetupWizard onFinish={close} onCancel={close} />,
+      <LazyPane><SetupWizard onFinish={close} onCancel={close} /></LazyPane>,
       true,
       { initialSize, autoFit: false }
     );
@@ -110,7 +118,7 @@ function App() {
   };
 
   const openReadmeResume = useCallback(() => {
-    openWindow('readme-resume', 'readme.txt', <ReadmeResumeApp />, true, {
+    openWindow('readme-resume', 'readme.txt', <LazyPane><ReadmeResumeApp /></LazyPane>, true, {
       initialSize: getResponsiveWindowSize({ width: 560, height: 400 }),
       autoFit: false,
     });
@@ -135,7 +143,7 @@ function App() {
   }, [openWindow]);
 
   const openContact = useCallback(() => {
-    openWindow('contact', 'Contact', <ContactPanel />, true, {
+    openWindow('contact', 'Contact', <LazyPane><ContactPanel /></LazyPane>, true, {
       initialSize: getResponsiveWindowSize({ width: 400, height: 320 }),
       autoFit: false,
     });
@@ -172,7 +180,7 @@ function App() {
         size: '112 K',
         icon: '/desktop-icons/spotify.png',
         action: () =>
-          openWindow('spotify', 'Spotify Player', <SpotifyApp />, true, {
+          openWindow('spotify', 'Spotify Player', <LazyPane><SpotifyApp /></LazyPane>, true, {
             initialSize: getResponsiveWindowSize({ width: 300, height: 340 }),
             autoFit: false,
           }),
@@ -194,7 +202,7 @@ function App() {
         size: '2.1 MB',
         icon: '/desktop-icons/doom.png',
         action: () =>
-          openWindow('doom', 'Doom', <DoomApp />, true, {
+          openWindow('doom', 'Doom', <LazyPane><DoomApp /></LazyPane>, true, {
             initialSize: getResponsiveWindowSize({ width: 520, height: 380 }),
             autoFit: false,
           }),
@@ -216,7 +224,7 @@ function App() {
         size: '2 K',
         icon: '/desktop-icons/linkedin.png',
         action: () =>
-          openWindow('linkedin', 'LinkedIn', <LinkedInApp />, true, {
+          openWindow('linkedin', 'LinkedIn', <LazyPane><LinkedInApp /></LazyPane>, true, {
             initialSize: getResponsiveWindowSize({ width: 680, height: 520 }),
             autoFit: false,
           }),
@@ -238,7 +246,7 @@ function App() {
         size: '-',
         icon: '/desktop-icons/work.png',
         action: () =>
-          openWindow('work', 'Work', <WorkApp />, true, {
+          openWindow('work', 'Work', <LazyPane><WorkApp /></LazyPane>, true, {
             initialSize: getResponsiveWindowSize({ width: 520, height: 400 }),
             autoFit: false,
           }),
@@ -251,7 +259,7 @@ function App() {
         size: '42 K',
         icon: '/desktop-icons/cv.png',
         action: () =>
-          openWindow('cv', 'CV', <CVApp />, true, {
+          openWindow('cv', 'CV', <LazyPane><CVApp /></LazyPane>, true, {
             initialSize: getResponsiveWindowSize({ width: 520, height: 420 }),
             autoFit: false,
           }),
@@ -266,7 +274,7 @@ function App() {
       openWindow(
         'finder',
         'Applications',
-        <FinderApp apps={desktopApps} viewMode={mode} />,
+        <LazyPane><FinderApp apps={desktopApps} viewMode={mode} /></LazyPane>,
         true
       );
     },
@@ -279,7 +287,7 @@ function App() {
       setWindows((prev) =>
         prev.map((w) =>
           w.id === 'finder'
-            ? { ...w, content: <FinderApp apps={desktopApps} viewMode={finderViewMode} /> }
+            ? { ...w, content: <LazyPane><FinderApp apps={desktopApps} viewMode={finderViewMode} /></LazyPane> }
             : w
         )
       );
@@ -433,7 +441,7 @@ function App() {
     <AudioProvider>
       <MenuBar
         onOpenHelp={() =>
-          openWindow('help', 'Wiz Tree', <HelpWindow />, true, {
+          openWindow('help', 'Wiz Tree', <LazyPane><HelpWindow /></LazyPane>, true, {
             initialSize: getResponsiveWindowSize({ width: 480, height: 380 }),
             autoFit: false,
           })
@@ -519,7 +527,6 @@ function App() {
         <MusicBar />
         <SocialDock />
       </div>
-      <SpeedInsights />
     </AudioProvider>
   );
 }

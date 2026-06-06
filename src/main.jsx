@@ -1,8 +1,11 @@
-import { StrictMode } from 'react'
+import { StrictMode, lazy, Suspense } from 'react'
 import { createRoot } from 'react-dom/client'
-import { SpeedInsights } from '@vercel/speed-insights/react'
-import './index.css'
 import App from './App.jsx'
+import './index.css'
+
+const SpeedInsights = lazy(() =>
+  import('@vercel/speed-insights/react').then((mod) => ({ default: mod.SpeedInsights }))
+)
 
 if (typeof window !== 'undefined') {
   const ua = window.navigator.userAgent || '';
@@ -14,6 +17,8 @@ if (typeof window !== 'undefined') {
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <App />
-    <SpeedInsights />
+    <Suspense fallback={null}>
+      <SpeedInsights />
+    </Suspense>
   </StrictMode>,
 )
