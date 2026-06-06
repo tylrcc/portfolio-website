@@ -46,6 +46,40 @@ export function getViewportPadding() {
   return isMobileViewport() ? MOBILE_EDGE_PADDING : 20;
 }
 
+/** Large centered app window — uses most of the desktop without going edge-to-edge. */
+export function getLargeAppWindowSize(options = {}) {
+  const {
+    minWidth = 760,
+    minHeight = 580,
+    widthRatio = 0.9,
+    heightRatio = 0.86,
+  } = options;
+
+  if (typeof window === 'undefined') {
+    return { width: minWidth, height: minHeight };
+  }
+
+  const width = getViewportWidth();
+  const height = getViewportContentHeight();
+  const padding = getViewportPadding();
+  const isMobile = isMobileViewport();
+
+  if (isMobile) {
+    return getResponsiveWindowSize({
+      width: Math.max(minWidth, width - padding * 2),
+      height: Math.max(minHeight, Math.floor(height * 0.88)),
+    });
+  }
+
+  const maxWidth = Math.max(minWidth, width - padding * 2);
+  const maxHeight = Math.max(minHeight, height - padding * 2);
+
+  return {
+    width: Math.min(maxWidth, Math.max(minWidth, Math.floor(width * widthRatio))),
+    height: Math.min(maxHeight, Math.max(minHeight, Math.floor(height * heightRatio))),
+  };
+}
+
 /** Clamp a preferred window size to the current viewport (mobile-first). */
 export function getResponsiveWindowSize(preferred) {
   if (typeof window === 'undefined') {

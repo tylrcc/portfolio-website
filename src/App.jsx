@@ -7,7 +7,12 @@ import MusicBar from './components/MusicBar';
 import SocialDock from './components/SocialDock';
 import { AudioProvider } from './AudioProvider';
 import { attachClickSounds } from './clickSounds';
-import { getDesktopLayout, getResponsiveWindowSize, getViewportSize } from './desktopLayout';
+import {
+  getDesktopLayout,
+  getLargeAppWindowSize,
+  getResponsiveWindowSize,
+  getViewportSize,
+} from './desktopLayout';
 
 const SetupWizard = lazy(() => import('./components/SetupWizard'));
 const SpotifyApp = lazy(() => import('./components/SpotifyApp'));
@@ -20,9 +25,15 @@ const LinkedInApp = lazy(() => import('./components/LinkedInApp'));
 const HelpWindow = lazy(() => import('./components/HelpWindow'));
 const ContactPanel = lazy(() => import('./components/ContactPanel'));
 
-function LazyPane({ children }) {
+function LazyPane({ children, minHeight = 420 }) {
   return (
-    <Suspense fallback={<div className="mac-content-inner mac-lazy-loading"><p>Loading…</p></div>}>
+    <Suspense
+      fallback={(
+        <div className="mac-content-inner mac-lazy-loading" style={{ minHeight }}>
+          <p>Loading…</p>
+        </div>
+      )}
+    >
       {children}
     </Suspense>
   );
@@ -87,11 +98,11 @@ function App() {
 
   const openSetupWizard = useCallback(() => {
     const close = () => closeWindowById('wizard');
-    const initialSize = getResponsiveWindowSize({ width: 648, height: 460 });
+    const initialSize = getLargeAppWindowSize({ minWidth: 680, minHeight: 500, widthRatio: 0.72, heightRatio: 0.78 });
     openWindow(
       'wizard',
       'Setup Assistant',
-      <LazyPane><SetupWizard onFinish={close} onCancel={close} /></LazyPane>,
+      <LazyPane minHeight={460}><SetupWizard onFinish={close} onCancel={close} /></LazyPane>,
       true,
       { initialSize, autoFit: false }
     );
@@ -118,8 +129,8 @@ function App() {
   };
 
   const openReadmeResume = useCallback(() => {
-    openWindow('readme-resume', 'readme.txt', <LazyPane><ReadmeResumeApp /></LazyPane>, true, {
-      initialSize: getResponsiveWindowSize({ width: 560, height: 400 }),
+    openWindow('readme-resume', 'readme.txt', <LazyPane minHeight={360}><ReadmeResumeApp /></LazyPane>, true, {
+      initialSize: getLargeAppWindowSize({ minWidth: 640, minHeight: 480, widthRatio: 0.62, heightRatio: 0.72 }),
       autoFit: false,
     });
   }, [openWindow]);
@@ -143,8 +154,8 @@ function App() {
   }, [openWindow]);
 
   const openContact = useCallback(() => {
-    openWindow('contact', 'Contact', <LazyPane><ContactPanel /></LazyPane>, true, {
-      initialSize: getResponsiveWindowSize({ width: 400, height: 320 }),
+    openWindow('contact', 'Contact', <LazyPane minHeight={280}><ContactPanel /></LazyPane>, true, {
+      initialSize: getLargeAppWindowSize({ minWidth: 480, minHeight: 380, widthRatio: 0.48, heightRatio: 0.55 }),
       autoFit: false,
     });
   }, [openWindow]);
@@ -202,8 +213,8 @@ function App() {
         size: '2.1 MB',
         icon: '/desktop-icons/doom.png',
         action: () =>
-          openWindow('doom', 'Doom', <LazyPane><DoomApp /></LazyPane>, true, {
-            initialSize: getResponsiveWindowSize({ width: 520, height: 380 }),
+          openWindow('doom', 'Doom', <LazyPane minHeight={520}><DoomApp /></LazyPane>, true, {
+            initialSize: getLargeAppWindowSize({ minWidth: 760, minHeight: 560, widthRatio: 0.78 }),
             autoFit: false,
           }),
       },
@@ -224,8 +235,8 @@ function App() {
         size: '2 K',
         icon: '/desktop-icons/linkedin.png',
         action: () =>
-          openWindow('linkedin', 'LinkedIn', <LazyPane><LinkedInApp /></LazyPane>, true, {
-            initialSize: getResponsiveWindowSize({ width: 680, height: 520 }),
+          openWindow('linkedin', 'LinkedIn', <LazyPane minHeight={560}><LinkedInApp /></LazyPane>, true, {
+            initialSize: getLargeAppWindowSize({ minWidth: 820, minHeight: 620 }),
             autoFit: false,
           }),
       },
@@ -246,8 +257,8 @@ function App() {
         size: '-',
         icon: '/desktop-icons/work.png',
         action: () =>
-          openWindow('work', 'Work', <LazyPane><WorkApp /></LazyPane>, true, {
-            initialSize: getResponsiveWindowSize({ width: 520, height: 400 }),
+          openWindow('work', 'Work', <LazyPane minHeight={640}><WorkApp /></LazyPane>, true, {
+            initialSize: getLargeAppWindowSize({ minWidth: 860, minHeight: 680 }),
             autoFit: false,
           }),
       },
@@ -259,8 +270,8 @@ function App() {
         size: '42 K',
         icon: '/desktop-icons/cv.png',
         action: () =>
-          openWindow('cv', 'CV', <LazyPane><CVApp /></LazyPane>, true, {
-            initialSize: getResponsiveWindowSize({ width: 520, height: 420 }),
+          openWindow('cv', 'CV', <LazyPane minHeight={420}><CVApp /></LazyPane>, true, {
+            initialSize: getLargeAppWindowSize({ minWidth: 680, minHeight: 540, widthRatio: 0.68, heightRatio: 0.75 }),
             autoFit: false,
           }),
       },
@@ -441,8 +452,8 @@ function App() {
     <AudioProvider>
       <MenuBar
         onOpenHelp={() =>
-          openWindow('help', 'Wiz Tree', <LazyPane><HelpWindow /></LazyPane>, true, {
-            initialSize: getResponsiveWindowSize({ width: 480, height: 380 }),
+          openWindow('help', 'Wiz Tree', <LazyPane minHeight={320}><HelpWindow /></LazyPane>, true, {
+            initialSize: getLargeAppWindowSize({ minWidth: 560, minHeight: 440, widthRatio: 0.58, heightRatio: 0.62 }),
             autoFit: false,
           })
         }
