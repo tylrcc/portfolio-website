@@ -4053,6 +4053,8 @@ canvas {
 }
 
 .wiz9--welcome .wiz9-preview-frame--about {
+  height: 168px;
+  min-height: 168px;
   border: 1px solid #666;
   box-shadow: inset 1px 1px 0 #fff, inset -1px -1px 0 #999;
 }
@@ -4066,14 +4068,13 @@ canvas {
 .wiz9--welcome .wiz9-content-panel {
   flex: 1 1 auto;
   min-height: 0;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
+  overflow: visible;
 }
 
 .wiz9--welcome .wiz9-step-title {
   font-size: 17px;
-  margin-bottom: 5px;
-  padding-bottom: 5px;
+  margin-bottom: 4px;
+  padding-bottom: 4px;
   flex-shrink: 0;
 }
 
@@ -4081,25 +4082,27 @@ canvas {
   flex: 0 0 auto;
   overflow: visible;
   font-size: 12px;
-  line-height: 1.33;
+  line-height: 1.3;
 }
 
 .wiz9--welcome .wiz9-step-body p {
-  margin-bottom: 5px;
+  margin-bottom: 4px;
 }
 
 .wiz9--welcome .wiz9-section-label {
-  margin-top: 4px !important;
+  margin-top: 2px !important;
+  margin-bottom: 2px !important;
 }
 
 .wiz9--welcome .wiz9-tour-list {
   font-size: 12px;
-  margin-top: 2px;
-  padding-bottom: 4px;
+  margin-top: 0;
+  padding-bottom: 0;
 }
 
 .wiz9--welcome .wiz9-tour-list li {
-  padding: 1px 0 1px 12px;
+  padding: 0 0 0 12px;
+  line-height: 1.35;
 }
 
 .wiz9-step-body p {
