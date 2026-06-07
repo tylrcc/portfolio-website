@@ -295,7 +295,7 @@ function QuantCodeDemo() {
     if (lineIdx >= CODE_LINES.length) return undefined;
     const line = CODE_LINES[lineIdx];
     const len = line.parts.reduce((n, p) => n + p.t.length, 0);
-    const delay = charIdx < len ? 10 : lineIdx === CODE_LINES.length - 1 ? 950 : 78;
+    const delay = charIdx < len ? 4 : lineIdx === CODE_LINES.length - 1 ? 380 : 26;
     const id = window.setTimeout(() => {
       if (charIdx < len) {
         setCharIdx((c) => c + 1);
@@ -340,7 +340,7 @@ function QuantCodeDemo() {
               <div
                 key={i}
                 className={i === 0 ? 'quant-term-cmd' : 'quant-term-line'}
-                style={{ animationDelay: `${i * 0.12}s` }}
+                style={{ animationDelay: `${i * 0.06}s` }}
               >
                 {t}
               </div>
@@ -351,28 +351,95 @@ function QuantCodeDemo() {
   );
 }
 
-function OssProjectRow({ project, index }) {
+function TremorMeshDemo() {
   return (
-    <a
-      href={project.url}
-      className="work-oss-row"
-      target="_blank"
-      rel="noopener noreferrer"
-      style={{ animationDelay: `${0.08 + index * 0.07}s` }}
-    >
-      <span className="work-oss-row-icon" aria-hidden="true">{project.icon}</span>
-      <span className="work-oss-row-main">
-        <span className="work-oss-row-name">{project.title}</span>
-        <span className="work-oss-row-desc">{project.description}</span>
-      </span>
-      <span className="work-oss-row-meta">
-        <span className="work-oss-row-lang">{project.language}</span>
-        <span className="work-oss-row-stars">★ {project.stars}</span>
-      </span>
-      <span className="work-oss-row-go" aria-hidden="true">▸</span>
-    </a>
+    <div className="work-oss-demo work-oss-demo--seismic" aria-hidden="true">
+      <div className="work-oss-demo-chrome">
+        <span className="work-oss-demo-status">
+          <span className="work-oss-demo-pulse" />
+          sensor mesh · 5 nodes
+        </span>
+        <span className="work-oss-demo-metric">P-wave 0.31s</span>
+      </div>
+      <div className="work-seismic-chart">
+        <div className="work-seismic-line work-seismic-line--1" />
+        <div className="work-seismic-line work-seismic-line--2" />
+        <div className="work-seismic-line work-seismic-line--3" />
+      </div>
+      <div className="work-seismic-nodes">
+        {[0, 1, 2, 3, 4].map((i) => (
+          <span
+            key={i}
+            className="work-seismic-node"
+            style={{ animationDelay: `${i * 0.18}s` }}
+          />
+        ))}
+      </div>
+    </div>
   );
 }
+
+function TapelineDemo() {
+  const ticks = ['142.31', '142.28', '142.35', '142.29', '142.33', '142.30', '142.32', '142.27'];
+  return (
+    <div className="work-oss-demo work-oss-demo--tape" aria-hidden="true">
+      <div className="work-oss-demo-chrome">
+        <span className="work-oss-demo-status">
+          <span className="work-oss-demo-pulse work-oss-demo-pulse--tape" />
+          FPGA · live avg
+        </span>
+        <span className="work-oss-demo-metric">42 ns/tick</span>
+      </div>
+      <div className="work-tape-scroll-wrap">
+        <div className="work-tape-scroll">
+          {[...ticks, ...ticks].map((t, i) => (
+            <span key={i} className="work-tape-tick">{t}</span>
+          ))}
+        </div>
+      </div>
+      <div className="work-tape-vwap">
+        <span className="work-tape-vwap-label">VWAP</span>
+        <div className="work-tape-vwap-track">
+          <div className="work-tape-vwap-fill" />
+        </div>
+        <span className="work-tape-vwap-num">142.302</span>
+      </div>
+    </div>
+  );
+}
+
+function OssProjectPanel({ project, demo: Demo, panelIndex }) {
+  return (
+    <article
+      className={`work-panel work-panel--oss work-panel--${project.id}`}
+      style={{ animationDelay: `${0.12 + panelIndex * 0.06}s` }}
+    >
+      <div className="work-mpw-shell">
+        <MpwTitlebar title={`Macintosh HD:Projects:${project.name}`} />
+        <div className="work-mpw-body work-mpw-body--oss">
+          <div className="work-panel-head work-panel-head--oss">
+            <span className="work-oss-panel-icon" aria-hidden="true">{project.icon}</span>
+            <div>
+              <p className="work-card-kicker">Open source</p>
+              <h3>{project.title}</h3>
+            </div>
+          </div>
+          <p className="work-card-desc work-card-desc--compact">{project.description}</p>
+          <Demo />
+          <div className="work-card-footer">
+            <TechTags items={project.tech} />
+            <MacButton href={project.url}>View on GitHub →</MacButton>
+          </div>
+        </div>
+      </div>
+    </article>
+  );
+}
+
+const OSS_DEMOS = {
+  'tremor-mesh': TremorMeshDemo,
+  tapeline: TapelineDemo,
+};
 
 function ConnectBar() {
   return (
@@ -426,7 +493,7 @@ const WorkApp = () => (
                 <h3>{FOURSEAT.title}</h3>
               </div>
             </div>
-            <p className="work-card-desc">{FOURSEAT.description}</p>
+            <p className="work-card-desc work-card-desc--compact">{FOURSEAT.description}</p>
             <div className="work-fourseat-roles" aria-label="Board members">
               {FOURSEAT.roles.map((role, i) => (
                 <span
@@ -453,7 +520,7 @@ const WorkApp = () => (
           <div className="work-mpw-body work-mpw-body--quant">
             <p className="work-card-kicker">{QUANT_ALGO.kicker}</p>
             <h3>{QUANT_ALGO.title}</h3>
-            <p className="work-card-desc">{QUANT_ALGO.description}</p>
+            <p className="work-card-desc work-card-desc--compact">{QUANT_ALGO.description}</p>
             <div className="work-quant-demo-wrap">
               <QuantCodeDemo />
             </div>
@@ -465,31 +532,17 @@ const WorkApp = () => (
         </div>
       </article>
 
-      <section className="work-oss-panel">
-        <div className="work-mpw-shell">
-          <MpwTitlebar title="Macintosh HD:Open Source (pinned)" />
-          <div className="work-mpw-body work-mpw-body--oss">
-            <p className="work-card-kicker">Open source</p>
-            <h3>Pinned on GitHub</h3>
-            <p className="work-card-desc work-card-desc--compact">
-              Public repos I&apos;m building alongside Fourseat and quant work.
-            </p>
-            <div className="work-oss-list" role="list">
-              {PINNED_OPENSOURCE.map((project, i) => (
-                <OssProjectRow key={project.id} project={project} index={i} />
-              ))}
-            </div>
-            <div className="work-oss-tags">
-              {PINNED_OPENSOURCE.map((p) => (
-                <div key={p.id} className="work-oss-tag-group">
-                  <span className="work-oss-tag-name">{p.name}</span>
-                  <TechTags items={p.tech} />
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
+      {PINNED_OPENSOURCE.map((project, i) => {
+        const Demo = OSS_DEMOS[project.id];
+        return (
+          <OssProjectPanel
+            key={project.id}
+            project={project}
+            demo={Demo}
+            panelIndex={i}
+          />
+        );
+      })}
     </div>
 
     <ConnectBar />

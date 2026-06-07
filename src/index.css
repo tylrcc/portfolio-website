@@ -666,23 +666,305 @@ body {
 }
 
 .work-stack {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  align-items: stretch;
 }
 
 .work-panel,
 .work-oss-panel {
   margin: 0;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
   animation: work-card-rise 0.55s cubic-bezier(0.22, 1, 0.36, 1) backwards;
 }
 
 .work-panel--quant {
-  animation-delay: 0.08s;
+  animation-delay: 0.06s;
 }
 
-.work-oss-panel {
-  animation-delay: 0.14s;
+.work-panel--tremor-mesh {
+  animation-delay: 0.12s;
+}
+
+.work-panel--tapeline {
+  animation-delay: 0.18s;
+}
+
+.work-stack .work-mpw-shell {
+  height: 100%;
+}
+
+.work-stack .work-mpw-body {
+  padding: 10px 10px 12px;
+  overflow: auto;
+}
+
+.work-stack .work-card-desc--compact {
+  font-size: 12px;
+  line-height: 1.42;
+  margin-bottom: 8px;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.work-stack .work-card h3,
+.work-stack .work-mpw-body h3 {
+  font-size: 17px;
+  margin-bottom: 6px;
+}
+
+.work-stack .work-panel-logo {
+  width: 36px;
+  height: 36px;
+}
+
+.work-stack .work-fourseat-mini-block {
+  margin: 2px 0 8px;
+  gap: 4px;
+}
+
+.work-stack .work-fourseat-mini-viewport {
+  height: 118px;
+}
+
+.work-stack .work-fourseat-mini-caption {
+  font-size: 10px;
+}
+
+.work-stack .work-fourseat-roles {
+  margin: 2px 0 4px;
+  gap: 4px;
+}
+
+.work-stack .work-role-chip {
+  font-size: 9px;
+  padding: 2px 6px;
+}
+
+.work-stack .work-quant-demo-wrap {
+  margin-bottom: 6px;
+  min-height: 0;
+}
+
+.work-stack .quant-demo {
+  grid-template-columns: 1fr;
+  min-height: 0;
+  gap: 6px;
+}
+
+.work-stack .quant-code {
+  min-height: 88px;
+  max-height: 110px;
+  font-size: 9px;
+  padding: 6px 8px;
+}
+
+.work-stack .quant-terminal-body {
+  min-height: 72px;
+  max-height: 92px;
+  font-size: 8px;
+  padding: 6px 8px;
+}
+
+.work-stack .work-card-footer {
+  padding-top: 6px;
+  gap: 6px;
+  margin-top: auto;
+}
+
+.work-panel-head--oss {
+  margin-bottom: 4px;
+}
+
+.work-oss-panel-icon {
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  border: 1px solid #000;
+  background: #fff;
+  box-shadow: 1px 1px 0 rgba(0, 0, 0, 0.2);
+}
+
+/* OSS mini demos */
+.work-oss-demo {
+  margin: 4px 0 8px;
+  border: 1px solid #000;
+  background: #1a1a1a;
+  box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+
+.work-oss-demo-chrome {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  font-family: Monaco, Menlo, 'Courier New', monospace;
+  font-size: 8px;
+  color: #8f8;
+  background: #0d0d0d;
+  border-bottom: 1px solid #333;
+}
+
+.work-oss-demo-status {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.work-oss-demo-pulse {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #3fb950;
+  animation: work-oss-pulse 1.4s ease-in-out infinite;
+}
+
+.work-oss-demo-pulse--tape {
+  background: #58a6ff;
+  animation-duration: 0.9s;
+}
+
+.work-oss-demo-metric {
+  color: #666;
+}
+
+@keyframes work-oss-pulse {
+  0%, 100% { opacity: 0.45; transform: scale(0.9); }
+  50% { opacity: 1; transform: scale(1.15); }
+}
+
+.work-seismic-chart {
+  position: relative;
+  height: 52px;
+  background: linear-gradient(180deg, #111 0%, #0a0a0a 100%);
+  overflow: hidden;
+}
+
+.work-seismic-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: repeating-linear-gradient(
+    90deg,
+    transparent 0,
+    transparent 3px,
+    #3fb950 3px,
+    #3fb950 4px,
+    transparent 4px,
+    transparent 7px
+  );
+  opacity: 0.85;
+  animation: work-seismic-drift 2.2s linear infinite;
+}
+
+.work-seismic-line--1 { top: 35%; animation-duration: 1.8s; }
+.work-seismic-line--2 { top: 50%; opacity: 0.55; animation-duration: 2.6s; animation-direction: reverse; }
+.work-seismic-line--3 { top: 65%; opacity: 0.35; animation-duration: 3.1s; }
+
+@keyframes work-seismic-drift {
+  from { transform: translateX(-12px); }
+  to { transform: translateX(12px); }
+}
+
+.work-seismic-nodes {
+  display: flex;
+  justify-content: space-around;
+  padding: 6px 8px 8px;
+  background: #141414;
+}
+
+.work-seismic-node {
+  width: 8px;
+  height: 8px;
+  border: 1px solid #3fb950;
+  background: #0a1a0a;
+  animation: work-seismic-node-blink 2s ease-in-out infinite;
+}
+
+@keyframes work-seismic-node-blink {
+  0%, 100% { background: #0a1a0a; box-shadow: none; }
+  15%, 35% { background: #3fb950; box-shadow: 0 0 6px rgba(63, 185, 80, 0.7); }
+}
+
+.work-tape-scroll-wrap {
+  height: 36px;
+  overflow: hidden;
+  background: #0a0a0a;
+  border-bottom: 1px solid #222;
+}
+
+.work-tape-scroll {
+  display: flex;
+  gap: 10px;
+  padding: 8px 10px;
+  width: max-content;
+  animation: work-tape-scroll 8s linear infinite;
+}
+
+@keyframes work-tape-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.work-tape-tick {
+  font-family: Monaco, Menlo, 'Courier New', monospace;
+  font-size: 10px;
+  color: #58a6ff;
+  white-space: nowrap;
+}
+
+.work-tape-vwap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px 8px;
+  font-family: Monaco, Menlo, 'Courier New', monospace;
+  font-size: 9px;
+  color: #ccc;
+}
+
+.work-tape-vwap-label {
+  color: #888;
+  flex-shrink: 0;
+}
+
+.work-tape-vwap-track {
+  flex: 1;
+  height: 10px;
+  border: 1px solid #444;
+  background: #111;
+  box-shadow: inset 1px 1px 0 #000;
+}
+
+.work-tape-vwap-fill {
+  height: 100%;
+  width: 62%;
+  background: linear-gradient(90deg, #1f6feb, #58a6ff);
+  animation: work-tape-vwap-pulse 2.4s ease-in-out infinite alternate;
+}
+
+@keyframes work-tape-vwap-pulse {
+  from { width: 55%; opacity: 0.85; }
+  to { width: 78%; opacity: 1; }
+}
+
+.work-tape-vwap-num {
+  color: #3fb950;
+  font-weight: bold;
+  flex-shrink: 0;
 }
 
 .work-panel-head {
@@ -5337,7 +5619,23 @@ canvas {
   }
 
   .work-stack {
+    grid-template-columns: 1fr;
     gap: 10px;
+  }
+
+  .work-stack .work-fourseat-mini-viewport {
+    height: 168px;
+  }
+
+  .work-stack .quant-code {
+    min-height: 140px;
+    max-height: 200px;
+    font-size: 9px;
+  }
+
+  .work-stack .quant-terminal-body {
+    min-height: 120px;
+    max-height: 160px;
   }
 
   .work-panel,
