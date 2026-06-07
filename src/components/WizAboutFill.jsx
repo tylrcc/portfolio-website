@@ -20,8 +20,8 @@ const WizAboutFill = () => {
       const contentH = about?.offsetHeight || 400;
       const sw = host.clientWidth / contentW;
       const sh = host.clientHeight / contentH;
-      /* Cover the preview pane — no gray letterboxing around the About panel */
-      setScale(Math.max(sw, sh));
+      /* Fit the whole About panel inside the preview — no crop, no blow-up */
+      setScale(Math.min(sw, sh));
     };
 
     fit();

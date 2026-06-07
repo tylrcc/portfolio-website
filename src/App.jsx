@@ -5,6 +5,7 @@ import DesktopIcon from './components/DesktopIcon';
 import Window from './components/Window';
 import MusicBar from './components/MusicBar';
 import SocialDock from './components/SocialDock';
+import SetupWizard from './components/SetupWizard';
 import { AudioProvider } from './AudioProvider';
 import { attachClickSounds } from './clickSounds';
 import {
@@ -14,7 +15,6 @@ import {
   getViewportSize,
 } from './desktopLayout';
 
-const SetupWizard = lazy(() => import('./components/SetupWizard'));
 const SpotifyApp = lazy(() => import('./components/SpotifyApp'));
 const WorkApp = lazy(() => import('./components/WorkApp'));
 const ReadmeResumeApp = lazy(() => import('./components/ReadmeResumeApp'));
@@ -98,11 +98,11 @@ function App() {
 
   const openSetupWizard = useCallback(() => {
     const close = () => closeWindowById('wizard');
-    const initialSize = getLargeAppWindowSize({ minWidth: 680, minHeight: 500, widthRatio: 0.72, heightRatio: 0.78 });
+    const initialSize = getResponsiveWindowSize({ width: 648, height: 460 });
     openWindow(
       'wizard',
       'Setup Assistant',
-      <LazyPane minHeight={460}><SetupWizard onFinish={close} onCancel={close} /></LazyPane>,
+      <SetupWizard onFinish={close} onCancel={close} />,
       true,
       { initialSize, autoFit: false }
     );
