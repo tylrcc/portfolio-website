@@ -4395,9 +4395,8 @@ canvas {
 
 /* Welcome preview embeds the real About-This-Computer panel,
    scaled down to fit inside the preview pane. We use the classic
-   absolute + translate(-50%,-50%) + scale() centering pattern --
-   flex/justify-content centering does not work here because the
-   transform does not change the laid-out box size. */
+   WizAboutFill stretches About This Computer to the preview width;
+   scale down only when the panel is taller than the pane. */
 .wiz9-prev--welcome {
   background: #d8d8d8;
 }
@@ -4411,15 +4410,47 @@ canvas {
 
 .wiz9-about-fill-inner {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform-origin: center center;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  transform-origin: top center;
 }
 
 .wiz9-about-fill-inner .about9 {
-  width: 540px !important;
+  width: 100% !important;
   max-width: none !important;
-  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.35);
+  box-shadow: none;
+}
+
+.wiz9-about-fill-inner .about9-top {
+  padding: 4px 4px 0;
+}
+
+.wiz9-about-fill-inner .about9-top-inner {
+  padding: 8px 10px;
+  gap: 12px;
+}
+
+.wiz9-about-fill-inner .about9-bottom {
+  padding: 2px 4px 6px;
+}
+
+.wiz9-about-fill-inner .about9-copyright {
+  padding: 3px 8px 6px;
+}
+
+.wiz9-about-fill-inner .about9-mem-row {
+  gap: 6px;
+  padding: 2px 2px;
+}
+
+.wiz9-about-fill-inner .about9-mem-name {
+  width: 118px;
+}
+
+.wiz9-about-fill-inner .about9-mem-bar-track {
+  min-width: 0;
 }
 
 /* ============================================================

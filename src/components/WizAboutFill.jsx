@@ -1,9 +1,6 @@
 import React, { useLayoutEffect, useRef, useState } from 'react';
 import AboutWindow from './AboutWindow';
 
-/** About This Computer is authored at 540px wide; scale to fill the preview host. */
-const ABOUT_BASE_WIDTH = 540;
-
 const WizAboutFill = () => {
   const hostRef = useRef(null);
   const innerRef = useRef(null);
@@ -16,18 +13,17 @@ const WizAboutFill = () => {
 
     const fit = () => {
       const about = inner.querySelector('.about9');
-      const contentW = about?.offsetWidth || ABOUT_BASE_WIDTH;
-      const contentH = about?.offsetHeight || 400;
-      const sw = host.clientWidth / contentW;
+      if (!about) return;
+      const contentH = about.offsetHeight || 400;
       const sh = host.clientHeight / contentH;
-      /* Fit the whole About panel inside the preview — no crop, no blow-up */
-      setScale(Math.min(sw, sh));
+      /* Full width via CSS; only scale down when taller than the preview pane */
+      setScale(Math.min(1, sh));
     };
 
     fit();
     const ro = new ResizeObserver(fit);
     ro.observe(host);
-    if (inner) ro.observe(inner);
+    ro.observe(inner);
     return () => ro.disconnect();
   }, []);
 
@@ -36,7 +32,10 @@ const WizAboutFill = () => {
       <div
         ref={innerRef}
         className="wiz9-about-fill-inner"
-        style={{ transform: `translate(-50%, -50%) scale(${scale})` }}
+        style={{
+          transform: scale < 1 ? `scale(${scale})` : undefined,
+          transformOrigin: 'top center',
+        }}
       >
         <AboutWindow />
       </div>
