@@ -4198,49 +4198,56 @@ canvas {
   flex-wrap: wrap;
 }
 
-/* Mac OS 9.2 dialog buttons — Geneva, platinum bevel, default ring */
+/* Mac OS 9.2 dialog buttons — flat platinum, hard bevel, default ring */
 .wiz9-btn {
+  appearance: none;
+  -webkit-appearance: none;
   font-family: Geneva, 'Lucida Grande', Charcoal, system-ui, sans-serif;
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 400;
   letter-spacing: 0;
   color: #000;
-  background: linear-gradient(#fafafa, #c4c4c4);
+  background: var(--mac-platinum);
   border: 1px solid #000;
   border-radius: 0;
   box-shadow:
-    inset 1px 1px 0 rgba(255, 255, 255, 0.9),
-    inset -1px -1px 0 rgba(0, 0, 0, 0.22);
-  padding: 3px 16px 2px;
-  min-width: 76px;
-  height: 24px;
+    inset 1px 1px 0 #fff,
+    inset -1px -1px 0 #666;
+  padding: 2px 14px 1px;
+  min-width: 72px;
+  height: 22px;
+  line-height: 1.1;
   cursor: pointer;
   -webkit-font-smoothing: antialiased;
 }
 
-.wiz9-btn:hover:not(:disabled) {
-  background: linear-gradient(#ffffff, #d4d4d4);
-}
-
 .wiz9-btn:active:not(:disabled) {
-  background: linear-gradient(#b8b8b8, #d2d2d2);
-  box-shadow:
-    inset 1px 1px 2px rgba(0, 0, 0, 0.35),
-    inset -1px -1px 0 rgba(255, 255, 255, 0.4);
+  background: #aaa;
+  box-shadow: inset 1px 1px 2px rgba(0, 0, 0, 0.45);
+  padding-top: 3px;
+  padding-left: 15px;
 }
 
 .wiz9-btn:disabled {
-  color: #888;
-  background: linear-gradient(#e8e8e8, #cfcfcf);
+  color: #777;
+  background: #c8c8c8;
+  box-shadow:
+    inset 1px 1px 0 rgba(255, 255, 255, 0.55),
+    inset -1px -1px 0 #999;
   cursor: default;
 }
 
 .wiz9-btn--default {
-  /* Classic Mac OS 9 default button: solid black outer ring */
-  outline: 2px solid #000;
-  outline-offset: 2px;
-  /* slight margin to keep the outline from clipping next to siblings */
-  margin: 0 3px;
+  position: relative;
+  margin: 0 5px;
+}
+
+.wiz9-btn--default::after {
+  content: '';
+  position: absolute;
+  inset: -4px -5px -4px -5px;
+  border: 1px solid #000;
+  pointer-events: none;
 }
 
 /* ============================================================
