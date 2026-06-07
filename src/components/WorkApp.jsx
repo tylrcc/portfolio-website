@@ -493,7 +493,7 @@ const WorkApp = () => (
                 <h3>{FOURSEAT.title}</h3>
               </div>
             </div>
-            <p className="work-card-desc work-card-desc--compact">{FOURSEAT.description}</p>
+            <p className="work-card-desc work-card-desc--featured">{FOURSEAT.description}</p>
             <div className="work-fourseat-roles" aria-label="Board members">
               {FOURSEAT.roles.map((role, i) => (
                 <span
@@ -517,10 +517,15 @@ const WorkApp = () => (
       <article className="work-panel work-panel--quant">
         <div className="work-mpw-shell">
           <MpwTitlebar title={`Macintosh HD:Projects:${QUANT_ALGO.name}`} />
-          <div className="work-mpw-body work-mpw-body--quant">
-            <p className="work-card-kicker">{QUANT_ALGO.kicker}</p>
-            <h3>{QUANT_ALGO.title}</h3>
-            <p className="work-card-desc work-card-desc--compact">{QUANT_ALGO.description}</p>
+          <div className="work-mpw-body work-mpw-body--quant work-mpw-body--featured">
+            <div className="work-panel-head">
+              <span className="work-panel-logo work-panel-logo--quant" aria-hidden="true">∑</span>
+              <div>
+                <p className="work-card-kicker">{QUANT_ALGO.kicker}</p>
+                <h3>{QUANT_ALGO.title}</h3>
+              </div>
+            </div>
+            <p className="work-card-desc work-card-desc--featured">{QUANT_ALGO.description}</p>
             <div className="work-quant-demo-wrap">
               <QuantCodeDemo />
             </div>

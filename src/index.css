@@ -668,7 +668,8 @@ body {
 .work-stack {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px;
+  grid-template-rows: minmax(360px, 1.4fr) minmax(190px, 0.72fr);
+  gap: 12px;
   align-items: stretch;
 }
 
@@ -776,6 +777,187 @@ body {
   padding-top: 6px;
   gap: 6px;
   margin-top: auto;
+}
+
+/* Featured row — Fourseat & Quant */
+.work-panel--fourseat,
+.work-panel--quant {
+  min-height: 0;
+}
+
+.work-panel--fourseat .work-mpw-body,
+.work-panel--quant .work-mpw-body {
+  padding: 14px 14px 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+.work-panel--fourseat .work-panel-head,
+.work-panel--quant .work-panel-head {
+  margin-bottom: 8px;
+}
+
+.work-panel--fourseat .work-panel-logo {
+  width: 48px;
+  height: 48px;
+}
+
+.work-panel-logo--quant {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 26px;
+  font-weight: 400;
+  font-style: italic;
+  border: 1px solid #000;
+  background: linear-gradient(180deg, #fff 0%, #e8e8e8 100%);
+  box-shadow: 1px 1px 0 rgba(0, 0, 0, 0.2);
+}
+
+.work-panel--fourseat .work-card-kicker,
+.work-panel--quant .work-card-kicker {
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  margin-bottom: 4px;
+}
+
+.work-panel--fourseat h3,
+.work-panel--quant h3 {
+  font-size: 21px;
+  margin-bottom: 0;
+  letter-spacing: -0.02em;
+}
+
+.work-panel--fourseat .work-card-desc--featured,
+.work-panel--quant .work-card-desc--featured {
+  font-size: 13px;
+  line-height: 1.52;
+  margin-bottom: 10px;
+  display: block;
+  overflow: visible;
+  -webkit-line-clamp: unset;
+}
+
+.work-panel--fourseat .work-fourseat-roles {
+  margin: 0 0 8px;
+  gap: 6px;
+}
+
+.work-panel--fourseat .work-role-chip {
+  font-size: 10px;
+  padding: 3px 8px;
+}
+
+.work-panel--fourseat .work-fourseat-mini-block {
+  flex: 1;
+  min-height: 0;
+  margin: 0 0 10px;
+  gap: 6px;
+  display: flex;
+  flex-direction: column;
+}
+
+.work-panel--fourseat .work-fourseat-mini-browser {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.work-panel--fourseat .work-fourseat-mini-viewport {
+  flex: 1;
+  height: auto;
+  min-height: 150px;
+  max-height: 220px;
+}
+
+.work-panel--fourseat .work-fourseat-mini-caption {
+  font-size: 11px;
+  flex-shrink: 0;
+}
+
+.work-panel--quant .work-quant-demo-wrap {
+  flex: 1;
+  min-height: 0;
+  margin-bottom: 10px;
+  display: flex;
+}
+
+.work-panel--quant .quant-demo {
+  flex: 1;
+  min-height: 0;
+  grid-template-columns: 1.08fr 0.92fr;
+  gap: 8px;
+}
+
+.work-panel--quant .quant-window,
+.work-panel--quant .quant-terminal {
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.work-panel--quant .quant-code {
+  flex: 1;
+  min-height: 130px;
+  max-height: none;
+  font-size: 10px;
+  line-height: 1.5;
+  padding: 8px 10px;
+}
+
+.work-panel--quant .quant-terminal-body {
+  flex: 1;
+  min-height: 130px;
+  max-height: none;
+  font-size: 9px;
+  line-height: 1.45;
+  padding: 8px 10px;
+}
+
+.work-panel--quant .work-card-footer,
+.work-panel--fourseat .work-card-footer {
+  padding-top: 8px;
+  gap: 8px;
+}
+
+/* OSS row — compact */
+.work-panel--tremor-mesh .work-mpw-body,
+.work-panel--tapeline .work-mpw-body {
+  padding: 8px 9px 10px;
+}
+
+.work-panel--tremor-mesh h3,
+.work-panel--tapeline h3 {
+  font-size: 15px;
+}
+
+.work-panel--tremor-mesh .work-card-desc--compact,
+.work-panel--tapeline .work-card-desc--compact {
+  font-size: 11px;
+  -webkit-line-clamp: 2;
+  margin-bottom: 6px;
+}
+
+.work-panel--tremor-mesh .work-oss-demo,
+.work-panel--tapeline .work-oss-demo {
+  margin: 2px 0 6px;
+}
+
+.work-panel--tremor-mesh .work-seismic-chart {
+  height: 40px;
+}
+
+.work-panel--tremor-mesh .work-seismic-nodes {
+  padding: 4px 6px 6px;
+}
+
+.work-panel--tapeline .work-tape-scroll-wrap {
+  height: 30px;
 }
 
 .work-panel-head--oss {
@@ -5620,22 +5802,26 @@ canvas {
 
   .work-stack {
     grid-template-columns: 1fr;
+    grid-template-rows: auto;
     gap: 10px;
+  }
+
+  .work-panel--fourseat .work-fourseat-mini-viewport {
+    min-height: 168px;
+    max-height: none;
+  }
+
+  .work-panel--quant .quant-demo {
+    grid-template-columns: 1fr;
+  }
+
+  .work-panel--quant .quant-code,
+  .work-panel--quant .quant-terminal-body {
+    min-height: 100px;
   }
 
   .work-stack .work-fourseat-mini-viewport {
     height: 168px;
-  }
-
-  .work-stack .quant-code {
-    min-height: 140px;
-    max-height: 200px;
-    font-size: 9px;
-  }
-
-  .work-stack .quant-terminal-body {
-    min-height: 120px;
-    max-height: 160px;
   }
 
   .work-panel,
