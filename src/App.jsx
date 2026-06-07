@@ -98,7 +98,7 @@ function App() {
 
   const openSetupWizard = useCallback(() => {
     const close = () => closeWindowById('wizard');
-    const initialSize = getResponsiveWindowSize({ width: 648, height: 528 });
+    const initialSize = getResponsiveWindowSize({ width: 648, height: 492 });
     openWindow(
       'wizard',
       'Setup Assistant',
