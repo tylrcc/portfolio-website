@@ -3932,24 +3932,19 @@ canvas {
 .wiz9-main {
   flex: 1;
   min-width: 0;
-  min-height: 0;
   display: flex;
-  flex-direction: row;
-  align-items: stretch;
-  gap: 12px;
+  flex-direction: column;
+  gap: 10px;
   padding: 4px 6px 4px 12px;
   overflow: hidden;
 }
 
 .wiz9-preview-col {
-  flex: 0 0 38%;
-  width: auto;
-  min-width: 200px;
-  max-width: 280px;
+  flex: 0 0 auto;
+  width: 100%;
   display: flex;
   flex-direction: column;
   gap: 4px;
-  min-height: 0;
 }
 
 .wiz9-preview-caption {
@@ -3974,15 +3969,14 @@ canvas {
 }
 
 .wiz9-preview-frame--compact {
-  flex: 1 1 auto;
-  min-height: 148px;
-  height: auto;
+  flex: 0 0 auto;
+  height: 148px;
 }
 
 .wiz9-preview-frame--about {
-  flex: 1 1 auto;
-  min-height: 240px;
-  height: auto;
+  flex: 0 0 auto;
+  height: 200px;
+  min-height: 200px;
   padding: 0;
   background: #d8d8d8;
   box-shadow: inset 1px 1px 0 #fff, inset -1px -1px 0 #999;
@@ -4010,7 +4004,7 @@ canvas {
   flex: 1 1 auto;
   min-width: 0;
   min-height: 0;
-  padding: 10px 12px 8px;
+  padding: 8px 10px 6px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -4040,7 +4034,7 @@ canvas {
   min-height: 0;
 }
 
-/* Welcome: preview left, copy right — same row as other steps */
+/* Welcome: preview fixed height; text panel gets remaining space */
 .wiz9--welcome .wiz9-main {
   flex: 1 1 auto;
   min-height: 0;
@@ -4048,8 +4042,10 @@ canvas {
 }
 
 .wiz9--welcome .wiz9-preview-col {
-  flex: 0 0 42%;
-  max-width: 300px;
+  flex: 0 0 auto;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .wiz9--welcome .wiz9-preview-caption {
@@ -4075,17 +4071,17 @@ canvas {
 }
 
 .wiz9--welcome .wiz9-step-title {
-  font-size: 20px;
-  margin-bottom: 8px;
-  padding-bottom: 8px;
+  font-size: 17px;
+  margin-bottom: 5px;
+  padding-bottom: 5px;
   flex-shrink: 0;
 }
 
 .wiz9--welcome .wiz9-step-body {
-  flex: 1 1 auto;
-  overflow-y: auto;
-  font-size: 13px;
-  line-height: 1.45;
+  flex: 0 0 auto;
+  overflow: visible;
+  font-size: 12px;
+  line-height: 1.33;
 }
 
 .wiz9--welcome .wiz9-step-body p {
