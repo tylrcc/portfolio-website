@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   CONNECT_LINKS,
   FOURSEAT,
@@ -239,7 +239,31 @@ function MacButton({ href, children, external = true }) {
   );
 }
 
+const FOURSEAT_PREVIEW_W = 800;
+const FOURSEAT_PREVIEW_H = 500;
+
 function FourSeatMiniPreview() {
+  const viewportRef = useRef(null);
+  const [previewScale, setPreviewScale] = useState(0.35);
+
+  useEffect(() => {
+    const node = viewportRef.current;
+    if (!node) return undefined;
+
+    const updateScale = () => {
+      const width = node.clientWidth;
+      const height = node.clientHeight;
+      if (!width || !height) return;
+      // Cover the viewport (crop edges) so letterboxing never exposes the browser chrome.
+      setPreviewScale(Math.max(width / FOURSEAT_PREVIEW_W, height / FOURSEAT_PREVIEW_H));
+    };
+
+    updateScale();
+    const observer = new ResizeObserver(updateScale);
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <a
       href={FOURSEAT_URL}
@@ -253,28 +277,34 @@ function FourSeatMiniPreview() {
           <span className="work-fourseat-mini-url">fourseat.dev</span>
           <span className="work-fourseat-mini-zoom" />
         </div>
-        <div className="work-fourseat-mini-viewport">
-          <div className="work-fourseat-faux" aria-hidden="true">
-            <div
-              className="work-fourseat-faux-bg"
-              style={{ backgroundImage: 'url(/work/fourseat/hero-poster.jpg)' }}
-            />
-            <div className="work-fourseat-faux-scrim" />
-            <nav className="work-fourseat-faux-nav">
-              <div className="work-fourseat-faux-brand">
-                <img src="/work/fourseat/logo-circle.png" alt="" />
-                <span>fourseat</span>
+        <div className="work-fourseat-mini-viewport" ref={viewportRef}>
+          <div
+            className="work-fourseat-faux-scale"
+            style={{ transform: `scale(${previewScale})` }}
+            aria-hidden="true"
+          >
+            <div className="work-fourseat-faux">
+              <div
+                className="work-fourseat-faux-bg"
+                style={{ backgroundImage: 'url(/work/fourseat/hero-poster.jpg)' }}
+              />
+              <div className="work-fourseat-faux-scrim" />
+              <nav className="work-fourseat-faux-nav">
+                <div className="work-fourseat-faux-brand">
+                  <img src="/work/fourseat/logo-circle.png" alt="" />
+                  <span>fourseat</span>
+                </div>
+                <div className="work-fourseat-faux-nav-right">
+                  <span>Oracle</span>
+                  <span className="work-fourseat-faux-nav-hide-sm">How it works</span>
+                  <span className="work-fourseat-faux-cta">Get access</span>
+                </div>
+              </nav>
+              <div className="work-fourseat-faux-hero">
+                <p className="work-fourseat-faux-eyebrow">The Context Layer</p>
+                <p className="work-fourseat-faux-word">fourseat</p>
+                <p className="work-fourseat-faux-tag">Built for the modern company</p>
               </div>
-              <div className="work-fourseat-faux-nav-right">
-                <span>Oracle</span>
-                <span className="work-fourseat-faux-nav-hide-sm">How it works</span>
-                <span className="work-fourseat-faux-cta">Get access</span>
-              </div>
-            </nav>
-            <div className="work-fourseat-faux-hero">
-              <p className="work-fourseat-faux-eyebrow">The Context Layer</p>
-              <p className="work-fourseat-faux-word">fourseat</p>
-              <p className="work-fourseat-faux-tag">Built for the modern company</p>
             </div>
           </div>
           <div className="work-fourseat-mini-shine" aria-hidden="true" />
@@ -335,16 +365,22 @@ function QuantCodeDemo() {
       <div className="quant-terminal">
         <MpwTitlebar title="MPW Shell — Output" />
         <div className={`quant-terminal-body${lineIdx >= CODE_LINES.length ? ' quant-terminal-body--live' : ''}`}>
-          {lineIdx >= CODE_LINES.length
-            && TERMINAL_LINES.map((t, i) => (
+          {TERMINAL_LINES.map((t, i) => {
+            const live = lineIdx >= CODE_LINES.length;
+            return (
               <div
                 key={i}
-                className={i === 0 ? 'quant-term-cmd' : 'quant-term-line'}
-                style={{ animationDelay: `${i * 0.06}s` }}
+                className={[
+                  i === 0 ? 'quant-term-cmd' : 'quant-term-line',
+                  live ? null : 'quant-term-line--reserved',
+                ].filter(Boolean).join(' ')}
+                style={live ? { animationDelay: `${i * 0.06}s` } : undefined}
+                aria-hidden={!live}
               >
                 {t}
               </div>
-            ))}
+            );
+          })}
         </div>
       </div>
     </div>
@@ -482,6 +518,7 @@ const WorkApp = () => (
     </header>
 
     <div className="work-stack">
+      <div className="work-featured">
       <article className="work-panel work-panel--fourseat">
         <div className="work-mpw-shell">
           <MpwTitlebar title={`Macintosh HD:Projects:${FOURSEAT.name}`} />
@@ -536,7 +573,9 @@ const WorkApp = () => (
           </div>
         </div>
       </article>
+      </div>
 
+      <div className="work-oss-grid">
       {PINNED_OPENSOURCE.map((project, i) => {
         const Demo = OSS_DEMOS[project.id];
         return (
@@ -548,6 +587,7 @@ const WorkApp = () => (
           />
         );
       })}
+      </div>
     </div>
 
     <ConnectBar />
