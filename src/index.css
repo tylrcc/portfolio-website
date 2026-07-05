@@ -1592,7 +1592,8 @@ body {
   font-weight: 700;
 }
 
-.work-priv-chip {
+.work-priv-chip,
+.work-live-chip {
   font-size: 10px;
   font-weight: 700;
   padding: 2px 7px;
@@ -1600,6 +1601,16 @@ body {
   background: linear-gradient(180deg, #fff, #e8e8e8);
   box-shadow: inset 1px 1px 0 #fff;
   white-space: nowrap;
+}
+
+.work-live-chip {
+  font-family: Monaco, Menlo, 'Courier New', monospace;
+  color: #0000aa;
+}
+
+.work-oss-row:hover .work-live-chip,
+.work-oss-row:active .work-live-chip {
+  color: #0000aa;
 }
 
 .work-oss-row--private {

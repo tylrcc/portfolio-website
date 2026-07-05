@@ -60,6 +60,7 @@ export const MORE_PROJECTS = [
     name: 'racketfit',
     title: 'Racketfit',
     url: 'https://github.com/tylrcc/racketfit',
+    live: 'https://racketfit.vercel.app',
     description:
       'Take a quiz, get your complete tennis setup — racket, string, tension, and grip size. 158 rackets and 49 strings.',
     language: 'JavaScript',
@@ -72,6 +73,7 @@ export const MORE_PROJECTS = [
     name: 'glasskin',
     title: 'Glasskin',
     url: null,
+    live: 'https://glasskin.vercel.app',
     description:
       'Snap a photo of any skincare label and Glasskin decodes it — endocrine disruptors, pore-cloggers, allergens, and K-beauty actives in plain English.',
     language: 'TypeScript',
@@ -109,6 +111,7 @@ export const MORE_PROJECTS = [
     name: 'concourse',
     title: 'Concourse',
     url: 'https://github.com/tylrcc/concourse',
+    live: 'https://starcourse.vercel.app',
     description:
       'The operating layer for group hospitality — venue marketplace, benchmarking insights, and a 14-market growth watchlist.',
     language: 'HTML',

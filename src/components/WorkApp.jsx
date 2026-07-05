@@ -420,11 +420,15 @@ const OSS_DEMOS = {
 };
 
 function ProjectRow({ project, rowIndex }) {
-  const isLink = Boolean(project.url);
+  const href = project.live || project.url;
+  const isLink = Boolean(href);
   const Tag = isLink ? 'a' : 'div';
   const linkProps = isLink
-    ? { href: project.url, target: '_blank', rel: 'noopener noreferrer' }
+    ? { href, target: '_blank', rel: 'noopener noreferrer' }
     : {};
+  const liveDomain = project.live
+    ? project.live.replace(/^https?:\/\//, '').replace(/\/$/, '')
+    : null;
   return (
     <Tag
       className={`work-oss-row${isLink ? '' : ' work-oss-row--private'}`}
@@ -438,7 +442,9 @@ function ProjectRow({ project, rowIndex }) {
       </span>
       <span className="work-oss-row-meta">
         <span className="work-oss-row-kind">{project.kind}</span>
-        {project.isPrivate ? (
+        {liveDomain ? (
+          <span className="work-live-chip">{liveDomain} ↗</span>
+        ) : project.isPrivate ? (
           <span className="work-priv-chip">🔒 Private</span>
         ) : (
           <span className="work-oss-row-lang">
