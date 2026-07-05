@@ -276,14 +276,32 @@ body {
 }
 
 /* Winamp Retro Player Specifics */
+.spotify-app {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  min-height: 0;
+  padding: 0;
+  margin: 0;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
 .winamp-player {
-  width: 280px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
   background: var(--mac-platinum);
   border: 1px solid #000;
   box-shadow: 1px 1px 0 #fff inset;
   padding: 4px 8px;
-  display: flex;
-  flex-direction: column;
 }
 
 .winamp-menu {
@@ -390,6 +408,11 @@ body {
   gap: 2px;
 }
 
+.winamp-play-btn {
+  flex: 1;
+  min-width: 0;
+}
+
 .retro-mac-btn {
   background: var(--mac-platinum);
   border: 1px solid #000;
@@ -461,6 +484,85 @@ body {
   box-shadow: 1px 1px 0 #fff inset;
 }
 
+.winamp-playlist {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  margin-top: 6px;
+  border: 1px solid #000;
+  background: #fff;
+  box-shadow: inset 1px 1px 0 #808080;
+}
+
+.winamp-playlist-head {
+  flex-shrink: 0;
+  padding: 3px 6px;
+  font-family: Chicago, Charcoal, Geneva, system-ui, sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  background: linear-gradient(180deg, #ececec, #c8c8c8);
+  border-bottom: 1px solid #666;
+}
+
+.winamp-playlist-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  overflow: auto;
+  flex: 1;
+  min-height: 0;
+}
+
+.winamp-playlist-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  padding: 5px 8px;
+  border: none;
+  border-bottom: 1px solid #ccc;
+  background: #fff;
+  font-family: Geneva, 'Lucida Grande', system-ui, sans-serif;
+  font-size: 11px;
+  text-align: left;
+  cursor: pointer;
+  color: #000;
+}
+
+.winamp-playlist-item:last-child {
+  border-bottom: none;
+}
+
+.winamp-playlist-item:hover {
+  background: #eef4ff;
+}
+
+.winamp-playlist-item--active {
+  background: #dce8ff;
+  font-weight: 700;
+}
+
+.winamp-playlist-swatch {
+  width: 10px;
+  height: 10px;
+  flex-shrink: 0;
+  border: 1px solid #000;
+}
+
+.winamp-playlist-name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.winamp-playlist-now {
+  flex-shrink: 0;
+  font-size: 9px;
+}
+
 /* Resize Handle Style */
 .mac-resize-handle {
   position: absolute;
@@ -529,6 +631,55 @@ body {
   min-height: 0;
 }
 
+/* LinkedIn viewer fills the window; inner panes scroll */
+.mac-content:has(.linkedin9) {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 0;
+  min-height: 0;
+}
+
+.mac-app-shell:has(.linkedin9) {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+/* Work folder scrolls inside the window */
+.mac-content:has(.work-app) {
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+  padding: 0;
+  min-height: 0;
+}
+
+.mac-app-shell:has(.work-app) {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+}
+
+/* Spotify player fills its window */
+.mac-content:has(.spotify-app) {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 0;
+  min-height: 0;
+}
+
+.mac-app-shell:has(.spotify-app) {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
 .mac-app-shell {
   width: 100%;
   height: 100%;
@@ -566,12 +717,15 @@ body {
 .work-app {
   display: flex;
   flex-direction: column;
+  flex: 1;
   gap: 14px;
   width: 100%;
   max-width: 100%;
   min-width: 0;
   min-height: 0;
-  padding: 12px;
+  padding: 10px;
+  margin: 0;
+  box-sizing: border-box;
   overflow: visible;
   font-family: Geneva, 'Lucida Grande', Chicago, Charcoal, system-ui, sans-serif;
   font-size: 14px;
@@ -670,24 +824,32 @@ body {
   flex-direction: column;
   gap: 12px;
   min-width: 0;
+  width: 100%;
 }
 
 .work-featured {
-  display: block;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  align-items: start;
   min-width: 0;
-  font-size: 0;
+  width: 100%;
 }
 
 .work-featured > .work-panel {
-  display: inline-block;
-  vertical-align: top;
-  width: calc(50% - 6px);
-  font-size: 14px;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  max-width: 100%;
   box-sizing: border-box;
+  overflow: hidden;
 }
 
-.work-featured > .work-panel--fourseat {
-  margin-right: 12px;
+.work-featured > .work-panel .work-mpw-shell {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
 }
 
 .work-panel--fourseat .work-mpw-shell,
@@ -710,6 +872,7 @@ body {
   gap: 12px;
   align-items: start;
   min-width: 0;
+  width: 100%;
 }
 
 .work-panel,
@@ -833,6 +996,8 @@ body {
 .work-panel--quant .work-mpw-body {
   display: flex;
   flex-direction: column;
+  flex: 1;
+  min-height: 0;
   overflow: hidden;
 }
 
@@ -954,14 +1119,12 @@ body {
 }
 
 .work-panel--quant .work-quant-demo-wrap {
-  flex: none;
-  height: 200px !important;
-  max-height: 200px !important;
-  min-height: 200px !important;
+  flex: 1 1 auto;
+  min-height: 228px;
   min-width: 0;
   max-width: 100%;
   margin-bottom: 10px;
-  display: block;
+  display: flex;
   overflow: hidden;
 }
 
@@ -969,11 +1132,10 @@ body {
   display: grid;
   grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
   grid-template-rows: 1fr;
-  gap: 8px;
+  gap: 10px;
   width: 100%;
-  height: 200px !important;
-  max-height: 200px !important;
-  min-height: 200px !important;
+  height: 100%;
+  min-height: 228px;
   min-width: 0;
   overflow: hidden;
 }
@@ -1006,6 +1168,10 @@ body {
   padding: 8px 10px;
 }
 
+.work-panel--quant .quant-code-line {
+  min-height: 1.35em;
+}
+
 .work-panel--quant .quant-terminal-body {
   font-size: 9px;
   line-height: 1.4;
@@ -1016,8 +1182,17 @@ body {
 
 .work-panel--quant .work-card-footer,
 .work-panel--fourseat .work-card-footer {
+  flex-shrink: 0;
+  width: 100%;
   padding-top: 8px;
   gap: 8px;
+}
+
+.work-panel--quant .work-card-footer {
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
 }
 
 /* OSS row — compact */
@@ -1380,6 +1555,77 @@ body {
   background: #efefef;
 }
 
+/* "More projects" — classic Finder folder window */
+.work-panel--folder {
+  animation-delay: 0.24s;
+}
+
+.work-folder-infobar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 4px 12px;
+  font-size: 10px;
+  color: #333;
+  background: linear-gradient(180deg, #f2f2f2, #e0e0e0);
+  border-bottom: 1px solid #888;
+  box-shadow: inset 0 1px 0 #fff;
+}
+
+.work-oss-list--folder {
+  gap: 0;
+  margin: 0;
+  border: none;
+  box-shadow: none;
+}
+
+.work-oss-row-kind {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  opacity: 0.75;
+}
+
+.work-oss-row-lang {
+  font-weight: 700;
+}
+
+.work-priv-chip {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border: 1px solid #888;
+  background: linear-gradient(180deg, #fff, #e8e8e8);
+  box-shadow: inset 1px 1px 0 #fff;
+  white-space: nowrap;
+}
+
+.work-oss-row--private {
+  cursor: default;
+}
+
+.work-oss-row--private:hover,
+.work-oss-row--private:active {
+  background: linear-gradient(180deg, #fff, #f4f4f4);
+  color: #000;
+  transform: none;
+}
+
+.work-oss-row--private:nth-child(even):hover,
+.work-oss-row--private:nth-child(even):active {
+  background: linear-gradient(180deg, #f8f8f8, #ececec);
+}
+
+.work-oss-row--private:hover .work-oss-row-desc,
+.work-oss-row--private:hover .work-oss-row-meta {
+  color: #444;
+}
+
+.work-oss-row--private:hover .work-oss-row-meta {
+  color: #555;
+}
+
 .work-card {
   display: flex;
   flex-direction: column;
@@ -1403,10 +1649,14 @@ body {
 }
 
 .work-mpw-shell {
-  flex: 0 1 auto;
+  flex: 1 1 auto;
   display: flex;
   flex-direction: column;
   min-height: 0;
+  min-width: 0;
+  max-width: 100%;
+  width: 100%;
+  box-sizing: border-box;
   border: 2px solid #000;
   background: #b4b4b4;
   box-shadow:
@@ -2798,9 +3048,18 @@ body {
 
 /* LinkedIn — Mac OS 9 shell + early-2000s web profile (real photos/logos) */
 .linkedin9 {
-  width: min(720px, 96vw);
-  min-width: 300px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  min-height: 0;
   padding: 0;
+  margin: 0;
+  background: transparent;
+  border: none;
+  box-shadow: none;
   font-family: Geneva, 'Lucida Grande', Charcoal, system-ui, sans-serif;
   font-size: 12px;
   line-height: 1.45;
@@ -2811,10 +3070,12 @@ body {
 .linkedin9-app {
   display: flex;
   flex-direction: column;
+  flex: 1;
+  width: 100%;
+  min-height: 0;
   border: 2px solid #8f8f8f;
   background: #e8e8e8;
   box-shadow: inset 1px 1px 0 #fff, inset -1px -1px 0 #b5b5b5;
-  min-height: 360px;
 }
 
 .linkedin9-menubar {
@@ -3011,6 +3272,9 @@ body {
 }
 
 .linkedin9-connect-btn {
+  display: inline-flex;
+  width: auto;
+  align-self: flex-start;
   font-family: Geneva, 'Lucida Grande', Charcoal, system-ui, sans-serif;
   font-size: 11px;
   font-weight: 700;
@@ -5727,6 +5991,7 @@ canvas {
   .readme-resume,
   .linkedin9,
   .work-app,
+  .spotify-app,
   .doom-app,
   .winamp-player,
   .finder-app,
@@ -5907,10 +6172,18 @@ canvas {
     display: none;
   }
 
+  .work-featured {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
   .work-featured > .work-panel {
-    display: block;
     width: 100%;
-    font-size: 14px;
+  }
+
+  .work-panel--quant .work-quant-demo-wrap,
+  .work-panel--quant .quant-demo {
+    min-height: 200px;
   }
 
   .work-oss-grid {

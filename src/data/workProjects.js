@@ -53,6 +53,83 @@ export const PINNED_OPENSOURCE = [
   },
 ];
 
+/** Everything else on github.com/tylrcc worth a look — shown as a Finder list. */
+export const MORE_PROJECTS = [
+  {
+    id: 'racketfit',
+    name: 'racketfit',
+    title: 'Racketfit',
+    url: 'https://github.com/tylrcc/racketfit',
+    description:
+      'Take a quiz, get your complete tennis setup — racket, string, tension, and grip size. 158 rackets and 49 strings.',
+    language: 'JavaScript',
+    stars: 1,
+    icon: '🎾',
+    kind: 'Web app',
+  },
+  {
+    id: 'glasskin',
+    name: 'glasskin',
+    title: 'Glasskin',
+    url: null,
+    description:
+      'Snap a photo of any skincare label and Glasskin decodes it — endocrine disruptors, pore-cloggers, allergens, and K-beauty actives in plain English.',
+    language: 'TypeScript',
+    stars: null,
+    icon: '🧴',
+    kind: 'Product',
+    isPrivate: true,
+  },
+  {
+    id: 'llmfit',
+    name: 'llmfit',
+    title: 'LLMfit',
+    url: 'https://github.com/tylrcc/llmfit',
+    description:
+      'Right-size local LLMs for your hardware — what your machine can run, at what quant, how fast. 100% local.',
+    language: 'Python',
+    stars: 1,
+    icon: '🧠',
+    kind: 'CLI tool',
+  },
+  {
+    id: 'hearth',
+    name: 'hearth',
+    title: 'Hearth',
+    url: 'https://github.com/tylrcc/hearth',
+    description:
+      'Local-LLM tools for your terminal — redact secrets and PII, search code by meaning, 100% offline.',
+    language: 'Python',
+    stars: 0,
+    icon: '🔥',
+    kind: 'CLI tool',
+  },
+  {
+    id: 'concourse',
+    name: 'concourse',
+    title: 'Concourse',
+    url: 'https://github.com/tylrcc/concourse',
+    description:
+      'The operating layer for group hospitality — venue marketplace, benchmarking insights, and a 14-market growth watchlist.',
+    language: 'HTML',
+    stars: 0,
+    icon: '🥂',
+    kind: 'Web app',
+  },
+  {
+    id: 'pebble',
+    name: 'pebble',
+    title: 'Pebble',
+    url: 'https://github.com/tylrcc/pebble',
+    description:
+      'A clean personal finance app with budgets, accounts, net worth, and proactive money moves.',
+    language: 'TypeScript',
+    stars: 0,
+    icon: '🪙',
+    kind: 'Web app',
+  },
+];
+
 export const CONNECT_LINKS = [
   { label: 'GitHub', handle: '@tylrcc', href: GITHUB_PROFILE_URL },
   { label: 'LinkedIn', handle: 'in/tylerriccardi', href: 'https://www.linkedin.com/in/tylerriccardi/' },

@@ -3,6 +3,7 @@ import {
   CONNECT_LINKS,
   FOURSEAT,
   FOURSEAT_URL,
+  MORE_PROJECTS,
   PINNED_OPENSOURCE,
   QUANT_ALGO,
 } from '../data/workProjects';
@@ -28,7 +29,12 @@ const CODE_LINES = [
       { c: 'var', t: 'train_days' },
       { c: 'pl', t: ': int = ' },
       { c: 'num', t: '252' },
-      { c: 'pl', t: '; ' },
+    ],
+  },
+  {
+    key: 'l7b',
+    parts: [
+      { c: 'pl', t: '    ' },
       { c: 'var', t: 'test_days' },
       { c: 'pl', t: ': int = ' },
       { c: 'num', t: '21' },
@@ -66,7 +72,13 @@ const CODE_LINES = [
       { c: 'var', t: 'rank_f' },
       { c: 'pl', t: ' = f.rank(pct=' },
       { c: 'kw', t: 'True' },
-      { c: 'pl', t: '); ' },
+      { c: 'pl', t: ')' },
+    ],
+  },
+  {
+    key: 'l12',
+    parts: [
+      { c: 'pl', t: '    ' },
       { c: 'var', t: 'rank_r' },
       { c: 'pl', t: ' = fwd_ret.rank(pct=' },
       { c: 'kw', t: 'True' },
@@ -74,7 +86,7 @@ const CODE_LINES = [
     ],
   },
   {
-    key: 'l12',
+    key: 'l13',
     parts: [
       { c: 'pl', t: '    ' },
       { c: 'kw', t: 'return' },
@@ -87,77 +99,6 @@ const CODE_LINES = [
       { c: 'pl', t: ').sum() / ' },
       { c: 'var', t: 'w' },
       { c: 'pl', t: '.sum())' },
-    ],
-  },
-  { key: 'l13', parts: [] },
-  {
-    key: 'l14',
-    parts: [
-      { c: 'kw', t: 'def' },
-      { c: 'fn', t: ' cvar_objective' },
-      { c: 'pl', t: '(' },
-      { c: 'var', t: 'w' },
-      { c: 'pl', t: ', ' },
-      { c: 'var', t: 'losses' },
-      { c: 'pl', t: ', ' },
-      { c: 'var', t: 'alpha' },
-      { c: 'pl', t: '=' },
-      { c: 'num', t: '0.95' },
-      { c: 'pl', t: '):' },
-    ],
-  },
-  {
-    key: 'l15',
-    parts: [
-      { c: 'pl', t: '    ' },
-      { c: 'var', t: 'port' },
-      { c: 'pl', t: ' = losses @ ' },
-      { c: 'var', t: 'w' },
-      { c: 'pl', t: '; ' },
-      { c: 'var', t: 'q' },
-      { c: 'pl', t: ' = np.quantile(' },
-      { c: 'var', t: 'port' },
-      { c: 'pl', t: ', ' },
-      { c: 'num', t: '1' },
-      { c: 'pl', t: ' - ' },
-      { c: 'var', t: 'alpha' },
-      { c: 'pl', t: ')' },
-    ],
-  },
-  {
-    key: 'l16',
-    parts: [
-      { c: 'pl', t: '    ' },
-      { c: 'kw', t: 'return' },
-      { c: 'pl', t: ' float(np.mean(np.maximum(' },
-      { c: 'num', t: '0' },
-      { c: 'pl', t: ', ' },
-      { c: 'var', t: 'q' },
-      { c: 'pl', t: ' - ' },
-      { c: 'var', t: 'port' },
-      { c: 'pl', t: ')))' },
-    ],
-  },
-  { key: 'l17', parts: [] },
-  {
-    key: 'l18',
-    parts: [
-      { c: 'var', t: 'w_star' },
-      { c: 'pl', t: ' = minimize(' },
-      { c: 'fn', t: 'cvar_objective' },
-      { c: 'pl', t: ', ' },
-      { c: 'var', t: 'x0' },
-      { c: 'pl', t: ', args=(' },
-      { c: 'var', t: 'L_hist' },
-      { c: 'pl', t: '),' },
-    ],
-  },
-  {
-    key: 'l19',
-    parts: [
-      { c: 'pl', t: '                 method=' },
-      { c: 'str', t: '"SLSQP"' },
-      { c: 'pl', t: ', bounds=bnds, constraints=[turn, lev])' },
     ],
   },
 ];
@@ -444,7 +385,8 @@ function TapelineDemo() {
   );
 }
 
-function OssProjectPanel({ project, demo: Demo, panelIndex }) {
+function OssProjectPanel({ project, panelIndex }) {
+  const Demo = OSS_DEMOS[project.id];
   return (
     <article
       className={`work-panel work-panel--oss work-panel--${project.id}`}
@@ -476,6 +418,59 @@ const OSS_DEMOS = {
   'tremor-mesh': TremorMeshDemo,
   tapeline: TapelineDemo,
 };
+
+function ProjectRow({ project, rowIndex }) {
+  const isLink = Boolean(project.url);
+  const Tag = isLink ? 'a' : 'div';
+  const linkProps = isLink
+    ? { href: project.url, target: '_blank', rel: 'noopener noreferrer' }
+    : {};
+  return (
+    <Tag
+      className={`work-oss-row${isLink ? '' : ' work-oss-row--private'}`}
+      style={{ animationDelay: `${0.1 + rowIndex * 0.07}s` }}
+      {...linkProps}
+    >
+      <span className="work-oss-row-icon" aria-hidden="true">{project.icon}</span>
+      <span className="work-oss-row-main">
+        <span className="work-oss-row-name">{project.title}</span>
+        <span className="work-oss-row-desc">{project.description}</span>
+      </span>
+      <span className="work-oss-row-meta">
+        <span className="work-oss-row-kind">{project.kind}</span>
+        {project.isPrivate ? (
+          <span className="work-priv-chip">🔒 Private</span>
+        ) : (
+          <span className="work-oss-row-lang">
+            {project.language}
+            {project.stars > 0 ? ` · ★ ${project.stars}` : ''}
+          </span>
+        )}
+      </span>
+      <span className="work-oss-row-go" aria-hidden="true">{isLink ? '▸' : ''}</span>
+    </Tag>
+  );
+}
+
+function ProjectsFolder() {
+  return (
+    <article className="work-panel work-panel--folder">
+      <div className="work-mpw-shell">
+        <MpwTitlebar title="Macintosh HD:tyler:Projects" />
+        <div className="work-folder-infobar" aria-hidden="true">
+          <span>{MORE_PROJECTS.length} items</span>
+          <span>github.com/tylrcc</span>
+          <span>1.9 GB available</span>
+        </div>
+        <div className="work-oss-list work-oss-list--folder">
+          {MORE_PROJECTS.map((p, i) => (
+            <ProjectRow key={p.id} project={p} rowIndex={i} />
+          ))}
+        </div>
+      </div>
+    </article>
+  );
+}
 
 function ConnectBar() {
   return (
@@ -510,7 +505,7 @@ const WorkApp = () => (
       <div>
         <h2>Work</h2>
         <p>
-          Products I ship, quant research, and pinned open source from{' '}
+          Products I ship, quant research, and the rest of the lab from{' '}
           <a href="https://github.com/tylrcc" target="_blank" rel="noopener noreferrer">@tylrcc</a>.
           Everything opens in a new tab.
         </p>
@@ -576,18 +571,12 @@ const WorkApp = () => (
       </div>
 
       <div className="work-oss-grid">
-      {PINNED_OPENSOURCE.map((project, i) => {
-        const Demo = OSS_DEMOS[project.id];
-        return (
-          <OssProjectPanel
-            key={project.id}
-            project={project}
-            demo={Demo}
-            panelIndex={i}
-          />
-        );
-      })}
+      {PINNED_OPENSOURCE.map((project, i) => (
+        <OssProjectPanel key={project.id} project={project} panelIndex={i} />
+      ))}
       </div>
+
+      <ProjectsFolder />
     </div>
 
     <ConnectBar />
