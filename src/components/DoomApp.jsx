@@ -14,7 +14,7 @@ const PLAYER_RADIUS = 0.18;
 const ENEMY_RADIUS = 0.2;
 const PROJECTILE_RADIUS = 0.14;
 const MELEE_RANGE = 1.28;
-const AIM_HALF_WIDTH = 58;
+const AIM_HALF_WIDTH = 78;
 const TWO_PI = Math.PI * 2;
 const PLAYER_WALK_SPEED = 0.00425;
 const PLAYER_RUN_MULTIPLIER = 1.42;
@@ -22,8 +22,8 @@ const PLAYER_BACKPEDAL_MULTIPLIER = 0.78;
 const PLAYER_ACCEL_BLEND = 0.36;
 const PLAYER_DECEL_BLEND = 0.24;
 const PLAYER_STOP_FRICTION = 0.58;
-const KEYBOARD_TURN_SPEED = 0.00445;
-const POINTER_LOOK_SPEED = 0.0085;
+const KEYBOARD_TURN_SPEED = 0.0029;
+const POINTER_LOOK_SPEED = 0.0042;
 const PLAYER_SPAWN = { x: 7.5, y: 5.5, angle: 1.45 };
 const MAP = [
   '1111111111111111',
@@ -53,9 +53,6 @@ const SPAWN_POINTS = [
   { x: 3.5, y: 6.5 },
   { x: 8.5, y: 8.5 }
 ];
-const ASSET_RECTS = {
-  hud: { src: '/doom-ref-room-3.png', x: 0, y: 430, w: 1024, h: 147 }
-};
 
 const DOOM_SFX_VOLUME = 0.14;
 const DOOM_AUDIO = {
@@ -105,21 +102,6 @@ const getRoundTuning = (roundNumber) => {
   };
 };
 
-const loadImage = (src) =>
-  new Promise((resolve, reject) => {
-    const image = new Image();
-    image.onload = () => resolve(image);
-    image.onerror = reject;
-    image.src = src;
-  });
-
-const drawSprite = (ctx, image, rect, dx, dy, dw, dh, alpha = 1) => {
-  ctx.save();
-  ctx.globalAlpha = alpha;
-  ctx.drawImage(image, rect.x, rect.y, rect.w, rect.h, dx, dy, dw, dh);
-  ctx.restore();
-};
-
 const drawHudText = (ctx, text, x, y, scale = 3) => {
   let cursorX = x;
 
@@ -154,6 +136,241 @@ const createSpriteCanvas = (width, height, draw) => {
   draw(ctx, width, height);
   return canvas;
 };
+
+/** 3x5 pixel font for HUD labels and the small ammo table. */
+const TINY_GLYPHS = {
+  '0': ['111', '101', '101', '101', '111'],
+  '1': ['010', '110', '010', '010', '111'],
+  '2': ['111', '001', '111', '100', '111'],
+  '3': ['111', '001', '011', '001', '111'],
+  '4': ['101', '101', '111', '001', '001'],
+  '5': ['111', '100', '111', '001', '111'],
+  '6': ['111', '100', '111', '101', '111'],
+  '7': ['111', '001', '001', '010', '010'],
+  '8': ['111', '101', '111', '101', '111'],
+  '9': ['111', '101', '111', '001', '111'],
+  A: ['010', '101', '111', '101', '101'],
+  B: ['110', '101', '110', '101', '110'],
+  C: ['011', '100', '100', '100', '011'],
+  E: ['111', '100', '110', '100', '111'],
+  H: ['101', '101', '111', '101', '101'],
+  K: ['101', '101', '110', '101', '101'],
+  L: ['100', '100', '100', '100', '111'],
+  M: ['101', '111', '111', '101', '101'],
+  O: ['010', '101', '101', '101', '010'],
+  R: ['110', '101', '110', '110', '101'],
+  S: ['011', '100', '010', '001', '110'],
+  T: ['111', '010', '010', '010', '010'],
+  U: ['101', '101', '101', '101', '111'],
+  '/': ['001', '001', '010', '100', '100'],
+  ' ': ['000', '000', '000', '000', '000']
+};
+
+const drawTinyText = (ctx, text, x, y, scale, color, shadow = 'rgba(0,0,0,0.6)') => {
+  let cursorX = x;
+  text.split('').forEach((character) => {
+    const glyph = TINY_GLYPHS[character];
+    if (glyph) {
+      glyph.forEach((row, rowIndex) => {
+        for (let columnIndex = 0; columnIndex < 3; columnIndex += 1) {
+          if (row[columnIndex] !== '1') continue;
+          if (shadow) {
+            ctx.fillStyle = shadow;
+            ctx.fillRect(cursorX + columnIndex * scale + 1, y + rowIndex * scale + 1, scale, scale);
+          }
+          ctx.fillStyle = color;
+          ctx.fillRect(cursorX + columnIndex * scale, y + rowIndex * scale, scale, scale);
+        }
+      });
+    }
+    cursorX += 4 * scale;
+  });
+  return cursorX;
+};
+
+const tinyTextWidth = (text, scale) => text.length * 4 * scale - scale;
+
+const HUD_GOLD = '#c9a24c';
+const HUD_DIM_DIGIT = '#6f6f6f';
+const HUD_LIT_DIGIT = '#ffd23e';
+const HUD_HEIGHT = VIEW_HEIGHT - HUD_Y;
+const HUD_FACE_X = 170;
+const HUD_FACE_Y = HUD_Y + 8;
+const HUD_ARMS_SLOTS = [
+  { key: 'pistol', char: '1', x: 141, y: 10 },
+  { key: 'fist', char: '2', x: 151, y: 10 },
+  { key: null, char: '3', x: 161, y: 10 },
+  { key: null, char: '4', x: 141, y: 22 },
+  { key: null, char: '5', x: 151, y: 22 },
+  { key: null, char: '6', x: 161, y: 22 }
+];
+const HUD_AMMO_ROWS = [
+  { label: 'BULL', max: 200, dynamic: true },
+  { label: 'SHEL', max: 50 },
+  { label: 'RCKT', max: 50 },
+  { label: 'CELL', max: 300 }
+];
+
+const drawHudRecess = (ctx, x, y, w, h) => {
+  ctx.fillStyle = '#1d1d1d';
+  ctx.fillRect(x, y, w, h);
+  ctx.fillStyle = '#101010';
+  ctx.fillRect(x, y, w, 1);
+  ctx.fillRect(x, y, 1, h);
+  ctx.fillStyle = '#7d7d7d';
+  ctx.fillRect(x, y + h - 1, w, 1);
+  ctx.fillRect(x + w - 1, y, 1, h);
+  ctx.fillStyle = '#262626';
+  ctx.fillRect(x + 1, y + 1, w - 2, h - 2);
+};
+
+/** Classic beveled-gunmetal status bar, drawn once. */
+const createHudBase = () =>
+  createSpriteCanvas(VIEW_WIDTH, HUD_HEIGHT, (ctx) => {
+    // Brushed metal body with deterministic per-column grain.
+    for (let x = 0; x < VIEW_WIDTH; x += 1) {
+      const grain = Math.sin(x * 12.9898) * 43758.5453;
+      const v = 84 + Math.floor((grain - Math.floor(grain)) * 14);
+      ctx.fillStyle = `rgb(${v},${v - 2},${v - 4})`;
+      ctx.fillRect(x, 0, 1, HUD_HEIGHT);
+    }
+    // Horizontal wear lines.
+    for (let y = 6; y < HUD_HEIGHT; y += 9) {
+      ctx.fillStyle = 'rgba(0,0,0,0.14)';
+      ctx.fillRect(0, y, VIEW_WIDTH, 1);
+    }
+    // Top and bottom bevels.
+    ctx.fillStyle = '#a8a8a8';
+    ctx.fillRect(0, 0, VIEW_WIDTH, 1);
+    ctx.fillStyle = '#3a3a3a';
+    ctx.fillRect(0, 1, VIEW_WIDTH, 1);
+    ctx.fillStyle = '#141414';
+    ctx.fillRect(0, HUD_HEIGHT - 1, VIEW_WIDTH, 1);
+
+    // Section dividers.
+    [53, 136, 167, 197, 252].forEach((x) => {
+      ctx.fillStyle = '#1f1f1f';
+      ctx.fillRect(x, 2, 1, HUD_HEIGHT - 3);
+      ctx.fillStyle = '#909090';
+      ctx.fillRect(x + 1, 2, 1, HUD_HEIGHT - 3);
+    });
+
+    // Recessed number wells: ammo, health, arms, face, armor, ammo table.
+    drawHudRecess(ctx, 8, 8, 42, 26);
+    drawHudRecess(ctx, 59, 8, 74, 26);
+    drawHudRecess(ctx, 139, 7, 26, 26);
+    drawHudRecess(ctx, 168, 6, 26, 33);
+    drawHudRecess(ctx, 199, 8, 74, 26);
+    drawHudRecess(ctx, 255, 4, 62, 38);
+
+    // Gold section labels.
+    drawTinyText(ctx, 'AMMO', 14, 37, 1, HUD_GOLD);
+    drawTinyText(ctx, 'HEALTH', 73, 37, 1, HUD_GOLD);
+    drawTinyText(ctx, 'ARMS', 144, 37, 1, HUD_GOLD);
+    drawTinyText(ctx, 'ARMOR', 217, 37, 1, HUD_GOLD);
+
+    // Arms grid, all slots dim; the active slot is re-lit each frame.
+    HUD_ARMS_SLOTS.forEach((slot) => {
+      drawTinyText(ctx, slot.char, slot.x, slot.y, 2, slot.key ? '#9c9c9c' : HUD_DIM_DIGIT);
+    });
+
+    // Ammo table: labels and maximums are static.
+    HUD_AMMO_ROWS.forEach((row, i) => {
+      const y = 7 + i * 9;
+      drawTinyText(ctx, row.label, 258, y, 1, HUD_GOLD);
+      drawTinyText(ctx, '/', 296, y, 1, '#b9b9b9');
+      drawTinyText(ctx, String(row.max), 301, y, 1, HUD_LIT_DIGIT);
+      if (!row.dynamic) {
+        const value = String(0);
+        drawTinyText(ctx, value, 293 - tinyTextWidth(value, 1), y, 1, HUD_LIT_DIGIT);
+      }
+    });
+  });
+
+/** Pixel-art Doomguy face: 'ok' | 'hurt' | 'dead'. */
+const createDoomFaceSprite = (state) =>
+  createSpriteCanvas(24, 29, (ctx) => {
+    const skin = state === 'dead' ? '#a8794f' : '#c78e58';
+    const skinShade = state === 'dead' ? '#8a6240' : '#a57142';
+
+    // Head base.
+    ctx.fillStyle = skin;
+    ctx.fillRect(3, 4, 18, 22);
+    ctx.fillRect(5, 26, 14, 2);
+    // Side shading.
+    ctx.fillStyle = 'rgba(0,0,0,0.22)';
+    ctx.fillRect(3, 6, 2, 20);
+    ctx.fillRect(19, 6, 2, 20);
+    // Buzz-cut hair.
+    ctx.fillStyle = '#3d2413';
+    ctx.fillRect(2, 2, 20, 4);
+    ctx.fillRect(2, 6, 3, 4);
+    ctx.fillRect(19, 6, 3, 4);
+    ctx.fillStyle = '#57351d';
+    ctx.fillRect(3, 2, 18, 1);
+
+    // Brows.
+    ctx.fillStyle = '#3d2413';
+    ctx.fillRect(5, 10, 6, 2);
+    ctx.fillRect(13, 10, 6, 2);
+
+    if (state === 'dead') {
+      // X-ed out eyes.
+      ctx.fillStyle = '#1c1008';
+      [
+        [6, 13], [8, 15], [6, 15], [8, 13], [7, 14],
+        [15, 13], [17, 15], [15, 15], [17, 13], [16, 14]
+      ].forEach(([px, py]) => ctx.fillRect(px, py, 1, 1));
+    } else {
+      // Whites and forward pupils.
+      ctx.fillStyle = '#e6ddc8';
+      ctx.fillRect(5, 12, 6, 4);
+      ctx.fillRect(13, 12, 6, 4);
+      ctx.fillStyle = '#20304a';
+      ctx.fillRect(7, 13, 2, 3);
+      ctx.fillRect(15, 13, 2, 3);
+    }
+
+    // Nose.
+    ctx.fillStyle = skinShade;
+    ctx.fillRect(10, 16, 4, 4);
+    ctx.fillStyle = 'rgba(0,0,0,0.3)';
+    ctx.fillRect(10, 19, 4, 1);
+
+    // Mouth.
+    if (state === 'dead') {
+      ctx.fillStyle = '#1c1008';
+      ctx.fillRect(8, 22, 8, 3);
+    } else if (state === 'hurt') {
+      // Gritted teeth.
+      ctx.fillStyle = '#1c1008';
+      ctx.fillRect(6, 21, 12, 4);
+      ctx.fillStyle = '#ded6c2';
+      ctx.fillRect(7, 22, 10, 2);
+      ctx.fillStyle = '#1c1008';
+      for (let px = 9; px < 17; px += 3) ctx.fillRect(px, 22, 1, 2);
+    } else {
+      ctx.fillStyle = '#442410';
+      ctx.fillRect(7, 22, 10, 2);
+    }
+
+    // Blood for hurt and dead states.
+    if (state !== 'ok') {
+      ctx.fillStyle = '#a01008';
+      ctx.fillRect(4, 5, 2, 6);
+      ctx.fillRect(5, 11, 1, 3);
+      ctx.fillRect(17, 4, 2, 4);
+      if (state === 'dead') {
+        ctx.fillRect(6, 2, 3, 5);
+        ctx.fillRect(12, 4, 2, 8);
+        ctx.fillRect(16, 8, 2, 9);
+      }
+    }
+
+    // Jaw shadow.
+    ctx.fillStyle = 'rgba(0,0,0,0.25)';
+    ctx.fillRect(5, 27, 14, 1);
+  });
 
 const createImpSprite = (isHit = false) =>
   createSpriteCanvas(60, 78, (ctx) => {
@@ -1589,10 +1806,29 @@ const DoomApp = () => {
         bctx.fillRect(0, 0, VIEW_WIDTH, VIEWPORT_HEIGHT);
       }
 
-      drawSprite(bctx, assets.hud, ASSET_RECTS.hud, 0, HUD_Y, VIEW_WIDTH, VIEW_HEIGHT - HUD_Y);
+      bctx.drawImage(assets.hudBase, 0, HUD_Y);
       drawHudText(bctx, String(Math.round(game.player.ammo)).padStart(2, '0'), 14, 165, 3);
       drawHudText(bctx, `${Math.round(game.player.hp)}%`, 63, 165, 3);
       drawHudText(bctx, `${Math.round(game.player.armor)}%`, 201, 165, 3);
+
+      // Light up the active weapon slot in the ARMS grid.
+      const activeSlot = HUD_ARMS_SLOTS.find((slot) => slot.key === game.player.weapon);
+      if (activeSlot) {
+        drawTinyText(bctx, activeSlot.char, activeSlot.x, HUD_Y + activeSlot.y, 2, HUD_LIT_DIGIT);
+      }
+
+      // Doomguy reacts to how the fight is going.
+      const face =
+        game.player.hp <= 0
+          ? assets.faceDead
+          : game.player.hp < 45
+            ? assets.faceHurt
+            : assets.faceOk;
+      bctx.drawImage(face, HUD_FACE_X, HUD_FACE_Y);
+
+      // Live bullet count in the ammo table.
+      const bullets = String(Math.round(game.player.ammo));
+      drawTinyText(bctx, bullets, 293 - tinyTextWidth(bullets, 1), HUD_Y + 7, 1, HUD_LIT_DIGIT);
 
       bctx.save();
       bctx.font = 'bold 10px Monaco, Menlo, monospace';
@@ -1700,11 +1936,13 @@ const DoomApp = () => {
     const pointerMoveOpts = { passive: true };
 
     const boot = async () => {
-      const hud = await loadImage(ASSET_RECTS.hud.src);
       if (disposed) return;
 
       assets = {
-        hud,
+        hudBase: createHudBase(),
+        faceOk: createDoomFaceSprite('ok'),
+        faceHurt: createDoomFaceSprite('hurt'),
+        faceDead: createDoomFaceSprite('dead'),
         gunIdle: createWeaponSprite(false),
         gunFlash: createWeaponSprite(true),
         fistIdle: createFistSprite(false),
