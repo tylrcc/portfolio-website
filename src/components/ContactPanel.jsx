@@ -54,7 +54,7 @@ const ContactPanel = () => (
       </tbody>
     </table>
     <p className="contact-panel-note">
-      Or use the <strong>Connect</strong> strip on the desktop — hover WeChat for my QR code.
+      Or use the <strong>Connect</strong> strip on the desktop, hover WeChat for my QR code.
     </p>
   </div>
 );

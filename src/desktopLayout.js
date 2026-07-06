@@ -46,7 +46,7 @@ export function getViewportPadding() {
   return isMobileViewport() ? MOBILE_EDGE_PADDING : 20;
 }
 
-/** Large centered app window — uses most of the desktop without going edge-to-edge. */
+/** Large centered app window, uses most of the desktop without going edge-to-edge. */
 export function getLargeAppWindowSize(options = {}) {
   const {
     minWidth = 760,

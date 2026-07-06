@@ -173,7 +173,7 @@ function App() {
             <p className="bomb-body">
               &ldquo;konami code accepted&rdquo;
               <br />
-              Error ID = -1984. Nothing is actually broken. Nice work, player one — 30 lives granted.
+              Error ID = -1984. Nothing is actually broken. Nice work, player one, 30 lives granted.
             </p>
           </div>
         </div>

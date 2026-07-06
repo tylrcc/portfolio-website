@@ -267,7 +267,7 @@ const STEPS = [
             <strong>LinkedIn / Contact</strong> &mdash; get in touch.
           </li>
         </ul>
-        <p className="wiz9-italic">One more step — almost there!</p>
+        <p className="wiz9-italic">One more step, almost there!</p>
       </>
     ),
   },
@@ -281,7 +281,7 @@ const STEPS = [
     body: () => (
       <>
         <p>
-          That&apos;s the tour. Have fun poking around — windows drag, icons stack,
+          That&apos;s the tour. Have fun poking around, windows drag, icons stack,
           and the menu bar at the top actually works.
         </p>
         <p>Thanks for stopping by!</p>

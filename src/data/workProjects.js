@@ -9,7 +9,7 @@ export const FOURSEAT = {
   url: FOURSEAT_URL,
   logo: '/linkedin/fourseat.png',
   description:
-    'Decision-intelligence workspace for founders and operators — connect your stack, surface cross-source anomalies, and convene a board of AI advisors that debate every signal into one actionable verdict.',
+    'Decision-intelligence workspace for founders and operators, connect your stack, surface cross-source anomalies, and convene a board of AI advisors that debate every signal into one actionable verdict.',
   roles: ['Strategist', 'Finance', 'Tech', 'Contrarian', 'Chair'],
   tech: ['React', 'Node.js', 'LLMs', 'Vercel'],
 };
@@ -25,7 +25,7 @@ export const QUANT_ALGO = {
   tech: ['Python', 'NumPy', 'SciPy', 'pandas'],
 };
 
-/** Pinned on github.com/tylrcc (excluding quantalgo — shown above). */
+/** Pinned on github.com/tylrcc (excluding quantalgo, shown above). */
 export const PINNED_OPENSOURCE = [
   {
     id: 'tremor-mesh',
@@ -33,7 +33,7 @@ export const PINNED_OPENSOURCE = [
     title: 'Tremor Mesh',
     url: 'https://github.com/tylrcc/tremor-mesh',
     description:
-      'A $15 seismometer in every home — open-source distributed earthquake early-warning sensor mesh (ESP32 + MEMS).',
+      'A $15 seismometer in every home, open-source distributed earthquake early-warning sensor mesh (ESP32 + MEMS).',
     language: 'Python',
     stars: 2,
     tech: ['Python', 'ESP32', 'IoT'],
@@ -53,7 +53,7 @@ export const PINNED_OPENSOURCE = [
   },
 ];
 
-/** Everything else on github.com/tylrcc worth a look — shown as a Finder list. */
+/** Everything else on github.com/tylrcc worth a look, shown as a Finder list. */
 export const MORE_PROJECTS = [
   {
     id: 'racketfit',
@@ -62,7 +62,7 @@ export const MORE_PROJECTS = [
     url: 'https://github.com/tylrcc/racketfit',
     live: 'https://racketfit.vercel.app',
     description:
-      'Take a quiz, get your complete tennis setup — racket, string, tension, and grip size. 158 rackets and 49 strings.',
+      'Take a quiz, get your complete tennis setup, racket, string, tension, and grip size. 158 rackets and 49 strings.',
     language: 'JavaScript',
     stars: 1,
     icon: '🎾',
@@ -75,7 +75,7 @@ export const MORE_PROJECTS = [
     url: null,
     live: 'https://glasskin.vercel.app',
     description:
-      'Snap a photo of any skincare label and Glasskin decodes it — endocrine disruptors, pore-cloggers, allergens, and K-beauty actives in plain English.',
+      'Snap a photo of any skincare label and Glasskin decodes it, endocrine disruptors, pore-cloggers, allergens, and K-beauty actives in plain English.',
     language: 'TypeScript',
     stars: null,
     icon: '🧴',
@@ -88,7 +88,7 @@ export const MORE_PROJECTS = [
     title: 'LLMfit',
     url: 'https://github.com/tylrcc/llmfit',
     description:
-      'Right-size local LLMs for your hardware — what your machine can run, at what quant, how fast. 100% local.',
+      'Right-size local LLMs for your hardware, what your machine can run, at what quant, how fast. 100% local.',
     language: 'Python',
     stars: 1,
     icon: '🧠',
@@ -100,7 +100,7 @@ export const MORE_PROJECTS = [
     title: 'Hearth',
     url: 'https://github.com/tylrcc/hearth',
     description:
-      'Local-LLM tools for your terminal — redact secrets and PII, search code by meaning, 100% offline.',
+      'Local-LLM tools for your terminal, redact secrets and PII, search code by meaning, 100% offline.',
     language: 'Python',
     stars: 0,
     icon: '🔥',
@@ -113,7 +113,7 @@ export const MORE_PROJECTS = [
     url: 'https://github.com/tylrcc/concourse',
     live: 'https://starcourse.vercel.app',
     description:
-      'The operating layer for group hospitality — venue marketplace, benchmarking insights, and a 14-market growth watchlist.',
+      'The operating layer for group hospitality, venue marketplace, benchmarking insights, and a 14-market growth watchlist.',
     language: 'HTML',
     stars: 0,
     icon: '🥂',

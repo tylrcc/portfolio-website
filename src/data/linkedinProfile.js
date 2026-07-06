@@ -2,7 +2,7 @@ import { LINKEDIN_URL } from '../socialLinks';
 
 export { LINKEDIN_URL };
 
-/** Snapshot of https://www.linkedin.com/in/tylerriccardi/ — assets in /public/linkedin/ */
+/** Snapshot of https://www.linkedin.com/in/tylerriccardi/, assets in /public/linkedin/ */
 export const LINKEDIN_PROFILE = {
   name: 'Tyler Riccardi',
   headline: 'Founder at Fourseat',
@@ -19,19 +19,19 @@ export const LINKEDIN_PROFILE = {
       id: 'fourseat',
       title: 'Founder',
       company: 'Fourseat',
-      period: 'Apr 2026 – Present',
+      period: 'Apr 2026 - Present',
       location: 'Orlando, FL',
       current: true,
       logo: '/linkedin/fourseat.png',
       summary:
-        'Building decision intelligence for founders and operators — AI-driven clarity, institutional memory, and strategic pressure-testing.',
+        'Building decision intelligence for founders and operators, AI-driven clarity, institutional memory, and strategic pressure-testing.',
       url: 'https://fourseat.dev/',
     },
     {
       id: 'taxzone',
       title: 'Junior Accountant',
       company: 'Taxzone',
-      period: 'Aug 2025 – Present',
+      period: 'Aug 2025 - Present',
       location: 'Stockbridge, GA',
       current: true,
       logo: '/linkedin/taxzone.png',
@@ -42,7 +42,7 @@ export const LINKEDIN_PROFILE = {
       id: 'tdr2',
       title: 'Small Retail & Fashion Business Owner',
       company: 'tdr2 llc',
-      period: 'May 2023 – Apr 2026',
+      period: 'May 2023 - Apr 2026',
       location: 'Remote',
       current: false,
       logo: null,
@@ -54,7 +54,7 @@ export const LINKEDIN_PROFILE = {
       id: 'ops',
       title: 'Valet',
       company: 'Orlando Parking Solutions, Inc.',
-      period: 'Jul 2023 – Aug 2025',
+      period: 'Jul 2023 - Aug 2025',
       location: 'Orlando, FL',
       current: false,
       logo: null,
@@ -66,7 +66,7 @@ export const LINKEDIN_PROFILE = {
       id: 'otc',
       title: 'CNC Machinist Intern',
       company: 'OTC Manufacturing Lab',
-      period: 'Jan 2023 – May 2023',
+      period: 'Jan 2023 - May 2023',
       location: 'Orlando, FL',
       current: false,
       logo: '/linkedin/ucf.png',
@@ -79,7 +79,7 @@ export const LINKEDIN_PROFILE = {
     {
       school: 'University of Central Florida',
       degree: 'B.S. Accounting and Finance',
-      period: '2023 – 2027',
+      period: '2023 - 2027',
       location: 'Orlando, Florida',
       logo: '/linkedin/ucf.png',
     },
@@ -131,11 +131,11 @@ export const LINKEDIN_PROFILE = {
   ],
   activity: [
     {
-      title: 'Fourseat — AI boardroom for revenue intelligence',
+      title: 'Fourseat, AI boardroom for revenue intelligence',
       type: 'Post',
       date: 'Recent',
       excerpt:
-        'Connect your stack and let Finance, Tech, Strategy, and Contrarian agents pressure-test anomalies — then ship an action plan.',
+        'Connect your stack and let Finance, Tech, Strategy, and Contrarian agents pressure-test anomalies, then ship an action plan.',
       url: 'https://fourseat.dev/',
     },
     {

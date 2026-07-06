@@ -252,7 +252,7 @@ function FourSeatMiniPreview() {
         </div>
       </div>
       <span className="work-fourseat-mini-caption">
-        Live preview — opens <strong>fourseat.dev</strong>
+        Live preview, opens <strong>fourseat.dev</strong>
       </span>
     </a>
   );
@@ -304,7 +304,7 @@ function QuantCodeDemo() {
         </pre>
       </div>
       <div className="quant-terminal">
-        <MpwTitlebar title="MPW Shell — Output" />
+        <MpwTitlebar title="MPW Shell, Output" />
         <div className={`quant-terminal-body${lineIdx >= CODE_LINES.length ? ' quant-terminal-body--live' : ''}`}>
           {TERMINAL_LINES.map((t, i) => {
             const live = lineIdx >= CODE_LINES.length;
