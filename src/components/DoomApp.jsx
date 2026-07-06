@@ -79,17 +79,17 @@ const MAPS = [
     spawn: { x: 8, y: 13.4, angle: 4.712 },
     grid: [
       '1111111111111111',
+      '1033333333333301',
       '1000000000000001',
-      '1033000000003301',
       '1000000000000001',
-      '1000200000020001',
-      '1000000000000001',
+      '1000200000020041',
+      '1000000000000041',
       '1400000000000041',
       '1400000000000041',
       '1400000000000041',
-      '1000000000000001',
-      '1000200000020001',
-      '1000000000000001',
+      '1000000000000041',
+      '1000200000020041',
+      '1000000000000041',
       '1022000000002201',
       '1000000000000001',
       '1000000000000001',
@@ -1516,10 +1516,14 @@ const DoomApp = () => {
           const pushX = (dx / distance) * overlap;
           const pushY = (dy / distance) * overlap;
 
-          enemyA.x -= pushX;
-          enemyA.y -= pushY;
-          enemyB.x += pushX;
-          enemyB.y += pushY;
+          // Route the push through tryMove so separation never shoves an
+          // enemy through (or into) a wall.
+          const pushedA = tryMove(enemyA, enemyA.x - pushX, enemyA.y - pushY, ENEMY_RADIUS);
+          enemyA.x = pushedA.x;
+          enemyA.y = pushedA.y;
+          const pushedB = tryMove(enemyB, enemyB.x + pushX, enemyB.y + pushY, ENEMY_RADIUS);
+          enemyB.x = pushedB.x;
+          enemyB.y = pushedB.y;
         }
       }
     };
@@ -1531,17 +1535,29 @@ const DoomApp = () => {
       const moveX = (dx / distance) * step;
       const moveY = (dy / distance) * step;
       const next = tryMove(enemy, enemy.x + moveX, enemy.y + moveY, ENEMY_RADIUS);
+      const progress = Math.hypot(next.x - enemy.x, next.y - enemy.y);
 
-      if (next.x !== enemy.x || next.y !== enemy.y) {
+      if (progress > step * 0.35) {
         enemy.x = next.x;
         enemy.y = next.y;
+        enemy.detourDir = 0;
         return;
       }
 
-      const strafeDirection = Math.sin(now * 0.004 + enemy.bobSeed * 8) >= 0 ? 1 : -1;
-      const strafeX = (-dy / distance) * step * strafeDirection;
-      const strafeY = (dx / distance) * step * strafeDirection;
-      const sidestep = tryMove(enemy, enemy.x + strafeX, enemy.y + strafeY, ENEMY_RADIUS);
+      // Blocked or grinding a wall: commit to one detour direction for a
+      // while instead of jittering back and forth against the corner.
+      if (!enemy.detourDir || now > (enemy.detourUntil || 0)) {
+        enemy.detourDir = Math.sin(now * 0.0007 + enemy.bobSeed * 13) >= 0 ? 1 : -1;
+        enemy.detourUntil = now + 700;
+      }
+      const strafeX = (-dy / distance) * step * enemy.detourDir;
+      const strafeY = (dx / distance) * step * enemy.detourDir;
+      let sidestep = tryMove(enemy, enemy.x + strafeX, enemy.y + strafeY, ENEMY_RADIUS);
+      if (sidestep.x === enemy.x && sidestep.y === enemy.y) {
+        enemy.detourDir = -enemy.detourDir;
+        enemy.detourUntil = now + 700;
+        sidestep = tryMove(enemy, enemy.x - strafeX, enemy.y - strafeY, ENEMY_RADIUS);
+      }
       enemy.x = sidestep.x;
       enemy.y = sidestep.y;
     };

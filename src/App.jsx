@@ -110,6 +110,7 @@ function App() {
   }, [openWindow, closeWindowById]);
 
   const closeWindow = useCallback((id) => {
+    if (id === 'finder') setShowAppStickies(false);
     closeWindowById(id);
   }, [closeWindowById]);
 
@@ -445,14 +446,15 @@ function App() {
 
   // One-line Stickies blurbs for each desktop icon, toggled from Finder.
   const APP_STICKY_NOTES = {
-    readme: 'start here: a quick hello and how to poke around',
+    readme: 'the formal resume, Word 95 style. save or print it',
     spotify: 'lo-fi tunes while you browse, hit play',
     about: 'who I am, in one little window',
     doom: 'yes, it really runs. W/S to move, space to shoot',
     hd: 'the whole drive: poke through every file on this desktop',
     linkedin: 'my career so far, no login wall',
     contact: 'send me a note, I actually reply',
-    cv: 'the resume, printable and everything',
+    work: 'the main event: everything I build lives in here',
+    cv: 'the interactive CV: stats, timeline, the whole story',
   };
 
   const renderMiniSticky = (app, index, side) => {
@@ -528,13 +530,11 @@ function App() {
         {showAppStickies && !layout.isMobile && (
           <>
             {leftApps.map((app, i) => renderMiniSticky(app, i, 'left'))}
-            {rightApps.filter((a) => a.id !== 'work').map((app) =>
-              renderMiniSticky(app, rightApps.indexOf(app), 'right')
-            )}
+            {rightApps.map((app, i) => renderMiniSticky(app, i, 'right'))}
           </>
         )}
 
-        {!layout.isMobile && (
+        {!layout.isMobile && !showAppStickies && (
           <button
             type="button"
             className="desktop-sticky"
