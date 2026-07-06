@@ -335,7 +335,7 @@ function App() {
         shortName: 'AOL',
         kind: 'application',
         size: '8 K',
-        icon: '/desktop-icons/aim.svg',
+        icon: '/desktop-icons/aim-runner-v2.svg',
         action: () =>
           openWindow('aim', 'AOL Instant Messenger', <LazyPane minHeight={480}><AimApp /></LazyPane>, true, {
             initialSize: getLargeAppWindowSize({
