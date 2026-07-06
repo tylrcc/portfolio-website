@@ -1338,6 +1338,7 @@ const DoomApp = () => {
     };
 
     const applyDamage = (amount, now) => {
+      if (game.godMode) return;
       const armorAbsorb = Math.min(game.player.armor, amount * 0.38);
       game.player.armor = Math.max(0, game.player.armor - armorAbsorb);
       game.player.hp = Math.max(0, game.player.hp - (amount - armorAbsorb));
@@ -2032,8 +2033,26 @@ const DoomApp = () => {
       rafRef.current = requestAnimationFrame(frame);
     };
 
+    let cheatBuffer = '';
+
+    // The classics. Typed anywhere while the game has focus.
+    const checkCheats = (key) => {
+      if (!/^[a-z]$/.test(key)) return;
+      cheatBuffer = (cheatBuffer + key).slice(-5);
+      if (cheatBuffer === 'iddqd') {
+        game.godMode = !game.godMode;
+        if (game.godMode) game.player.hp = 100;
+        pushStatus(game.godMode ? 'Degreelessness mode ON.' : 'Degreelessness mode OFF.');
+      } else if (cheatBuffer === 'idkfa') {
+        game.player.ammo = 400;
+        game.player.armor = 200;
+        pushStatus('Very happy ammo added.');
+      }
+    };
+
     const setKey = (event, isPressed) => {
       const key = event.key.toLowerCase();
+      if (isPressed) checkCheats(key);
       if (key === '1' && isPressed) {
         selectWeapon('pistol');
         event.preventDefault();

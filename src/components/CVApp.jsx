@@ -28,6 +28,7 @@ const EXTENSIONS = [
 const CVApp = () => {
   const [typedCount, setTypedCount] = useState(0);
   const [barsLive, setBarsLive] = useState(false);
+  const [spins, setSpins] = useState(0);
   const profile = LINKEDIN_PROFILE;
 
   useEffect(() => {
@@ -44,7 +45,17 @@ const CVApp = () => {
   return (
     <div className="mac-content-inner cv9">
       <header className="cv9-hero">
-        <img className="cv9-photo" src={profile.photo} alt="Tyler Riccardi" />
+        <img
+          className="cv9-photo"
+          src={profile.photo}
+          alt="Tyler Riccardi"
+          onClick={() => setSpins((n) => n + 1)}
+          style={{
+            transform: `rotate(${spins * 360}deg)`,
+            transition: 'transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1)',
+            cursor: 'pointer',
+          }}
+        />
         <div className="cv9-hero-main">
           <p className="cv9-kicker">About This Human</p>
           <h2 className="cv9-name">

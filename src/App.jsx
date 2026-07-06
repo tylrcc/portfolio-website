@@ -21,7 +21,7 @@ const ReadmeResumeApp = lazy(() => import('./components/ReadmeResumeApp'));
 const CVApp = lazy(() => import('./components/CVApp'));
 const DoomApp = lazy(() => import('./components/DoomApp'));
 const FinderApp = lazy(() => import('./components/FinderApp'));
-const LinkedInApp = lazy(() => import('./components/LinkedInApp'));
+const AimApp = lazy(() => import('./components/AimApp'));
 const HelpWindow = lazy(() => import('./components/HelpWindow'));
 const ContactPanel = lazy(() => import('./components/ContactPanel'));
 
@@ -113,6 +113,60 @@ function App() {
     if (id === 'finder') setShowAppStickies(false);
     closeWindowById(id);
   }, [closeWindowById]);
+
+  // Easter egg: the Konami code summons a very sorry system error.
+  const openBombDialog = useCallback(() => {
+    openWindow(
+      'syserror',
+      'System Error',
+      <div className="mac-content-inner bomb-dialog">
+        <div className="bomb-row">
+          <span className="bomb-icon" aria-hidden="true">💣</span>
+          <div>
+            <p className="bomb-title">Sorry, a system error occurred.</p>
+            <p className="bomb-body">
+              &ldquo;konami code accepted&rdquo;
+              <br />
+              Error ID = -1984. Nothing is actually broken. Nice work, player one — 30 lives granted.
+            </p>
+          </div>
+        </div>
+        <div className="bomb-actions">
+          <button type="button" className="retro-mac-btn" onClick={() => closeWindowById('syserror')}>
+            Restart
+          </button>
+          <button type="button" className="retro-mac-btn" onClick={() => closeWindowById('syserror')}>
+            Continue
+          </button>
+        </div>
+      </div>,
+      true,
+      { initialSize: getResponsiveWindowSize({ width: 440, height: 220 }), autoFit: false }
+    );
+  }, [openWindow, closeWindowById]);
+
+  useEffect(() => {
+    const KONAMI = [
+      'arrowup', 'arrowup', 'arrowdown', 'arrowdown',
+      'arrowleft', 'arrowright', 'arrowleft', 'arrowright',
+      'b', 'a',
+    ];
+    let progress = 0;
+    const onKeyDown = (event) => {
+      const target = event.target;
+      if (target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable)) {
+        return;
+      }
+      const key = event.key.toLowerCase();
+      progress = key === KONAMI[progress] ? progress + 1 : key === KONAMI[0] ? 1 : 0;
+      if (progress === KONAMI.length) {
+        progress = 0;
+        openBombDialog();
+      }
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [openBombDialog]);
 
   const focusWindow = useCallback((id) => {
     setActiveWindow(id);
@@ -230,15 +284,20 @@ function App() {
         action: openHD,
       },
       {
-        id: 'linkedin',
-        label: 'LinkedIn',
-        shortName: 'Link',
-        kind: 'alias',
-        size: '2 K',
-        icon: '/desktop-icons/linkedin.png',
+        id: 'aim',
+        label: 'AIM',
+        shortName: 'AIM',
+        kind: 'application',
+        size: '8 K',
+        icon: '/desktop-icons/aim.svg',
         action: () =>
-          openWindow('linkedin', 'LinkedIn', <LazyPane minHeight={560}><LinkedInApp /></LazyPane>, true, {
-            initialSize: getLargeAppWindowSize({ minWidth: 820, minHeight: 620 }),
+          openWindow('aim', 'Instant Message', <LazyPane minHeight={480}><AimApp /></LazyPane>, true, {
+            initialSize: getLargeAppWindowSize({
+              minWidth: 460,
+              minHeight: 560,
+              widthRatio: 0.36,
+              heightRatio: 0.78,
+            }),
             autoFit: false,
           }),
       },
@@ -451,7 +510,7 @@ function App() {
     about: 'who I am, in one little window',
     doom: 'yes, it really runs. W/S to move, space to shoot',
     hd: 'the whole drive: poke through every file on this desktop',
-    linkedin: 'my career so far, no login wall',
+    aim: 'AIM me. mini tyler is always online and talks back',
     contact: 'send me a note, I actually reply',
     work: 'the main event: everything I build lives in here',
     cv: 'the interactive CV: stats, timeline, the whole story',
@@ -570,6 +629,7 @@ function App() {
                 folder.label,
                 <div className="mac-content-inner">
                   <p>This folder is empty.</p>
+                  <p className="empty-folder-hint">(nothing here but us pixels)</p>
                 </div>
               )
             }
