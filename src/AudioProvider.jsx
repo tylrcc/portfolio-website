@@ -1,11 +1,8 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { AudioContext } from './AudioContext';
+import { AUDIO_TRACKS } from './data/audioTracks';
 
-const TRACKS = [
-  { name: 'Avril 14th', src: '/Aphex Twin - Avril 14th.mp3', color: '#ffd1dc' },
-  { name: 'Show Me', src: '/show me.mp3', color: '#fff9ae' },
-  { name: 'Objects in the Mirror', src: '/Mac Miller - Objects in the Mirror (SPOTISAVER).mp3', color: '#a2cffe' }
-];
+const TRACKS = AUDIO_TRACKS;
 
 export const AudioProvider = ({ children }) => {
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
@@ -24,6 +21,11 @@ export const AudioProvider = ({ children }) => {
 
   const prevTrack = useCallback(() => {
     setCurrentTrackIndex((prev) => (prev - 1 + TRACKS.length) % TRACKS.length);
+    setIsPlaying(true);
+  }, []);
+
+  const selectTrack = useCallback((index) => {
+    setCurrentTrackIndex(index);
     setIsPlaying(true);
   }, []);
 
@@ -118,6 +120,7 @@ export const AudioProvider = ({ children }) => {
         setVolume,
         nextTrack,
         prevTrack,
+        selectTrack,
         seek
       }}
     >

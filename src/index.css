@@ -7493,3 +7493,135 @@ canvas {
   flex: 1;
   min-height: 0;
 }
+
+/* Apple menu About box */
+.about-mac {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 16px 18px;
+  font-family: Geneva, 'Lucida Grande', Arial, Helvetica, sans-serif;
+}
+
+.about-mac-top {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #aaa;
+}
+
+.about-mac-apple {
+  width: 44px;
+  height: 44px;
+  cursor: pointer;
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.about-mac-apple:hover {
+  transform: rotate(-8deg) scale(1.08);
+}
+
+.about-mac-apple:active {
+  transform: scale(0.92);
+}
+
+.about-mac-title {
+  margin: 0 0 2px;
+  font-family: Chicago, Charcoal, Geneva, system-ui, sans-serif;
+  font-size: 19px;
+  font-weight: 700;
+}
+
+.about-mac-sub {
+  margin: 0;
+  font-size: 11px;
+  color: #555;
+}
+
+.about-mac-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.about-mac-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 12px;
+}
+
+.about-mac-row span:first-child {
+  font-weight: 700;
+}
+
+/* AOL offline state */
+.aim-online--off {
+  color: #777;
+}
+
+.aim-online--off .aim-online-dot {
+  background: #9a9a9a;
+  box-shadow: none;
+  animation: none;
+}
+
+/* ---- Mobile hardening for AOL, About box, and menu bar ---- */
+@media (max-width: 768px) {
+  .aim-app {
+    padding: 8px;
+    gap: 6px;
+    font-size: 14px;
+  }
+
+  .aim-head {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .aim-head-main {
+    flex: 1 1 100%;
+    order: 2;
+  }
+
+  .aim-runner {
+    order: 1;
+    width: 34px;
+    height: 34px;
+  }
+
+  .aim-head-actions {
+    order: 1;
+    margin-left: auto;
+  }
+
+  .aim-mini-btn {
+    min-height: 32px;
+    padding: 6px 10px;
+    font-size: 11px;
+  }
+
+  /* Bigger tap targets so a thumb can send messages */
+  .aim-input {
+    font-size: 16px; /* iOS won't zoom on focus at >=16px */
+    padding: 10px 12px;
+  }
+
+  .aim-send {
+    padding: 10px 16px;
+  }
+
+  .about-mac {
+    padding: 14px;
+  }
+
+  .about-mac-row {
+    font-size: 13px;
+  }
+
+  .bomb-actions .retro-mac-btn,
+  .cv9-action-btn {
+    min-height: 40px;
+  }
+}

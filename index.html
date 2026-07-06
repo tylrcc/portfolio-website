@@ -8,8 +8,7 @@
     <meta name="theme-color" content="#000000" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <link rel="preload" href="/apple-logo.svg" as="image" type="image/svg+xml" />
-    <link rel="preload" href="/fonts/geneva.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/apple-logo.svg" as="image" type="image/svg+xml" fetchpriority="high" />
     <style>
       body {
         margin: 0;
@@ -52,7 +51,7 @@
   <body>
     <div id="root">
       <div class="boot-shell" aria-hidden="true">
-        <img src="/apple-logo.svg" alt="" width="72" height="72" />
+        <img src="/apple-logo.svg" alt="" width="72" height="72" fetchpriority="high" decoding="async" />
         <h2>Welcome to Mac OS.</h2>
         <p>(Click or tap anywhere to Startup)</p>
       </div>

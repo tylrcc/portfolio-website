@@ -1,7 +1,21 @@
 import React, { useEffect, useRef, useState } from 'react';
 
-const BOT_NAME = 'MiniTylr';
+const BOT_NAME = 'Mini Tyler';
 const YOUR_NAME = 'xXguestXx';
+
+/** One unique line per 10% of warning, then the sign-off at 100%. */
+const WARN_LINES = [
+  'warned at 10%. cute.',
+  "20%? I've survived worse. (dial-up)",
+  '30% and rising. tyler would NEVER.',
+  "40%. I'm telling the real Tyler about this.",
+  'half warned. do you kiss your modem with that mouth?',
+  '60%. my lawyer (also me) will be in touch.',
+  '70%?? I literally helped you find easter eggs.',
+  '80%. the running man is running out of patience.',
+  "90%. one more and I'm gone. I mean it.",
+  "I'm not answering any of your questions. *Mini Tyler has signed off*",
+];
 
 const pick = (options) => options[Math.floor(Math.random() * options.length)];
 
@@ -61,14 +75,14 @@ const RULES = [
       'hiring? the Contact app goes straight to the real Tyler. I accept payment in RAM.',
     ],
   },
-  { re: /fourseat/i, out: ["fourseat.dev — an AI boardroom that argues so you don't have to"] },
+  { re: /fourseat/i, out: ["fourseat.dev: an AI boardroom that argues so you don't have to"] },
   {
     re: /glasskin/i,
     out: ["glasskin reads skincare labels so you don't rub endocrine disruptors on your face"],
   },
   {
     re: /(racketfit|tennis)/i,
-    out: ['racketfit.vercel.app — your perfect racket in 60 seconds. no sign-up.'],
+    out: ['racketfit.vercel.app: your perfect racket in 60 seconds. no sign-up.'],
   },
   {
     re: /(doom|iddqd|idkfa)/i,
@@ -119,13 +133,24 @@ const replyTo = (text) => {
 
 const RunnerLogo = ({ className }) => (
   <svg className={className} viewBox="0 0 64 64" aria-hidden="true">
-    <g stroke="#ffd200" strokeWidth="9" strokeLinecap="round" fill="none">
-      <path d="M19 28 Q32 19 45 28" />
-      <path d="M32 26 L32 39" />
-      <path d="M32 39 L21 53" />
-      <path d="M32 39 L44 50" />
+    <g fill="none" strokeLinecap="round" strokeLinejoin="round">
+      <g stroke="#000000" strokeWidth="15">
+        <path d="M33 20 L30 33" />
+        <path d="M32 22 Q41 23 46 16" />
+        <path d="M31 25 L22 30" />
+        <path d="M30 33 Q39 34 43 43" />
+        <path d="M30 33 Q22 40 13 44" />
+      </g>
+      <circle cx="37" cy="10" r="10" fill="#000000" />
+      <g stroke="#ffd200" strokeWidth="8">
+        <path d="M33 20 L30 33" />
+        <path d="M32 22 Q41 23 46 16" />
+        <path d="M31 25 L22 30" />
+        <path d="M30 33 Q39 34 43 43" />
+        <path d="M30 33 Q22 40 13 44" />
+      </g>
+      <circle cx="37" cy="10" r="6.5" fill="#ffd200" />
     </g>
-    <circle cx="32" cy="13" r="8" fill="#ffd200" />
   </svg>
 );
 
@@ -133,12 +158,13 @@ const AimApp = () => {
   const [messages, setMessages] = useState([
     {
       who: 'bot',
-      text: "yo. you've reached mini tyler. say hi, ask about the Work folder, or talk trash — I talk back.",
+      text: "yo. you've reached mini tyler. say hi, ask about the Work folder, or talk trash. I talk back.",
     },
   ]);
   const [draft, setDraft] = useState('');
   const [typing, setTyping] = useState(false);
   const [warnLevel, setWarnLevel] = useState(0);
+  const [offline, setOffline] = useState(false);
   const logRef = useRef(null);
   const timerRef = useRef(null);
 
@@ -163,26 +189,34 @@ const AimApp = () => {
     if (!text || typing) return;
     setDraft('');
     setMessages((prev) => [...prev, { who: 'you', text }]);
+
+    if (offline) {
+      if (/sorry|apolog|my bad|forgive/i.test(text)) {
+        setOffline(false);
+        setWarnLevel(0);
+        botSays("...fine. apology accepted. warning level reset. don't make it weird.");
+      } else {
+        setMessages((prev) => [
+          ...prev,
+          { who: 'bot', text: '*auto response from Mini Tyler: signed off. (an apology might work)*' },
+        ]);
+      }
+      return;
+    }
+
     botSays(replyTo(text));
   };
 
   const warn = () => {
-    if (typing) return;
+    if (typing || offline) return;
     const next = Math.min(100, warnLevel + 10);
     setWarnLevel(next);
-    botSays(
-      next >= 100
-        ? "100% warned. and yet, still here. can't kill what lives in the menu bar."
-        : pick([
-            `warned at ${next}%? bold move for a guest account.`,
-            `${next}% warning level. tyler would never.`,
-            'warn me again and I will send you 47 chain emails.',
-          ])
-    );
+    botSays(WARN_LINES[next / 10 - 1]);
+    if (next >= 100) setOffline(true);
   };
 
   const block = () => {
-    if (typing) return;
+    if (typing || offline) return;
     botSays(pick([
       "you can't block me. I live here.",
       'blocked?? this is MY buddy list.',
@@ -197,8 +231,8 @@ const AimApp = () => {
         <div className="aim-head-main">
           <div className="aim-buddy">
             <span className="aim-buddy-name">{BOT_NAME}</span>
-            <span className="aim-online">
-              <span className="aim-online-dot" aria-hidden="true" /> Online
+            <span className={`aim-online${offline ? ' aim-online--off' : ''}`}>
+              <span className="aim-online-dot" aria-hidden="true" /> {offline ? 'Offline' : 'Online'}
             </span>
           </div>
           <div className="aim-sub">

@@ -25,6 +25,38 @@ const AimApp = lazy(() => import('./components/AimApp'));
 const HelpWindow = lazy(() => import('./components/HelpWindow'));
 const ContactPanel = lazy(() => import('./components/ContactPanel'));
 
+/** Apple menu "About" box; clicking the apple three times is easter egg #5. */
+function AboutMacDialog() {
+  const [bites, setBites] = useState(0);
+  const eaten = bites >= 3;
+  return (
+    <div className="mac-content-inner about-mac">
+      <div className="about-mac-top">
+        <img
+          src="/apple-logo.svg"
+          alt="Apple logo"
+          className="about-mac-apple"
+          onClick={() => setBites((n) => n + 1)}
+        />
+        <div>
+          <p className="about-mac-title">{eaten ? 'About This Human' : 'Mac OS 9.2'}</p>
+          <p className="about-mac-sub">
+            {eaten
+              ? 'powered by coffee and shipped code. you found a secret 🏆'
+              : 'lovingly emulated in your browser'}
+          </p>
+        </div>
+      </div>
+      <div className="about-mac-rows">
+        <div className="about-mac-row"><span>Built-in Memory:</span><span>640 K (enough for anybody)</span></div>
+        <div className="about-mac-row"><span>Virtual Memory:</span><span>vibes</span></div>
+        <div className="about-mac-row"><span>Largest Unused Block:</span><span>my free time</span></div>
+        <div className="about-mac-row"><span>Made by:</span><span>Tyler Riccardi, Orlando FL</span></div>
+      </div>
+    </div>
+  );
+}
+
 function LazyPane({ children, minHeight = 420 }) {
   return (
     <Suspense
@@ -113,6 +145,20 @@ function App() {
     if (id === 'finder') setShowAppStickies(false);
     closeWindowById(id);
   }, [closeWindowById]);
+
+  const openAboutMac = useCallback(() => {
+    openWindow('about-mac', 'About This Computer', <AboutMacDialog />, true, {
+      initialSize: getResponsiveWindowSize({ width: 460, height: 260 }),
+      autoFit: false,
+    });
+  }, [openWindow]);
+
+  const rebootDesktop = useCallback(() => {
+    setWindows([]);
+    setActiveWindow(null);
+    setShowAppStickies(false);
+    setBooted(false);
+  }, []);
 
   // Easter egg: the Konami code summons a very sorry system error.
   const openBombDialog = useCallback(() => {
@@ -285,13 +331,13 @@ function App() {
       },
       {
         id: 'aim',
-        label: 'AIM',
-        shortName: 'AIM',
+        label: 'AOL',
+        shortName: 'AOL',
         kind: 'application',
         size: '8 K',
         icon: '/desktop-icons/aim.svg',
         action: () =>
-          openWindow('aim', 'Instant Message', <LazyPane minHeight={480}><AimApp /></LazyPane>, true, {
+          openWindow('aim', 'AOL Instant Messenger', <LazyPane minHeight={480}><AimApp /></LazyPane>, true, {
             initialSize: getLargeAppWindowSize({
               minWidth: 460,
               minHeight: 560,
@@ -442,6 +488,13 @@ function App() {
 
   const menuActions = useMemo(
     () => ({
+      Apple: [
+        { label: 'About This Computer…', onClick: openAboutMac },
+        { divider: true },
+        { label: 'Sleep', disabled: true },
+        { label: 'Restart…', onClick: rebootDesktop },
+        { label: 'Shut Down', onClick: rebootDesktop },
+      ],
       File: [
         { label: 'New Folder', shortcut: '⌘N', onClick: handleNewFolder },
         {
@@ -490,6 +543,8 @@ function App() {
       handleSetViewMode,
       finderViewMode,
       handleCleanUp,
+      openAboutMac,
+      rebootDesktop,
       handleMinimizeActive,
       handleBringAllToFront,
       selectedIcon,
@@ -510,7 +565,7 @@ function App() {
     about: 'who I am, in one little window',
     doom: 'yes, it really runs. W/S to move, space to shoot',
     hd: 'the whole drive: poke through every file on this desktop',
-    aim: 'AIM me. mini tyler is always online and talks back',
+    aim: 'AOL me. mini tyler is always online and talks back',
     contact: 'send me a note, I actually reply',
     work: 'the main event: everything I build lives in here',
     cv: 'the interactive CV: stats, timeline, the whole story',
@@ -545,12 +600,13 @@ function App() {
   return (
     <AudioProvider>
       <MenuBar
-        onOpenHelp={() =>
+        onOpenHelp={() => {
           openWindow('help', 'Wiz Tree', <LazyPane minHeight={320}><HelpWindow /></LazyPane>, true, {
             initialSize: getLargeAppWindowSize({ minWidth: 560, minHeight: 440, widthRatio: 0.58, heightRatio: 0.62 }),
             autoFit: false,
-          })
-        }
+          });
+          setShowAppStickies((value) => !value);
+        }}
         onOpenFinder={() => {
           openFinder();
           setShowAppStickies((value) => !value);

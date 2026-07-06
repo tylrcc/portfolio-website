@@ -138,6 +138,7 @@ const MenuBar = ({ onOpenHelp, onOpenFinder, menuActions = {} }) => {
     return () => clearInterval(interval);
   }, []);
 
+  const appleItems = menuActions.Apple || [];
   const fileItems = menuActions.File || [];
   const editItems = menuActions.Edit || [];
   const viewItems = menuActions.View || [];
@@ -145,9 +146,10 @@ const MenuBar = ({ onOpenHelp, onOpenFinder, menuActions = {} }) => {
 
   return (
     <div className="mac-menubar">
-      <div className="mac-menu-item" style={{ padding: '0 8px' }}>
-        <img src="/apple-logo.svg" alt="Apple" style={{ height: '18px', marginRight: '8px' }} />
-      </div>
+      <MenuDropdown
+        label={<img src="/apple-logo.svg" alt="Apple menu" style={{ height: '18px', display: 'block' }} />}
+        items={appleItems}
+      />
       <MenuDropdown label="File" items={fileItems} />
       <MenuDropdown label="Edit" items={editItems} />
       <MenuDropdown label="View" items={viewItems} />
