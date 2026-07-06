@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import Draggable from 'react-draggable';
 
 const DesktopIcon = ({
@@ -9,15 +9,24 @@ const DesktopIcon = ({
   onDoubleClick,
   position,
   layoutEpoch,
+  highlight = false,
 }) => {
   const nodeRef = useRef(null);
   const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
   const dragStartPos = useRef(null);
   const [pos, setPos] = useState(position);
 
-  useEffect(() => {
+  // Reset to the layout position whenever the layout recomputes (derived
+  // state during render, per React docs, instead of a cascading effect).
+  const [layoutKey, setLayoutKey] = useState({ layoutEpoch, x: position.x, y: position.y });
+  if (
+    layoutKey.layoutEpoch !== layoutEpoch ||
+    layoutKey.x !== position.x ||
+    layoutKey.y !== position.y
+  ) {
+    setLayoutKey({ layoutEpoch, x: position.x, y: position.y });
     setPos(position);
-  }, [layoutEpoch, position.x, position.y]);
+  }
 
   const handleDragStart = (e, data) => {
     dragStartPos.current = { x: data.x, y: data.y };
@@ -60,7 +69,7 @@ const DesktopIcon = ({
     >
       <div
         ref={nodeRef}
-        className={`icon-container ${selected ? 'selected' : ''}`}
+        className={`icon-container ${selected ? 'selected' : ''}${highlight ? ' icon-container--beacon' : ''}`}
         onDoubleClick={onDoubleClick}
       >
         <div className="icon-box">

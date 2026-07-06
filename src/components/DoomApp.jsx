@@ -898,8 +898,9 @@ const DoomApp = () => {
         window.matchMedia &&
         window.matchMedia('(pointer: coarse)').matches);
     const planeWallStride = isLowPower ? 2 : 1;
-    ctx.imageSmoothingEnabled = true;
-    ctx.imageSmoothingQuality = isLowPower ? 'low' : 'high';
+    // Nearest-neighbor upscale keeps the chunky 320x200 pixels crisp, like
+    // DOS-era Doom on a CRT, instead of a blurry bilinear smear.
+    ctx.imageSmoothingEnabled = false;
     bctx.imageSmoothingEnabled = false;
     const viewportImageData = bctx.createImageData(VIEW_WIDTH, VIEWPORT_HEIGHT);
     const pixels = viewportImageData.data;
@@ -1100,8 +1101,7 @@ const DoomApp = () => {
       canvas.width = Math.round(frameWidth * dpr);
       canvas.height = Math.round(frameHeight * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      ctx.imageSmoothingEnabled = true;
-      ctx.imageSmoothingQuality = isLowPower ? 'low' : 'high';
+      ctx.imageSmoothingEnabled = false;
     };
 
     const tryShoot = (now) => {

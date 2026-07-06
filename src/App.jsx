@@ -191,8 +191,8 @@ function App() {
         size: '112 K',
         icon: '/desktop-icons/spotify.png',
         action: () =>
-          openWindow('spotify', 'Spotify Player', <LazyPane><SpotifyApp /></LazyPane>, true, {
-            initialSize: getResponsiveWindowSize({ width: 300, height: 340 }),
+          openWindow('spotify', 'Spotify Player', <LazyPane minHeight={280}><SpotifyApp /></LazyPane>, true, {
+            initialSize: getResponsiveWindowSize({ width: 300, height: 380 }),
             autoFit: false,
           }),
       },
@@ -485,8 +485,32 @@ function App() {
             onDoubleClick={app.action}
             layoutEpoch={layoutVersion}
             position={{ x: rightColumnX, y: iconY(i) }}
+            highlight={app.id === 'work'}
           />
         ))}
+
+        {!layout.isMobile && (
+          <button
+            type="button"
+            className="desktop-sticky"
+            style={{
+              left: rightColumnX - 258,
+              top: iconY(rightApps.findIndex((a) => a.id === 'work')) - 4,
+            }}
+            onClick={(e) => {
+              e.stopPropagation();
+              desktopApps.find((a) => a.id === 'work')?.action();
+            }}
+          >
+            <span className="desktop-sticky-title">read me first!</span>
+            <span className="desktop-sticky-body">
+              everything I&apos;ve built is in the <strong>Work</strong> folder — products,
+              quant research &amp; open source
+            </span>
+            <span className="desktop-sticky-cta">click to open ▸</span>
+            <span className="desktop-sticky-arrow" aria-hidden="true">→</span>
+          </button>
+        )}
 
         {customFolders.map((folder, i) => (
           <DesktopIcon
