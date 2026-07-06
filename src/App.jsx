@@ -41,6 +41,7 @@ function LazyPane({ children, minHeight = 420 }) {
 
 function App() {
   const [booted, setBooted] = useState(false);
+  const [showAppStickies, setShowAppStickies] = useState(false);
   const [windows, setWindows] = useState([]);
   const [activeWindow, setActiveWindow] = useState(null);
   const [selectedIcon, setSelectedIcon] = useState(null);
@@ -442,6 +443,38 @@ function App() {
   const layout = getDesktopLayout(viewport.width, viewport.height);
   const { leftColumnX, rightColumnX, iconY } = layout;
 
+  // One-line Stickies blurbs for each desktop icon, toggled from Finder.
+  const APP_STICKY_NOTES = {
+    readme: 'start here: a quick hello and how to poke around',
+    spotify: 'lo-fi tunes while you browse, hit play',
+    about: 'who I am, in one little window',
+    doom: 'yes, it really runs. W/S to move, space to shoot',
+    hd: 'the whole drive: poke through every file on this desktop',
+    linkedin: 'my career so far, no login wall',
+    contact: 'send me a note, I actually reply',
+    cv: 'the resume, printable and everything',
+  };
+
+  const renderMiniSticky = (app, index, side) => {
+    const note = APP_STICKY_NOTES[app.id];
+    if (!note) return null;
+    const left = side === 'left' ? leftColumnX + 88 : rightColumnX - 188;
+    return (
+      <button
+        key={`sticky-${app.id}`}
+        type="button"
+        className={`desktop-sticky desktop-sticky--mini${index % 2 ? ' desktop-sticky--tilt-b' : ''}`}
+        style={{ left, top: iconY(index) + 6, animationDelay: `${index * 0.07}s` }}
+        onClick={(e) => {
+          e.stopPropagation();
+          app.action();
+        }}
+      >
+        <span className="desktop-sticky-body">{note}</span>
+      </button>
+    );
+  };
+
   const leftColumnIds = ['readme', 'spotify', 'about', 'doom'];
   const leftApps = leftColumnIds
     .map((id) => desktopApps.find((a) => a.id === id))
@@ -457,7 +490,10 @@ function App() {
             autoFit: false,
           })
         }
-        onOpenFinder={() => openFinder()}
+        onOpenFinder={() => {
+          openFinder();
+          setShowAppStickies((value) => !value);
+        }}
         menuActions={menuActions}
       />
       <div className="desktop-area" onClick={() => setSelectedIcon(null)}>
@@ -489,6 +525,15 @@ function App() {
           />
         ))}
 
+        {showAppStickies && !layout.isMobile && (
+          <>
+            {leftApps.map((app, i) => renderMiniSticky(app, i, 'left'))}
+            {rightApps.filter((a) => a.id !== 'work').map((app) =>
+              renderMiniSticky(app, rightApps.indexOf(app), 'right')
+            )}
+          </>
+        )}
+
         {!layout.isMobile && (
           <button
             type="button"
@@ -504,7 +549,7 @@ function App() {
           >
             <span className="desktop-sticky-title">read me first!</span>
             <span className="desktop-sticky-body">
-              everything I&apos;ve built is in the <strong>Work</strong> folder — products,
+              everything I&apos;ve built is in the <strong>Work</strong> folder: products,
               quant research &amp; open source
             </span>
             <span className="desktop-sticky-cta">click to open ▸</span>

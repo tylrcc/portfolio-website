@@ -24,35 +24,139 @@ const PLAYER_DECEL_BLEND = 0.24;
 const PLAYER_STOP_FRICTION = 0.58;
 const KEYBOARD_TURN_SPEED = 0.0029;
 const POINTER_LOOK_SPEED = 0.0042;
-const PLAYER_SPAWN = { x: 7.5, y: 5.5, angle: 1.45 };
-const MAP = [
-  '1111111111111111',
-  '1000000000000001',
-  '1044440000222201',
-  '1000010000000001',
-  '1000010001100001',
-  '1030000001100001',
-  '1030000000000001',
-  '1000005500000001',
-  '1000005500000001',
-  '1000010000003301',
-  '1000010001100001',
-  '1000000001100001',
-  '1022200000444401',
-  '1000000000000001',
-  '1000000000000001',
-  '1111111111111111'
+/**
+ * Three mini maps in the spirit of the classics. Zones pick floor/ceiling
+ * textures by world rect; first match wins, falling back to the default.
+ */
+const MAPS = [
+  {
+    name: 'TOXIN YARD',
+    spawn: { x: 7.5, y: 5.5, angle: 1.45 },
+    grid: [
+      '1111111111111111',
+      '1000000000000001',
+      '1044440000222201',
+      '1000010000000001',
+      '1000010001100001',
+      '1030000001100001',
+      '1030000000000001',
+      '1000005500000001',
+      '1000005500000001',
+      '1000010000003301',
+      '1000010001100001',
+      '1000000001100001',
+      '1022200000444401',
+      '1000000000000001',
+      '1000000000000001',
+      '1111111111111111'
+    ],
+    spawnPoints: [
+      { x: 11.5, y: 1.5 },
+      { x: 13.5, y: 3.5 },
+      { x: 13.5, y: 8.5 },
+      { x: 11.5, y: 10.5 },
+      { x: 8.5, y: 11.5 },
+      { x: 6.5, y: 12.5 },
+      { x: 3.5, y: 6.5 },
+      { x: 8.5, y: 8.5 }
+    ],
+    floorZones: [
+      { x1: 6, y1: 7, x2: 9, y2: 9, key: 'nukage' },
+      { x1: 8.5, y1: 1, x2: 14, y2: 4.5, key: 'metal' },
+      { x1: 2, y1: 11.5, x2: 14, y2: 14.5, key: 'metal' }
+    ],
+    floorDefault: 'hex',
+    ceilingZones: [
+      { x1: 2, y1: 1, x2: 14, y2: 4.5, key: 'light' },
+      { x1: 4.5, y1: 4.5, x2: 11.5, y2: 11.5, key: 'grid' }
+    ],
+    ceilingDefault: 'dark'
+  },
+  {
+    // E1M1 Hangar homage: open bay, sunken blue pool, wood pillars,
+    // computer panels north, silver tile columns along the walls.
+    name: 'HANGAR',
+    spawn: { x: 8, y: 13.4, angle: 4.712 },
+    grid: [
+      '1111111111111111',
+      '1000000000000001',
+      '1033000000003301',
+      '1000000000000001',
+      '1000200000020001',
+      '1000000000000001',
+      '1400000000000041',
+      '1400000000000041',
+      '1400000000000041',
+      '1000000000000001',
+      '1000200000020001',
+      '1000000000000001',
+      '1022000000002201',
+      '1000000000000001',
+      '1000000000000001',
+      '1111111111111111'
+    ],
+    spawnPoints: [
+      { x: 2.5, y: 2.5 },
+      { x: 13.5, y: 2.5 },
+      { x: 8, y: 2.5 },
+      { x: 2.5, y: 8 },
+      { x: 13.5, y: 10.5 },
+      { x: 8, y: 10.5 },
+      { x: 2.5, y: 13.5 },
+      { x: 13.5, y: 13.5 }
+    ],
+    floorZones: [
+      { x1: 5, y1: 5, x2: 11, y2: 10, key: 'water' },
+      { x1: 12, y1: 1, x2: 15, y2: 15, key: 'metal' }
+    ],
+    floorDefault: 'hex',
+    ceilingZones: [{ x1: 5, y1: 5, x2: 11, y2: 10, key: 'light' }],
+    ceilingDefault: 'dark'
+  },
+  {
+    // Doom II Entryway homage: long brown-metal hall to a techbase door,
+    // with two side chambers off the corridor.
+    name: 'ENTRYWAY',
+    spawn: { x: 7.5, y: 12.8, angle: 4.712 },
+    grid: [
+      '1111111111111111',
+      '1222223553222221',
+      '1222220000222221',
+      '1222220000222221',
+      '1200020000222221',
+      '1200000000222221',
+      '1200000000222221',
+      '1200020000222221',
+      '1222220000200021',
+      '1222220000000021',
+      '1222220000000021',
+      '1222220000200021',
+      '1222220000222221',
+      '1222220000222221',
+      '1222222222222221',
+      '1111111111111111'
+    ],
+    spawnPoints: [
+      { x: 7.5, y: 3 },
+      { x: 8.5, y: 5 },
+      { x: 3.5, y: 5.5 },
+      { x: 3.5, y: 6.5 },
+      { x: 12.5, y: 9.5 },
+      { x: 12.5, y: 10.5 },
+      { x: 7, y: 8.5 },
+      { x: 8.5, y: 10.5 }
+    ],
+    floorZones: [
+      { x1: 2, y1: 4, x2: 5, y2: 8, key: 'hex' },
+      { x1: 11, y1: 8, x2: 14, y2: 12, key: 'hex' }
+    ],
+    floorDefault: 'metal',
+    ceilingZones: [{ x1: 6, y1: 1, x2: 10, y2: 14, key: 'grid' }],
+    ceilingDefault: 'dark'
+  }
 ];
-const SPAWN_POINTS = [
-  { x: 11.5, y: 1.5 },
-  { x: 13.5, y: 3.5 },
-  { x: 13.5, y: 8.5 },
-  { x: 11.5, y: 10.5 },
-  { x: 8.5, y: 11.5 },
-  { x: 6.5, y: 12.5 },
-  { x: 3.5, y: 6.5 },
-  { x: 8.5, y: 8.5 }
-];
+
+let ACTIVE_MAP = MAPS[0];
 
 const DOOM_SFX_VOLUME = 0.14;
 const DOOM_AUDIO = {
@@ -87,7 +191,7 @@ const getRoundTuning = (roundNumber) => {
   const ramp = Math.max(0, roundNumber - 1);
 
   return {
-    enemyCount: Math.min(SPAWN_POINTS.length, 2 + Math.floor(ramp * 0.75)),
+    enemyCount: Math.min(ACTIVE_MAP.spawnPoints.length, 2 + Math.floor(ramp * 0.75)),
     enemyHp: 1 + Math.floor(Math.max(0, roundNumber - 3) / 2),
     enemySpeed: 0.00082 + Math.min(0.00105, ramp * 0.00011),
     projectileSpeed: 0.0037 + Math.min(0.00155, ramp * 0.00014),
@@ -854,6 +958,27 @@ const createNukageTexture = () =>
     }
   });
 
+const createWaterTexture = () =>
+  createSpriteCanvas(64, 64, (ctx) => {
+    ctx.fillStyle = '#0c2350';
+    ctx.fillRect(0, 0, 64, 64);
+
+    for (let y = 0; y < 64; y += 1) {
+      for (let x = 0; x < 64; x += 1) {
+        const wave = 70 + Math.sin((x + y) * 0.35) * 18 + ((x * 17 + y * 7) % 24);
+        ctx.fillStyle = `rgb(16, ${Math.round(wave * 0.55 + 30)}, ${Math.round(wave + 110)})`;
+        ctx.fillRect(x, y, 1, 1);
+      }
+    }
+
+    ctx.fillStyle = 'rgba(170, 210, 255, 0.16)';
+    for (let ripple = 0; ripple < 90; ripple += 1) {
+      const px = (ripple * 29) % 64;
+      const py = (ripple * 11) % 64;
+      ctx.fillRect(px, py, 2, 1);
+    }
+  });
+
 const createDarkCeilingTexture = () =>
   createSpriteCanvas(64, 64, (ctx) => {
     ctx.fillStyle = '#323437';
@@ -953,10 +1078,11 @@ const createTextureSampler = (canvas) => {
 };
 
 const getMapCell = (x, y) => {
+  const grid = ACTIVE_MAP.grid;
   const cellX = Math.floor(x);
   const cellY = Math.floor(y);
-  if (cellX < 0 || cellY < 0 || cellY >= MAP.length || cellX >= MAP[0].length) return '1';
-  return MAP[cellY][cellX];
+  if (cellX < 0 || cellY < 0 || cellY >= grid.length || cellX >= grid[0].length) return '1';
+  return grid[cellY][cellX];
 };
 
 const isWall = (x, y) => getMapCell(x, y) !== '0';
@@ -1026,8 +1152,9 @@ const castRay = (originX, originY, angle) => {
       side = 1;
     }
 
-    if (mapX < 0 || mapY < 0 || mapY >= MAP.length || mapX >= MAP[0].length) break;
-    cell = MAP[mapY][mapX];
+    const grid = ACTIVE_MAP.grid;
+    if (mapX < 0 || mapY < 0 || mapY >= grid.length || mapX >= grid[0].length) break;
+    cell = grid[mapY][mapX];
     if (cell !== '0') break;
   }
 
@@ -1049,18 +1176,18 @@ const castRay = (originX, originY, angle) => {
   return { distance, side, cell, textureU };
 };
 
-const getFloorTextureKey = (worldX, worldY) => {
-  if (pointInRect(worldX, worldY, 6, 7, 9, 9)) return 'nukage';
-  if (pointInRect(worldX, worldY, 8.5, 1, 14, 4.5)) return 'metal';
-  if (pointInRect(worldX, worldY, 2, 11.5, 14, 14.5)) return 'metal';
-  return 'hex';
+const zoneTextureKey = (zones, fallback, worldX, worldY) => {
+  for (const zone of zones) {
+    if (pointInRect(worldX, worldY, zone.x1, zone.y1, zone.x2, zone.y2)) return zone.key;
+  }
+  return fallback;
 };
 
-const getCeilingTextureKey = (worldX, worldY) => {
-  if (pointInRect(worldX, worldY, 2, 1, 14, 4.5)) return 'light';
-  if (pointInRect(worldX, worldY, 4.5, 4.5, 11.5, 11.5)) return 'grid';
-  return 'dark';
-};
+const getFloorTextureKey = (worldX, worldY) =>
+  zoneTextureKey(ACTIVE_MAP.floorZones, ACTIVE_MAP.floorDefault, worldX, worldY);
+
+const getCeilingTextureKey = (worldX, worldY) =>
+  zoneTextureKey(ACTIVE_MAP.ceilingZones, ACTIVE_MAP.ceilingDefault, worldX, worldY);
 
 const DoomApp = () => {
   const canvasRef = useRef(null);
@@ -1068,6 +1195,7 @@ const DoomApp = () => {
   const pointerLookRef = useRef({ active: false, pointerId: null, lastX: 0 });
   const gameRef = useRef(null);
   const rafRef = useRef(null);
+  const mapIndexRef = useRef(-1);
   const [restartKey, setRestartKey] = useState(0);
   const [status, setStatus] = useState('Loading round 1.');
   const [weaponLabel, setWeaponLabel] = useState('PISTOL');
@@ -1103,6 +1231,15 @@ const DoomApp = () => {
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return undefined;
+
+    // First boot plays the arena; every restart jumps to a different map.
+    if (mapIndexRef.current === -1) {
+      mapIndexRef.current = 0;
+    } else {
+      const others = MAPS.map((_, index) => index).filter((index) => index !== mapIndexRef.current);
+      mapIndexRef.current = others[Math.floor(Math.random() * others.length)];
+    }
+    ACTIVE_MAP = MAPS[mapIndexRef.current];
 
     const ctx = canvas.getContext('2d', { alpha: false, desynchronized: true });
     const buffer = document.createElement('canvas');
@@ -1147,9 +1284,9 @@ const DoomApp = () => {
 
     const game = {
       player: {
-        x: PLAYER_SPAWN.x,
-        y: PLAYER_SPAWN.y,
-        angle: PLAYER_SPAWN.angle,
+        x: ACTIVE_MAP.spawn.x,
+        y: ACTIVE_MAP.spawn.y,
+        angle: ACTIVE_MAP.spawn.angle,
         hp: 100,
         armor: 0,
         ammo: 50,
@@ -1245,9 +1382,9 @@ const DoomApp = () => {
 
       if (resetPlayer) {
         game.player = {
-          x: PLAYER_SPAWN.x,
-          y: PLAYER_SPAWN.y,
-          angle: PLAYER_SPAWN.angle,
+          x: ACTIVE_MAP.spawn.x,
+          y: ACTIVE_MAP.spawn.y,
+          angle: ACTIVE_MAP.spawn.angle,
           hp: 100,
           armor: 0,
           ammo: ammoGrant,
@@ -1272,10 +1409,10 @@ const DoomApp = () => {
       }
 
       game.deathSoundPlayed = false;
-      const spawnOffset = ((roundNumber - 1) * 2) % SPAWN_POINTS.length;
+      const spawnOffset = ((roundNumber - 1) * 2) % ACTIVE_MAP.spawnPoints.length;
 
       game.enemies = Array.from({ length: enemyCount }, (_, index) => {
-        const spawn = SPAWN_POINTS[(spawnOffset + index) % SPAWN_POINTS.length];
+        const spawn = ACTIVE_MAP.spawnPoints[(spawnOffset + index) % ACTIVE_MAP.spawnPoints.length];
         return {
           x: spawn.x,
           y: spawn.y,
@@ -1307,7 +1444,7 @@ const DoomApp = () => {
       }
       setWeaponLabel('PISTOL');
       pushStatus(
-        `Round ${roundNumber}. ${enemyCount} imps inbound. ${ammoStatus} W/S move, A/D turn, Q/E strafe, Shift runs, drag to look, 1 pistol, 2 fist.`
+        `${ACTIVE_MAP.name}: Round ${roundNumber}. ${enemyCount} imps inbound. ${ammoStatus} W/S move, A/D turn, Q/E strafe, Shift runs, drag to look, 1 pistol, 2 fist.`
       );
     };
 
@@ -1966,7 +2103,8 @@ const DoomApp = () => {
       floorTextures = {
         hex: createTextureSampler(createHexFloorTexture()),
         metal: createTextureSampler(createMetalFloorTexture()),
-        nukage: createTextureSampler(createNukageTexture())
+        nukage: createTextureSampler(createNukageTexture()),
+        water: createTextureSampler(createWaterTexture())
       };
 
       ceilingTextures = {

@@ -4052,6 +4052,40 @@ body {
   }
 }
 
+/* Mini per-app notes toggled from the Finder */
+.desktop-sticky--mini {
+  width: 168px;
+  padding: 8px 10px 9px;
+  gap: 3px;
+  z-index: 28;
+}
+
+.desktop-sticky--mini .desktop-sticky-body {
+  margin-top: 5px;
+  font-size: 10.5px;
+  line-height: 1.4;
+}
+
+.desktop-sticky--tilt-b {
+  transform: rotate(1.6deg);
+  animation-name: sticky-drop-b;
+}
+
+.desktop-sticky--tilt-b:hover {
+  transform: rotate(0.4deg) translateY(-2px) scale(1.02);
+}
+
+@keyframes sticky-drop-b {
+  from {
+    opacity: 0;
+    transform: rotate(6deg) translateY(-26px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: rotate(1.6deg) translateY(0) scale(1);
+  }
+}
+
 @keyframes sticky-arrow-nudge {
   0%, 100% { transform: translateX(0); }
   50% { transform: translateX(6px); }
