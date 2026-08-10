@@ -5713,6 +5713,7 @@ canvas {
 .wiz9-prev-app--7 { animation: wiz9-app-pulse 4.5s ease-in-out infinite 2.4s; }
 .wiz9-prev-app--8 { animation: wiz9-app-pulse 4.5s ease-in-out infinite 2.8s; }
 .wiz9-prev-app--9 { animation: wiz9-app-pulse 4.5s ease-in-out infinite 3.2s; }
+.wiz9-prev-app--10 { animation: wiz9-app-pulse 4.5s ease-in-out infinite 3.6s; }
 
 @keyframes wiz9-app-pulse {
   0%, 100% {
@@ -5738,6 +5739,7 @@ canvas {
 .wiz9-prev-app--7 .wiz9-prev-app-ico { animation: wiz9-app-icon-flash 4.5s ease-in-out infinite 2.4s; }
 .wiz9-prev-app--8 .wiz9-prev-app-ico { animation: wiz9-app-icon-flash 4.5s ease-in-out infinite 2.8s; }
 .wiz9-prev-app--9 .wiz9-prev-app-ico { animation: wiz9-app-icon-flash 4.5s ease-in-out infinite 3.2s; }
+.wiz9-prev-app--10 .wiz9-prev-app-ico { animation: wiz9-app-icon-flash 4.5s ease-in-out infinite 3.6s; }
 
 @keyframes wiz9-app-icon-flash {
   0%, 100% {
@@ -7623,5 +7625,366 @@ canvas {
   .bomb-actions .retro-mac-btn,
   .cv9-action-btn {
     min-height: 40px;
+  }
+}
+
+/* ---- PictureViewer / Photos gallery (Mac OS 9) ---- */
+.photos9 {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-height: 100%;
+  padding: 14px 16px 18px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.55), transparent 48px),
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 3px,
+      rgba(0, 0, 0, 0.015) 3px,
+      rgba(0, 0, 0, 0.015) 4px
+    );
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.35s ease, transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.photos9--in {
+  opacity: 1;
+  transform: none;
+}
+
+.photos9-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.photos9-kicker {
+  margin: 0 0 2px;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #5a5a5a;
+}
+
+.photos9-title {
+  margin: 0;
+  font-family: Chicago, Charcoal, Geneva, system-ui, sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: #111;
+}
+
+.photos9-sub {
+  margin: 6px 0 0;
+  max-width: 42ch;
+  font-size: 13px;
+  line-height: 1.45;
+  color: #333;
+}
+
+.photos9-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: flex-end;
+}
+
+.photos9-meta-chip {
+  padding: 3px 8px;
+  border: 1px solid #000;
+  background: linear-gradient(180deg, #f7f7f7, #d8d8d8);
+  box-shadow: inset 1px 1px 0 #fff, inset -1px -1px 0 #8e8e8e;
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.photos9-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  padding: 8px;
+  border: 1px solid #000;
+  background: #dedede;
+  box-shadow: inset 1px 1px 0 #fff, inset -1px -1px 0 #8a8a8a;
+}
+
+.photos9-tab {
+  appearance: none;
+  border: 1px solid #000;
+  background: linear-gradient(180deg, #fafafa, #cfcfcf);
+  box-shadow: inset 1px 1px 0 #fff, inset -1px -1px 0 #909090;
+  padding: 4px 10px;
+  font-family: Geneva, 'Lucida Grande', Chicago, Charcoal, system-ui, sans-serif;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.photos9-tab:active {
+  box-shadow: inset 1px 1px 0 #808080, inset -1px -1px 0 #fff;
+}
+
+.photos9-tab--on {
+  background: linear-gradient(180deg, #3a6ea5, #1f4f86);
+  color: #fff;
+  box-shadow: inset 1px 1px 0 #7aa3cc, inset -1px -1px 0 #163a62;
+}
+
+.photos9-count {
+  margin-left: auto;
+  font-size: 11px;
+  color: #444;
+}
+
+.photos9-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  padding-bottom: 8px;
+  align-items: start;
+}
+
+.photos9-card {
+  appearance: none;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0;
+  opacity: 0;
+  transform: translateY(14px) scale(0.98);
+  animation: photos9-rise 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes photos9-rise {
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.photos9-card-frame {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  border: 1px solid #000;
+  background: #111;
+  box-shadow:
+    inset 1px 1px 0 rgba(255, 255, 255, 0.35),
+    2px 2px 0 rgba(0, 0, 0, 0.25);
+  /* Even tile size across the whole roll */
+  aspect-ratio: 4 / 3;
+  width: 100%;
+}
+
+.photos9-card--portrait .photos9-card-frame {
+  aspect-ratio: 4 / 3;
+}
+
+.photos9-card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  transform: scale(1.02);
+  transition: transform 1.1s cubic-bezier(0.16, 1, 0.3, 1), filter 0.35s ease;
+  filter: saturate(0.92) contrast(1.03);
+}
+
+.photos9-card[data-photo='euro-eiffel'] .photos9-card-img {
+  object-position: center 28%;
+}
+
+.photos9-card:hover .photos9-card-img,
+.photos9-card:focus-visible .photos9-card-img {
+  transform: scale(1.08);
+  filter: saturate(1.05) contrast(1.06);
+}
+
+.photos9-card-shine {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(
+    125deg,
+    transparent 35%,
+    rgba(255, 255, 255, 0.18) 48%,
+    transparent 62%
+  );
+  transform: translateX(-120%);
+  transition: transform 0.7s ease;
+}
+
+.photos9-card:hover .photos9-card-shine,
+.photos9-card:focus-visible .photos9-card-shine {
+  transform: translateX(120%);
+}
+
+.photos9-card-caption {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  padding: 0 2px;
+}
+
+.photos9-card-title {
+  font-family: Chicago, Charcoal, Geneva, system-ui, sans-serif;
+  font-size: 13px;
+  color: #111;
+}
+
+.photos9-card-place {
+  font-size: 11px;
+  color: #555;
+}
+
+.photos9-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 4000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(20, 20, 20, 0.55);
+  backdrop-filter: blur(2px);
+  animation: photos9-veil 0.2s ease;
+}
+
+@keyframes photos9-veil {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.photos9-lightbox-window {
+  width: min(920px, 100%);
+  max-height: min(88vh, 820px);
+  display: flex;
+  flex-direction: column;
+  background: #cfcfcf;
+  animation: photos9-pop 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes photos9-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.94) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.photos9-lightbox-titlebar {
+  flex: 0 0 auto;
+}
+
+.photos9-lightbox-stage {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  min-height: 280px;
+  background: #1a1a1a;
+  border-top: 1px solid #000;
+  border-bottom: 1px solid #000;
+}
+
+.photos9-lightbox-frame {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 240px;
+  max-height: min(64vh, 620px);
+  animation: photos9-frame-in 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes photos9-frame-in {
+  from {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.photos9-lightbox-img {
+  max-width: 100%;
+  max-height: min(64vh, 620px);
+  object-fit: contain;
+  box-shadow: 0 0 0 1px #000, 0 8px 24px rgba(0, 0, 0, 0.45);
+}
+
+.photos9-nav {
+  min-width: 36px;
+  min-height: 36px;
+  font-size: 16px;
+  line-height: 1;
+}
+
+.photos9-lightbox-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 12px;
+  font-size: 12px;
+  color: #222;
+  background: linear-gradient(180deg, #e8e8e8, #c8c8c8);
+}
+
+@media (max-width: 900px) {
+  .photos9-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 560px) {
+  .photos9 {
+    padding: 10px;
+  }
+
+  .photos9-head {
+    flex-direction: column;
+  }
+
+  .photos9-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .photos9-lightbox {
+    padding: 10px;
+  }
+
+  .photos9-lightbox-stage {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto;
+  }
+
+  .photos9-nav--prev {
+    order: 2;
+    justify-self: start;
+  }
+
+  .photos9-lightbox-frame {
+    order: 1;
+  }
+
+  .photos9-nav--next {
+    order: 2;
+    justify-self: end;
+    margin-top: -40px;
   }
 }

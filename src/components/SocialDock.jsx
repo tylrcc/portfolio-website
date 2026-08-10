@@ -1,10 +1,18 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { GITHUB_URL, LEETCODE_URL, LINKEDIN_URL, MAILTO, TWITTER_URL } from '../socialLinks';
+import {
+  GITHUB_URL,
+  LEETCODE_URL,
+  LINKEDIN_URL,
+  MAILTO,
+  SCHOLAR_URL,
+  TWITTER_URL,
+} from '../socialLinks';
 
 const DOCK_LINKS = [
   { id: 'email', label: 'Email', href: MAILTO, icon: '/social-icons/email.png', external: false },
   { id: 'github', label: 'GitHub', href: GITHUB_URL, icon: '/social-icons/github.png', external: true },
   { id: 'linkedin', label: 'LinkedIn', href: LINKEDIN_URL, icon: '/social-icons/linkedin.png', external: true },
+  { id: 'scholar', label: 'Google Scholar', href: SCHOLAR_URL, icon: '/social-icons/scholar.png', external: true },
   { id: 'twitter', label: 'X (Twitter)', href: TWITTER_URL, icon: '/social-icons/twitter.png', external: true },
   {
     id: 'leetcode',

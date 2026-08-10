@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { LINKEDIN_PROFILE } from '../data/linkedinProfile';
+import { SCHOLAR_URL } from '../socialLinks';
 
 const FULL_NAME = 'Tyler Riccardi';
 
@@ -173,6 +174,14 @@ const CVApp = () => {
           rel="noopener noreferrer"
         >
           LinkedIn
+        </a>
+        <a
+          className="retro-mac-btn cv9-action-btn"
+          href={SCHOLAR_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Google Scholar
         </a>
         <a
           className="retro-mac-btn cv9-action-btn"

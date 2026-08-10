@@ -136,5 +136,6 @@ export const MORE_PROJECTS = [
 export const CONNECT_LINKS = [
   { label: 'GitHub', handle: '@tylrcc', href: GITHUB_PROFILE_URL },
   { label: 'LinkedIn', handle: 'in/tylerriccardi', href: 'https://www.linkedin.com/in/tylerriccardi/' },
+  { label: 'Scholar', handle: 'Google Scholar', href: 'https://scholar.google.com/citations?user=LAJ_11MAAAAJ&hl=en' },
   { label: 'Site', handle: 'fourseat.dev', href: FOURSEAT_URL },
 ];

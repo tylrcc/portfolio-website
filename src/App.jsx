@@ -24,6 +24,7 @@ const FinderApp = lazy(() => import('./components/FinderApp'));
 const AimApp = lazy(() => import('./components/AimApp'));
 const HelpWindow = lazy(() => import('./components/HelpWindow'));
 const ContactPanel = lazy(() => import('./components/ContactPanel'));
+const PhotosApp = lazy(() => import('./components/PhotosApp'));
 
 /** Apple menu "About" box; clicking the apple three times is easter egg #5. */
 function AboutMacDialog() {
@@ -382,6 +383,19 @@ function App() {
             autoFit: false,
           }),
       },
+      {
+        id: 'photos',
+        label: 'Photos',
+        shortName: 'Photos',
+        kind: 'document',
+        size: '2.8 MB',
+        icon: '/desktop-icons/photos.png',
+        action: () =>
+          openWindow('photos', 'PictureViewer', <LazyPane minHeight={520}><PhotosApp /></LazyPane>, true, {
+            initialSize: getLargeAppWindowSize({ minWidth: 780, minHeight: 600, widthRatio: 0.78, heightRatio: 0.82 }),
+            autoFit: false,
+          }),
+      },
     ],
     [openWindow, openReadmeResume, openAboutMe, openContact, openHD]
   );
@@ -569,6 +583,7 @@ function App() {
     contact: 'send me a note, I actually reply',
     work: 'the main event: everything I build lives in here',
     cv: 'the interactive CV: stats, timeline, the whole story',
+    photos: 'film + X-Pro3: a small gallery of the best frames',
   };
 
   const renderMiniSticky = (app, index, side) => {

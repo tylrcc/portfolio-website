@@ -24,6 +24,7 @@ const HelpWindow = () => {
         <li><strong>spotify.exe</strong> - tunes for browsing.</li>
         <li><strong>Doom</strong> - a small portfolio mini-game.</li>
         <li><strong>Contact</strong> - how to reach me.</li>
+        <li><strong>Photos</strong> - a small PictureViewer gallery from the Nikon F3 and X-Pro3.</li>
         <li><strong>LinkedIn</strong> - retro Mac OS 9 browser with my real photo, experience, school &amp; company logos, and network posts; open the live profile from Go or View full profile.</li>
       </ul>
 

@@ -5,6 +5,7 @@ import {
   LEETCODE_URL,
   LINKEDIN_URL,
   MAILTO,
+  SCHOLAR_URL,
   TWITTER_URL,
 } from '../socialLinks';
 
@@ -32,6 +33,14 @@ const ContactPanel = () => (
           <td>
             <a href={LINKEDIN_URL} target="_blank" rel="noopener noreferrer">
               linkedin.com/in/tylerriccardi
+            </a>
+          </td>
+        </tr>
+        <tr>
+          <td className="contact-panel-label">Scholar</td>
+          <td>
+            <a href={SCHOLAR_URL} target="_blank" rel="noopener noreferrer">
+              Google Scholar
             </a>
           </td>
         </tr>

@@ -11,6 +11,7 @@ const WIZ_ICONS = {
   contact: '/desktop-icons/contact.png',
   doom: '/desktop-icons/doom.png',
   cv: '/desktop-icons/cv.png',
+  photos: '/desktop-icons/photos.png',
 };
 
 const PreviewCursor = ({ className = '' }) => (
@@ -129,6 +130,7 @@ const PREVIEW_APPS = [
   { icon: WIZ_ICONS.doom, label: 'Doom', cls: 'wiz9-prev-app--7' },
   { icon: WIZ_ICONS.work, label: 'Work', cls: 'wiz9-prev-app--8' },
   { icon: WIZ_ICONS.cv, label: 'CV', cls: 'wiz9-prev-app--9' },
+  { icon: WIZ_ICONS.photos, label: 'Photos', cls: 'wiz9-prev-app--10' },
 ];
 
 const PreviewApps = () => (
@@ -262,6 +264,9 @@ const STEPS = [
           </li>
           <li>
             <strong>Work / CV</strong> &mdash; projects and résumé.
+          </li>
+          <li>
+            <strong>Photos</strong> &mdash; film and X-Pro3 gallery.
           </li>
           <li>
             <strong>LinkedIn / Contact</strong> &mdash; get in touch.
