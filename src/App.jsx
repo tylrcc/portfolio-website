@@ -132,7 +132,7 @@ function App() {
 
   const openSetupWizard = useCallback(() => {
     const close = () => closeWindowById('wizard');
-    const initialSize = getResponsiveWindowSize({ width: 648, height: 492 });
+    const initialSize = getResponsiveWindowSize({ width: 648, height: 420 });
     openWindow(
       'wizard',
       'Setup Assistant',
@@ -391,8 +391,8 @@ function App() {
         size: '2.8 MB',
         icon: '/desktop-icons/photos.png',
         action: () =>
-          openWindow('photos', 'PictureViewer', <LazyPane minHeight={520}><PhotosApp /></LazyPane>, true, {
-            initialSize: getLargeAppWindowSize({ minWidth: 780, minHeight: 600, widthRatio: 0.78, heightRatio: 0.82 }),
+          openWindow('photos', 'PictureViewer', <LazyPane minHeight={320}><PhotosApp /></LazyPane>, true, {
+            initialSize: getLargeAppWindowSize({ minWidth: 780, minHeight: 520, widthRatio: 0.78, heightRatio: 0.82 }),
             autoFit: false,
           }),
       },
@@ -606,7 +606,7 @@ function App() {
     );
   };
 
-  const leftColumnIds = ['readme', 'spotify', 'about', 'doom'];
+  const leftColumnIds = ['readme', 'spotify', 'about', 'doom', 'photos'];
   const leftApps = leftColumnIds
     .map((id) => desktopApps.find((a) => a.id === id))
     .filter(Boolean);

@@ -12,8 +12,8 @@ const CHROME_HEIGHT = 32;
 const MIN_WIDTH = 240;
 const MIN_HEIGHT = 150;
 const MAX_WIDTH_RATIO = 0.97;
-/** On mobile, cap width so windows stay visibly inset even when content is wide. */
-const MOBILE_MAX_WIDTH_RATIO = 0.94;
+/** On mobile, leave visible desktop chrome around the window. */
+const MOBILE_MAX_WIDTH_RATIO = 0.9;
 
 const DEFAULT_WINDOW_SIZE = { width: 420, height: 280 };
 
@@ -137,9 +137,12 @@ const Window = ({
     const mobile = isMobileViewport();
     const fittedSize = {
       width: mobile
-        ? maxWidth
+        ? Math.min(maxWidth, Math.max(MIN_WIDTH, Math.min(measuredWidth, maxWidth)))
         : Math.min(maxWidth, Math.max(MIN_WIDTH, measuredWidth)),
-      height: Math.min(maxHeight, Math.max(MIN_HEIGHT, measuredHeight)),
+      height: Math.min(
+        maxHeight,
+        Math.max(MIN_HEIGHT, mobile ? Math.min(measuredHeight, Math.floor(maxHeight * 0.92)) : measuredHeight)
+      ),
     };
     const prevSize = sizeRef.current;
     setSize(fittedSize);
@@ -273,7 +276,7 @@ const Window = ({
     width: mobileFit ? '100%' : size.width,
     maxWidth: mobileFit ? `${size.width}px` : undefined,
     height: minimized ? undefined : size.height,
-    maxHeight: mobileFit ? `min(${size.height}px, calc(100dvh - 74px))` : undefined,
+    maxHeight: mobileFit ? `min(${size.height}px, calc(100dvh - 96px))` : undefined,
     resize: 'none',
     visibility: isReady ? 'visible' : 'hidden',
   };

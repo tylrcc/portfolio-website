@@ -1,11 +1,11 @@
 export const MENU_BAR_HEIGHT = 28;
 export const BOTTOM_CHROME_HEIGHT = 34;
 export const DESKTOP_PADDING = 10;
-export const MOBILE_EDGE_PADDING = 12;
+export const MOBILE_EDGE_PADDING = 10;
 export const ICON_WIDTH = 80;
 export const ICON_ROW_HEIGHT = 82;
-export const MOBILE_ICON_WIDTH = 68;
-export const MOBILE_ICON_ROW_HEIGHT = 58;
+export const MOBILE_ICON_WIDTH = 72;
+export const MOBILE_ICON_ROW_HEIGHT = 70;
 
 export function getViewportSize() {
   if (typeof window === 'undefined') {
@@ -65,9 +65,10 @@ export function getLargeAppWindowSize(options = {}) {
   const isMobile = isMobileViewport();
 
   if (isMobile) {
+    // Keep phone windows inset and shorter so they don't swallow the desktop.
     return getResponsiveWindowSize({
-      width: Math.max(minWidth, width - padding * 2),
-      height: Math.max(minHeight, Math.floor(height * 0.88)),
+      width: Math.max(280, width - padding * 2),
+      height: Math.max(260, Math.floor(height * 0.7)),
     });
   }
 
@@ -89,17 +90,20 @@ export function getResponsiveWindowSize(preferred) {
   const height = getViewportContentHeight();
   const padding = getViewportPadding();
   const isMobile = isMobileViewport();
-  const maxWidth = Math.max(240, width - padding * 2);
-  const maxHeight = Math.max(180, height - padding * 2);
   if (!isMobile) {
+    const maxWidth = Math.max(240, width - padding * 2);
+    const maxHeight = Math.max(180, height - padding * 2);
     return {
       width: Math.min(preferred.width, maxWidth),
       height: Math.min(preferred.height, maxHeight),
     };
   }
+  const edge = Math.max(padding, 12);
+  const maxWidth = Math.max(240, Math.floor(width - edge * 2));
+  const maxHeight = Math.max(200, Math.floor(height * 0.7));
   return {
-    width: maxWidth,
-    height: Math.min(preferred.height, Math.floor(maxHeight * 0.82)),
+    width: Math.min(preferred.width, maxWidth),
+    height: Math.min(preferred.height, maxHeight),
   };
 }
 
@@ -107,16 +111,15 @@ export function getResponsiveWindowSize(preferred) {
 export function getDesktopLayout(width, height) {
   const isMobile = width <= 768;
   const isSmall = width <= 480;
-  const pad = isMobile ? 4 : DESKTOP_PADDING;
+  const pad = isMobile ? 8 : DESKTOP_PADDING;
   const iconWidth = isMobile ? MOBILE_ICON_WIDTH : ICON_WIDTH;
-  const rowGap = isSmall ? MOBILE_ICON_ROW_HEIGHT : isMobile ? MOBILE_ICON_ROW_HEIGHT + 2 : ICON_ROW_HEIGHT;
-  const topY = isSmall ? 2 : isMobile ? 4 : 20;
+  const rowGap = isSmall ? 66 : isMobile ? MOBILE_ICON_ROW_HEIGHT : ICON_ROW_HEIGHT;
+  const topY = isSmall ? 6 : isMobile ? 8 : 20;
 
   const contentWidth = width - pad * 2;
-  const leftColumnX = isMobile ? 0 : pad;
-  const rightColumnX = isMobile
-    ? Math.min(iconWidth + 4, Math.max(iconWidth + 4, contentWidth - iconWidth))
-    : Math.max(leftColumnX + ICON_WIDTH + 8, contentWidth - ICON_WIDTH);
+  const leftColumnX = pad;
+  // Keep the two columns on opposite edges (old Math.min pinned both to the left).
+  const rightColumnX = Math.max(leftColumnX + iconWidth + 12, contentWidth - iconWidth);
   const maxX = Math.max(leftColumnX, contentWidth - iconWidth);
   const maxY = Math.max(topY, height - pad - rowGap);
 

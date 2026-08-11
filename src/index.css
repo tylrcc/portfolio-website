@@ -5868,24 +5868,24 @@ canvas {
   }
 
   .wiz9-preview-frame--compact {
-    height: 108px;
+    height: 88px;
   }
 
   .wiz9--welcome .wiz9-preview-frame--about {
-    height: 128px;
-    min-height: 128px;
+    height: 100px;
+    min-height: 100px;
   }
 
   .wiz9-content-panel {
     flex: 1 1 auto;
-    min-height: 88px;
+    min-height: 72px;
     max-height: none;
     font-size: 13px;
-    line-height: 1.5;
+    line-height: 1.45;
   }
 
   .wiz9-step-title {
-    font-size: 18px;
+    font-size: 16px;
   }
 
   .wiz9-footer {
@@ -5988,7 +5988,7 @@ canvas {
     justify-content: center;
     width: 100%;
     max-width: 100%;
-    padding: 4px 8px 6px;
+    padding: 10px 12px 14px;
     overflow-x: hidden;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
@@ -5996,7 +5996,7 @@ canvas {
 
   .mac-window-layer .mac-window--overlay {
     flex-shrink: 1;
-    width: 100% !important;
+    width: min(100%, var(--mac-mobile-window-width, 100%)) !important;
     max-width: 100% !important;
     min-width: 0 !important;
   }
@@ -6062,11 +6062,11 @@ canvas {
     height: 0px;
   }
 
-  /* Fit inside the desktop, avoid 100vw (Safari overflow) */
+  /* Fit inside the desktop, leave breathing room around the window */
   .mac-window {
     min-width: 0 !important;
     box-sizing: border-box;
-    max-height: calc(100dvh - 28px - 38px - 8px) !important;
+    max-height: calc(100dvh - 28px - 48px - 16px) !important;
   }
 
   .mac-window--mobile-fit {
@@ -6075,7 +6075,8 @@ canvas {
   }
 
   .mac-window--overlay {
-    margin-top: 2px;
+    margin-top: 4px;
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.28);
   }
 
   .wiz9-btn {
@@ -6176,7 +6177,8 @@ canvas {
   .doom-app,
   .winamp-player,
   .finder-app,
-  .wiz9 {
+  .wiz9,
+  .photos9 {
     min-width: 0 !important;
     max-width: 100% !important;
     width: 100% !important;
@@ -6579,26 +6581,27 @@ canvas {
   }
 
   .icon-container {
-    width: 64px;
-    padding: 2px;
+    width: 72px;
+    padding: 4px 2px;
   }
 
   .icon-container .icon-box {
-    width: 40px;
-    height: 40px;
-    font-size: 20px;
-    margin-bottom: 2px;
+    width: 44px;
+    height: 44px;
+    font-size: 22px;
+    margin-bottom: 3px;
   }
 
   .desktop-icon-image {
-    width: 36px;
-    height: 36px;
+    width: 40px;
+    height: 40px;
   }
 
   .icon-label {
-    font-size: 11px;
-    padding: 1px 3px 2px;
-    max-width: 62px;
+    font-size: 12px;
+    padding: 2px 4px 3px;
+    max-width: 70px;
+    line-height: 1.15;
   }
 
   .control-strip--social .control-strip-module--connect {
@@ -6797,34 +6800,35 @@ canvas {
   }
 
   .icon-container {
-    width: 60px;
-    padding: 2px;
+    width: 72px;
+    padding: 4px 2px;
   }
 
   .icon-container .icon-box {
-    width: 36px;
-    height: 36px;
-    font-size: 18px;
-    margin-bottom: 2px;
+    width: 44px;
+    height: 44px;
+    font-size: 22px;
+    margin-bottom: 3px;
   }
 
   .desktop-icon-image {
-    width: 32px;
-    height: 32px;
+    width: 40px;
+    height: 40px;
   }
 
   .icon-label {
-    font-size: 11px;
-    padding: 1px 3px 2px;
-    max-width: 58px;
-  }
-
-  .mac-window-layer {
-    padding: 4px 6px 6px;
+    font-size: 12px;
+    padding: 2px 4px 3px;
+    max-width: 70px;
+    line-height: 1.15;
   }
 
   .mac-window {
-    max-height: calc(100dvh - 28px - 40px - 6px) !important;
+    max-height: calc(100dvh - 28px - 52px - 12px) !important;
+  }
+
+  .mac-window-layer {
+    padding: 8px 10px 12px;
   }
 
   .wiz9-btn {
@@ -7948,43 +7952,99 @@ canvas {
 @media (max-width: 900px) {
   .photos9-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
   }
 }
 
 @media (max-width: 560px) {
   .photos9 {
-    padding: 10px;
+    padding: 8px 8px 12px;
+    gap: 10px;
   }
 
   .photos9-head {
     flex-direction: column;
+    gap: 8px;
+  }
+
+  .photos9-title {
+    font-size: 18px;
+  }
+
+  .photos9-sub {
+    font-size: 12px;
+    max-width: none;
+  }
+
+  .photos9-meta {
+    justify-content: flex-start;
+  }
+
+  .photos9-toolbar {
+    gap: 4px;
+    padding: 6px;
+  }
+
+  .photos9-tab {
+    padding: 6px 8px;
+    font-size: 11px;
+    min-height: 32px;
+  }
+
+  .photos9-count {
+    width: 100%;
+    margin-left: 0;
+    margin-top: 2px;
   }
 
   .photos9-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .photos9-card-title {
+    font-size: 12px;
+  }
+
+  .photos9-card-place {
+    font-size: 10px;
   }
 
   .photos9-lightbox {
-    padding: 10px;
+    padding: max(10px, env(safe-area-inset-top)) 10px max(12px, env(safe-area-inset-bottom));
+    align-items: flex-end;
+    background: rgba(12, 12, 12, 0.45);
+  }
+
+  .photos9-lightbox-window {
+    width: 100%;
+    max-height: min(78dvh, 640px);
+    border-radius: 0;
   }
 
   .photos9-lightbox-stage {
-    grid-template-columns: 1fr;
-    grid-template-rows: auto auto auto;
-  }
-
-  .photos9-nav--prev {
-    order: 2;
-    justify-self: start;
+    grid-template-columns: 40px 1fr 40px;
+    gap: 4px;
+    padding: 8px;
+    min-height: 0;
   }
 
   .photos9-lightbox-frame {
-    order: 1;
+    min-height: 160px;
+    max-height: min(52dvh, 420px);
   }
 
-  .photos9-nav--next {
-    order: 2;
-    justify-self: end;
-    margin-top: -40px;
+  .photos9-lightbox-img {
+    max-height: min(52dvh, 420px);
+  }
+
+  .photos9-nav {
+    min-width: 36px;
+    min-height: 44px;
+  }
+
+  .photos9-lightbox-footer {
+    font-size: 11px;
+    padding: 6px 10px;
   }
 }
