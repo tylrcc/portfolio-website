@@ -43,6 +43,8 @@ export const PHOTOS = [
   shot('euro-cloister', 'Cloister', 'x-pro3', 'Lisbon', 'landscape'),
   shot('euro-granvia', 'Gran Vía', 'x-pro3', 'Madrid', 'portrait'),
   shot('euro-rooftops', 'Orange roofs', 'x-pro3', 'Lisbon', 'landscape'),
+  shot('euro-keyhole', 'Through the arches', 'x-pro3', 'Madrid', 'landscape'),
+  shot('euro-street', 'Narrow street', 'x-pro3', 'Évora', 'portrait'),
   shot('dc-metro', 'Vaulted platform', 'x-pro3', 'Washington, DC', 'landscape'),
   shot('dc-mercedes', 'Green Mercedes', 'x-pro3', 'Street', 'landscape'),
   shot('hall-neon', 'Neon A', 'x-pro3', 'Night', 'landscape'),
