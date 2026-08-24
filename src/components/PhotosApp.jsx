@@ -101,9 +101,11 @@ const PhotosApp = () => {
               <span className="photos9-card-shine" aria-hidden="true" />
               <img
                 className="photos9-card-img"
-                src={photo.src}
+                src={photo.thumb || photo.src}
                 alt=""
-                loading="lazy"
+                loading={i < 6 ? 'eager' : 'lazy'}
+                fetchPriority={i < 4 ? 'high' : 'low'}
+                decoding="async"
                 draggable={false}
               />
             </span>
@@ -153,6 +155,7 @@ const PhotosApp = () => {
                   className="photos9-lightbox-img"
                   src={active.src}
                   alt={active.title}
+                  decoding="async"
                   draggable={false}
                 />
               </div>
