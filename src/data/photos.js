@@ -40,12 +40,6 @@ export const PHOTOS = [
   shot('dc-mercedes', 'Green Mercedes', 'x-pro3', 'Street', 'landscape'),
   shot('hall-neon', 'Neon A', 'x-pro3', 'Night', 'landscape'),
   shot('hall-pool', 'Two balls', 'x-pro3', 'Pool hall', 'landscape'),
-  shot('hall-church', 'Steeple', 'x-pro3', 'City', 'portrait'),
   shot('trop-villa', 'Villa dusk', 'x-pro3', 'Tropics', 'landscape'),
-  shot('trop-jungle', 'Jungle cut', 'x-pro3', 'Tropics', 'portrait'),
   shot('dc-falls', 'Great Falls', 'x-pro3', 'Virginia', 'portrait'),
-  shot('zoo-panda', 'Bamboo hour', 'x-pro3', 'National Zoo', 'landscape'),
-  shot('zoo-tiger', 'In the pool', 'x-pro3', 'National Zoo', 'landscape'),
-  shot('dc-castle', 'Smithsonian', 'x-pro3', 'Washington, DC', 'portrait'),
-  shot('dc-dome', 'Oculus', 'x-pro3', 'Washington, DC', 'landscape'),
 ];
